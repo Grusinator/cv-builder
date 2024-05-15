@@ -1,0 +1,55 @@
+You're right, some rows are missing the category value. Here's the updated CSV with the category value filled in where it was missing:
+
+Category,Working Area,Level,Last Used,Years of exp
+Software Development,Expert,2023,5
+Software Development,Full Stack,Experienced,2022,3
+Software Development,Frontend,Experienced,2022,2
+Software Development,Data Modeling,Highly experienced,2022,4
+Software Development,Data Transformation,Highly experienced,2022,4
+Software Development,Data Science,Experienced,2022,2
+Software Development,Big Data,,2023,1
+Software Development,Unit Testing,Highly experienced,2023,4
+databases,PostgreSQL,Experienced,2020,2
+databases,Oracle,Knowledgable,2019,1
+databases,Microsoft SQL Server,Experienced,2023,2
+databases,SQLite,Highly experienced,2022,3
+databases,PostGIS,Experienced,2018,2
+development tools,Kubernetes,Experienced,2022,2
+development tools,Atlassian Jira,Knowledgable,2019,2
+development tools,Git,Highly experienced,2023,5
+industries,Renewable Energy,Experienced,2022,4
+industries,Counselling,Experienced,2023,3
+industries,Electronics,Knowledgable,2014,1
+industries,Offshore Wind Energy,Highly experienced,2023,4
+methodologies,Data Engineering,Highly experienced,2023,5
+methodologies,DevOps,Highly experienced,2023,3
+methodologies,Data Visualization,Experienced,2023,4
+methodologies,SAFe,Highly experienced,2019,3
+methodologies,Scrum,Highly experienced,2023,4
+methodologies,Agile Software Development,Highly experienced,2023,4
+methodologies,Web Scraping,Knowledgable,2019,1
+methodologies,Containerization,Knowledgable,2022,3
+methodologies,CI/CD,Highly experienced,2023,4
+platforms,.NET,Experienced,2020,2
+platforms,Microsoft Azure,Highly experienced,2023,3
+platforms,Linux,Experienced,2022,4
+platforms,Xamarin,Knowledgable,2018,1
+platforms,AWS,Some knowledge ,2018,1
+programming languages,Python,Expert,2023,6
+programming languages,C#,Highly experienced,2020,2
+programming languages,SQL,Highly experienced,2023,4
+programming languages,Groovy,Experienced,2019,1
+programming languages,JavaScript,Experienced,2019,2
+technologies,Geographical Information Systems (GIS),Highly experienced,2023,2
+technologies,Machine Learning (ML),Experienced,2018,2
+technologies,Docker,Experienced,2022,2
+technologies,Microsoft Azure Data Factory,Highly experienced,2023,1
+technologies,Flask,Experienced,2019,1
+technologies,REST,Highly experienced,2022,4
+technologies,Django,Experienced,2020,2
+technologies,Amazon S3,Experienced,2020,1
+technologies,Spark,Highly experienced,2023,2
+technologies,Microsoft Azure Service Bus,Experienced,2022,2
+technologies,Pandas (Python),Highly experienced,2022,5
+technologies,React,Some knowledge ,2019,1
+technologies,Svelte,Some knowledge ,2023,1
