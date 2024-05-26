@@ -5,3 +5,6 @@
 *.out
 *.bcf
 *.run.xml
+job_application_text.txt
+
+*.env
