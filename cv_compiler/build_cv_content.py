@@ -12,6 +12,8 @@ from cv_compiler.github_projects import GitHubProjectFetcher
 from cv_compiler.llm_connector import ChatGPTInterface
 from cv_compiler.models import JobPosition, Competency, GithubProject
 
+DATA_JOB_DESCRIPTION_TXT = 'job_application_text.txt'
+
 JOB_POSITIONS_JSON = 'data/job_positions.json'
 COMPETENCY_MATRIX_CSV = 'data/competency_matrix_initial.csv'
 
@@ -21,25 +23,27 @@ load_dotenv()
 class CVContentBuilder:
 
     def __init__(self):
-        self.github_fetcher = GitHubProjectFetcher(os.getenv('GITHUB_TOKEN'))
-        self.chatgpt_interface = ChatGPTInterface(os.getenv('OPENAI_API_KEY'))
+        self.github_fetcher = GitHubProjectFetcher()
+        self.chatgpt_interface = ChatGPTInterface()
 
     def build_all(self):
         jobs = self.get_job_positions()
         competencies = self.generate_competencies_from_job_positions(jobs)
         self.write_competencies_generated(competencies)
         projects = self.get_projects()
-        self.write_projects(projects)
+        self.write_projects_to_file(projects)
         job_desc = self.read_job_description()
-        exp_competencies = self.extract_competencies_from_job_description(job_desc)
+        exp_competencies = self.extract_competencies_from_job_description(job_desc, competencies)
         print(exp_competencies)
 
-    def extract_competencies_from_job_description(self, job_description: str) -> List[str]:
+    def extract_competencies_from_job_description(self, job_description: str, competencies: List[Competency]) -> List[
+        str]:
         question = f"""What are the competencies required for the job: 
         \n\n {job_description} \n\n 
-        formatted as a json list?"""
+        formatted as a json List[str], make it short and concise, if possible, select from this list: 
+        \n\n{",".join([comp.WorkingArea for comp in competencies])}\n\n"""
         response = self.chatgpt_interface.ask_question(question)
-        return json.load(response)
+        return json.loads(response)
 
     def get_projects(self):
         return self.github_fetcher.fetch_all()
@@ -98,7 +102,7 @@ class CVContentBuilder:
             for competency in competencies:
                 writer.writerow(competency.dict())
 
-    def write_projects(self, projects: List[GithubProject]):
+    def write_projects_to_file(self, projects: List[GithubProject]):
         with open('data/projects.csv', 'w', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=projects[0].__fields__.keys())
             writer.writeheader()
@@ -106,7 +110,7 @@ class CVContentBuilder:
                 writer.writerow(project.dict())
 
     def read_job_description(self):
-        with open('data/job_description.txt', 'r') as f:
+        with open(DATA_JOB_DESCRIPTION_TXT, 'r') as f:
             job_description = f.read()
             return job_description
 
@@ -121,8 +125,9 @@ if __name__ == '__main__':
     #
     # # print(competencies)
     # projects = cv_content_builder.get_projects()
-    # cv_content_builder.write_projects(projects)
+    # cv_content_builder.write_projects_to_file(projects)
     #
+    competencies = cv_content_builder.load_competencies_from_csv()
     job_desc = cv_content_builder.read_job_description()
-    exp_competencies = cv_content_builder.extract_competencies_from_job_description(job_desc)
+    exp_competencies = cv_content_builder.extract_competencies_from_job_description(job_desc, competencies)
     print(exp_competencies)
