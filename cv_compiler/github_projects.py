@@ -8,10 +8,10 @@ from cv_compiler.models import GithubProject
 
 
 class GitHubProjectFetcher:
-    def __init__(self, token: str):
-        if not token:
+    def __init__(self):
+        self.token = os.getenv('GITHUB_TOKEN')
+        if not self.token:
             raise ValueError('GitHub token is required')
-        self.token = token
         self.headers = {'Authorization': f'token {self.token}'}
 
     def fetch_all_repos(self) -> List[Dict]:

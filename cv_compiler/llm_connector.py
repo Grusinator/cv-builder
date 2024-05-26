@@ -1,18 +1,20 @@
-import openai
+import os
+
+from openai import OpenAI
+
 
 class ChatGPTInterface:
-    def __init__(self, api_key):
-        openai.api_key = api_key
-
-    def ask_question(self, question):
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=question,
-            max_tokens=2048,
-            n=1,
-            stop=None,
-            temperature=0.5,
+    def __init__(self):
+        self.client = OpenAI(
+            organization=os.getenv("OPENAI_ORG_ID"),
+            project=os.getenv("OPENAI_PROJECT_ID"),
         )
 
-        answer = response.choices[0].text.strip()
+    def ask_question(self, question):
+        response = self.client.chat.completions.create(
+            model="gpt-3.5-turbo-0125",
+            messages=[{"role": "user", "content": question}],
+            max_tokens=500,
+        )
+        answer = response.choices[0].message.content
         return answer

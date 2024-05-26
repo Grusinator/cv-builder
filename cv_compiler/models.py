@@ -16,7 +16,7 @@ class JobPosition(BaseModel):
 
 class Competency(BaseModel):
     Category: str
-    WorkingArea: str
+    WorkingArea: str  # Name?
     Level: int
     LastUsed: int
     YearsOfExp: int
