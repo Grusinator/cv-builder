@@ -1,18 +1,16 @@
 from datetime import datetime
 
-import pandas as pd
 from cv_compiler.build_latex_content_files import LatexContentBuilder
-from cv_compiler.models import JobPosition
+from cv_compiler.models import JobPosition, Competency
 
 
 def test_create_skill_table_content():
     cv_builder = LatexContentBuilder()
-    table_data = pd.DataFrame({
-        'Working Area': ['Software Development', 'Databases'],
-        'Level': ['Experienced', 'Highly experienced'],
-        'Last Used': [2022, 2021],
-        'Years of exp': [3, 4]
-    })
+
+    competencies = [
+        Competency(WorkingArea='Software Development', Level=3, LastUsed=2022, YearsOfExp=3),
+        Competency(WorkingArea='Databases', Level=4, LastUsed=2021, YearsOfExp=4)
+    ]
     expected_content = (
         "\\cvsection{Skill matrix}\n"
         "\\begin{tabular}{|c|c|}\n"
@@ -21,7 +19,7 @@ def test_create_skill_table_content():
         "Databases & Highly experienced & 2021 & 4 \\\\\n"
         "\\end{tabular}"
     )
-    content = cv_builder.create_skill_table_content(table_data)
+    content = cv_builder.create_competencies_matrix_table_latex(competencies)
     assert content == expected_content
 
 

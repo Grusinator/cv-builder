@@ -28,9 +28,9 @@ class CVContentBuilder:
 
         jobs = self.file_handler.get_job_positions()
         competencies = self.generate_competencies_from_job_positions(jobs)
-        self.file_handler.write_competencies_generated(competencies)
+        self.file_handler.write_competency_matrix_generated(competencies)
         projects = self.get_projects()
-        self.file_handler.write_projects_to_file(projects)
+        self.file_handler.write_projects_generated_to_file(projects)
         job_desc = self.file_handler.read_job_description()
         exp_competencies = self.extract_competencies_from_job_description(job_desc, competencies)
         print(exp_competencies)
@@ -43,12 +43,12 @@ class CVContentBuilder:
     def build_competency_matrix(self):
         jobs = self.file_handler.get_job_positions()
         competencies = self.generate_competencies_from_job_positions(jobs)
-        self.file_handler.write_competencies_generated(competencies)
+        self.file_handler.write_competency_matrix_generated(competencies)
 
     def build_projects(self):
         projects = self.get_projects()
         # filter most relevant projects
-        self.file_handler.write_projects_to_file(projects)
+        self.file_handler.write_projects_generated_to_file(projects)
 
     def build_summary(self):
         job_desc = self.file_handler.read_job_description()

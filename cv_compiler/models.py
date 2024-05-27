@@ -22,13 +22,13 @@ class Competency(BaseModel):
     YearsOfExp: int
 
     @property
-    def level_value(self):
+    def level_description(self):
         level_mapping = {
-            'Some knowledge': 1,
-            'Knowledgable': 2,
-            'Experienced': 3,
-            'Highly experienced': 4,
-            'Expert': 5
+            1: 'Some knowledge',
+            2: 'Knowledgable',
+            3: 'Experienced',
+            4: 'Highly experienced',
+            5: 'Expert'
         }
         return level_mapping.get(self.Level, None)
 
