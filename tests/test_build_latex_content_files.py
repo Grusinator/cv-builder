@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from cv_compiler.build_latex_content_files import LatexContentBuilder
-from cv_compiler.models import JobPosition, Competency
+from cv_compiler.models import JobPosition, Competency, GenericProject
 
 
 def test_create_skill_table_content():
@@ -59,4 +59,43 @@ def test_convert_experiences_to_latex():
         \\divider"""
     )
     content = cv_builder.convert_experiences_to_latex(experiences)
+    assert content == expected_content
+
+def test_create_resume_summary_latex():
+    cv_builder = LatexContentBuilder()
+    summary_text = "This is a summary of my qualifications and experience."
+    expected_content = "\\cvsubsection{Summary}\n\nThis is a summary of my qualifications and experience."
+    content = cv_builder.create_summary_latex(summary_text)
+    assert content == expected_content
+
+
+def test_create_projects_latex():
+    cv_builder = LatexContentBuilder()
+
+    projects = [
+        GenericProject(
+            name="Project A",
+            description="This is project A",
+            effort_in_years=1,
+            competencies=["Python", "Django"]
+        ),
+        GenericProject(
+            name="Project B",
+            description="This is project B",
+            effort_in_years=0.5,
+            competencies=["JavaScript", "React"]
+        )
+    ]
+    expected_content = ('\\cvsection{Projects}\n'
+         '\\cvevent{Project A}{}{}{}\n'
+         '\\begin{itemize}\n'
+         '\\item This is project A\n'
+         '\\end{itemize}\n'
+         '\\divider\n'
+         '\\cvevent{Project B}{}{}{}\n'
+         '\\begin{itemize}\n'
+         '\\item This is project B\n'
+         '\\end{itemize}\n'
+         '\\divider\n')
+    content = cv_builder.convert_projects_to_latex(projects)
     assert content == expected_content

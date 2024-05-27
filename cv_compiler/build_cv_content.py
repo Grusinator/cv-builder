@@ -22,42 +22,50 @@ class CVContentBuilder:
         self._projects = []
 
     def build_all(self):
-        self.build_competency_matrix()
-        self.build_projects()
+        relevant_competencies = self.get_competencies_from_job_desciption_subset_of_job_positions()
+        self.build_competency_matrix(relevant_competencies)
+        self.build_projects(relevant_competencies)
         self.build_summary()
-
-        jobs = self.file_handler.get_job_positions()
-        competencies = self.generate_competencies_from_job_positions(jobs)
-        self.file_handler.write_competency_matrix_generated(competencies)
-        projects = self.get_projects()
-        self.file_handler.write_projects_generated_to_file(projects)
-        job_desc = self.file_handler.read_job_description()
-        exp_competencies = self.extract_competencies_from_job_description(job_desc, competencies)
-        print(exp_competencies)
+        self.build_job_positions()
 
     def get_projects(self):
         if len(self._projects) == 0:
             self._projects = self.github_fetcher.fetch_all()
         return self._projects
 
-    def build_competency_matrix(self):
-        jobs = self.file_handler.get_job_positions()
-        competencies = self.generate_competencies_from_job_positions(jobs)
+    def build_competency_matrix(self, competencies):
         self.file_handler.write_competency_matrix_generated(competencies)
 
-    def build_projects(self):
+    def get_competencies_from_job_desciption_subset_of_job_positions(self):
+        jobs = self.file_handler.get_job_positions()
+        competencies = self.generate_competencies_from_job_positions(jobs)
+        job_description = self.file_handler.read_job_description()
+        job_competencies = self.extract_competencies_from_job_description(job_description, competencies)
+        filtered_competencies = [comp for comp in competencies if comp.WorkingArea in job_competencies]
+        return filtered_competencies
+
+    def build_projects(self, competencies: List[Competency]):
         projects = self.get_projects()
-        # filter most relevant projects
-        self.file_handler.write_projects_generated_to_file(projects)
+        filtered_projects = self.filter_most_relevant_projects(projects, competencies)
+        self.file_handler.write_projects_generated_to_file(filtered_projects)
+
+    def filter_most_relevant_projects(self, projects, competencies):
+        known_languages = {comp.WorkingArea for comp in competencies}
+        filtered_projects = [
+            proj for proj in projects if
+            len(set(proj.languages).union(known_languages)) > 0
+        ]
+        projects = sorted(filtered_projects, key=lambda x: x.commits, reverse=True)[:2]
+        return projects
 
     def build_summary(self):
         job_desc = self.file_handler.read_job_description()
-        job_experiences = self.get_projects()
+        job_positions = self.file_handler.get_job_positions()
         question = f"""
         give me a summary of how i can contribute to this job description.
         \n\n {job_desc} \n\n
         given my competencies personal traits and experiences.
-        job experiences: {job_experiences}
+        job positions: {job_positions}
         """
         summary = self.chatgpt_interface.ask_question(question)
         self.file_handler.write_summary_to_file(summary)
@@ -89,6 +97,11 @@ class CVContentBuilder:
                 YearsOfExp=math.ceil(data['YearsOfExp'])
             ) for tech, data in competencies.items()
         ]
+
+    def build_job_positions(self):
+        job_positions = self.file_handler.get_job_positions()
+        job_positions = sorted(job_positions, key=lambda x: x.start_date, reverse=True)[:5]
+        self.file_handler.write_job_positions(job_positions)
 
 
 if __name__ == '__main__':

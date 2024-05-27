@@ -37,7 +37,22 @@ class GithubProject(BaseModel):
     name: str
     owner: str
     commits: int
-    number_of_weeks_with_commits: int
+    number_of_weeks_with_commits: Optional[int] = None
     last_commit: datetime
-    languages: List[str]
-    technologies: List[str]
+    languages: Optional[List[str]] = []
+    technologies: Optional[List[str]] = []
+
+    def map_to_generic_project(self) -> 'GenericProject':
+        return GenericProject(
+            name=self.name,
+            description='',
+            effort_in_years=self.number_of_weeks_with_commits / 52,
+            competencies=self.technologies + self.languages
+        )
+
+
+class GenericProject(BaseModel):
+    name: str
+    description: str
+    effort_in_years: float
+    competencies: List[str] = []

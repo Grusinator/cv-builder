@@ -1,9 +1,8 @@
-import re
 from datetime import datetime
 from typing import List
 
 from cv_compiler.file_handler import FileHandler
-from cv_compiler.models import JobPosition, Competency, GithubProject
+from cv_compiler.models import GenericProject, JobPosition, Competency
 
 CONTENT_SUMMARY_TEX = "cv_latex_content/summary.tex"
 SKILL_MATRIX_TEX = "cv_latex_content/skill_matrix.tex"
@@ -22,21 +21,24 @@ class LatexContentBuilder:
 
     def create_resume_summary_latex(self):
         summary_text = self.file_handler.read_summary_txt_file()
-        latex_content = "\\cvsubsection{Summary}\n\n" + summary_text
+        latex_content = self.create_summary_latex(summary_text)
         self.write_to_file(CONTENT_SUMMARY_TEX, latex_content)
 
+    def create_summary_latex(self, summary_text):
+        return "\\cvsubsection{Summary}\n\n" + summary_text
+
     def create_projects_latex(self):
-        projects = self.file_handler.read_generated_projects_from_csv()
-        latex_content = self.convert_projects_to_latex(projects)
+        github_projects = self.file_handler.read_generated_projects_from_csv()
+        generic_projects = [proj.map_to_generic_project() for proj in github_projects]
+        latex_content = self.convert_projects_to_latex(generic_projects)
         self.write_to_file('cv_latex_content/projects.tex', latex_content)
 
-    def convert_projects_to_latex(self, projects: List[GithubProject]) -> str:
+    def convert_projects_to_latex(self, projects: List[GenericProject]) -> str:
         latex_content = "\\cvsection{Projects}\n"
 
         for project in projects:
-            latex_content += "\\cvevent{" + project.name + "}{" + project.funding_agency + "}{" + \
-                             project.project_duration + "}{" + project.institution + "}\n\\begin{itemize}\n"
-            latex_content += "\\item " + project.details + "\n"
+            latex_content += "\\cvevent{" + project.name + "}{}{}{}\n\\begin{itemize}\n"
+            latex_content += "\\item " + project.description + "\n"
             latex_content += "\\end{itemize}\n\\divider\n"
 
         return latex_content

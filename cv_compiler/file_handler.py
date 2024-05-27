@@ -90,3 +90,7 @@ class FileHandler:
                 project = GithubProject.parse_obj(row)
                 projects.append(project)
         return projects
+
+    def write_job_positions(self, job_positions):
+        with open(GENERATED_JOB_POSITIONS, 'w') as f:
+            json.dump([job.dict() for job in job_positions], f)
