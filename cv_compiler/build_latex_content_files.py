@@ -5,14 +5,39 @@ from typing import List
 import pandas as pd
 from pandas import DataFrame
 
+from cv_compiler.file_handler import FileHandler
 from cv_compiler.models import JobPosition
 
+SKILL_MATRIX_TEX = "cv_latex_content/skill_matrix.tex"
 
-class BuildLatexContentFiles:
+default_output_file = 'cv_content/skill_matrix.tex'
 
-    def convert_competencies_matrix_csv_to_latex(self, csv_file, output_file):
-        table_data = self.read_skill_csv_file(csv_file)
-        self.write_skill_table_as_latex(output_file, table_data)
+class LatexContentBuilder:
+
+    def __init__(self):
+        self.file_handler = FileHandler()
+    def build_all(self):
+        self.create_competencies_matrix_latex()
+        self.create_job_experiences_latex()
+        self.create_projects_latex()
+        self.create_resume_summary_latex()
+
+
+    def create_resume_summary_latex(self):
+        pass
+
+    def create_projects_latex(self):
+        pass
+
+    def create_job_experiences_latex(self):
+        job_experiences = self.file_handler.get_job_positions()
+        self.convert_experiences_to_latex(job_experiences)
+
+
+    def create_competencies_matrix_latex(self):
+        table_data = self.file_handler.read_competencies_csv_file()
+        latex_content = self.create_skill_table_content(table_data)
+        self.file_handler.write_to_file(SKILL_MATRIX_TEX, latex_content)
 
     def create_skill_table_content(self, table_data: pd.DataFrame) -> str:
         content = "\\cvsection{Skill matrix}\n"
@@ -24,9 +49,7 @@ class BuildLatexContentFiles:
         content += "\\end{tabular}"
         return content
 
-    def write_to_file(self, output_file, content):
-        with open(output_file, 'w+') as file:
-            file.write(content)
+
 
     def write_skill_table_as_latex(self, output_file, table_data):
         content = self.create_skill_table_content(table_data)
@@ -49,9 +72,16 @@ class BuildLatexContentFiles:
 
         return latex_content
 
-    def read_skill_csv_file(self, csv_file) -> pd.DataFrame:
-        table_data = pd.read_csv(csv_file)
-        return table_data
+
+
+
+
+
+
+
+
+
+    #######
 
     def scrape_job_application_text(self, job_application_text_file, table_data):
         with open(job_application_text_file, 'r') as file:

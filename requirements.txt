@@ -2,3 +2,4 @@ python-linkedin
 pydantic
 openai
 python-dotenv
+pandas

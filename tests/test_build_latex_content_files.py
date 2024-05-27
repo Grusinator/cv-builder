@@ -1,12 +1,12 @@
 from datetime import datetime
 
 import pandas as pd
-from cv_compiler.build_latex_content_files import BuildLatexContentFiles
+from cv_compiler.build_latex_content_files import LatexContentBuilder
 from cv_compiler.models import JobPosition
 
 
 def test_create_skill_table_content():
-    cv_builder = BuildLatexContentFiles()
+    cv_builder = LatexContentBuilder()
     table_data = pd.DataFrame({
         'Working Area': ['Software Development', 'Databases'],
         'Level': ['Experienced', 'Highly experienced'],
@@ -26,7 +26,7 @@ def test_create_skill_table_content():
 
 
 def test_convert_experiences_to_latex():
-    cv_builder = BuildLatexContentFiles()
+    cv_builder = LatexContentBuilder()
     experiences = [
         JobPosition(
             title="Data Engineer",
