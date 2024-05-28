@@ -1,6 +1,6 @@
 import csv
 import json
-from typing import List
+from typing import List, Type
 
 from pydantic import BaseModel
 
@@ -14,7 +14,7 @@ COMPETENCY_MATRIX_CSV = 'data_background/competency_matrix_initial.csv'
 
 
 # data generated
-GENERATED_PROJECTS_CSV = 'data_generated/projects.csv'
+GENERATED_PROJECTS_JSON = 'data_generated/projects.json'
 GENERATED_COMPETENCY_MATRIX_CSV_FILE = 'data_generated/competencies.csv'
 GENERATED_SUMMARY_TXT_FILE = 'data_generated/summary.txt'
 GENERATED_JOB_POSITIONS = 'data_generated/job_positions.json'
@@ -23,13 +23,16 @@ GENERATED_JOB_POSITIONS = 'data_generated/job_positions.json'
 class FileHandler:
 
     def read_generated_competencies_from_csv(self) -> List[Competency]:
-        competencies = []
-        with open(GENERATED_COMPETENCY_MATRIX_CSV_FILE, 'r') as f:
+        return self._read_from_csv(GENERATED_COMPETENCY_MATRIX_CSV_FILE, Competency)
+    
+    def _read_from_csv(self, file_path: str, cls):
+        data = []
+        with open(file_path, 'r') as f:
             reader = csv.DictReader(f)
             for row in reader:
-                competency = Competency.parse_obj(row)
-                competencies.append(competency)
-        return competencies
+                obj = cls.model_validate(row)
+                data.append(obj)
+        return data
 
     def write_competency_matrix_generated(self, competencies: List[Competency]):
         with open(GENERATED_COMPETENCY_MATRIX_CSV_FILE, 'w', newline='') as f:
@@ -39,17 +42,15 @@ class FileHandler:
                 writer.writerow(competency.dict())
 
     def get_background_job_positions(self) -> List[JobPosition]:
-        # Load job positions from a JSON file manually
-        with open(BACKGROUND_JOB_POSITIONS_JSON, 'r') as f:
-            data = json.load(f)
-            return [JobPosition.parse_obj(item) for item in data]
+        return self._read_pydantic_objects_from_json(JobPosition, BACKGROUND_JOB_POSITIONS_JSON)
 
-    def write_projects_generated_to_csv_file(self, projects: List[GithubProject]):
-        with open(GENERATED_PROJECTS_CSV, 'w', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=projects[0].__fields__.keys())
-            writer.writeheader()
-            for project in projects:
-                writer.writerow(project.dict())
+    def _read_pydantic_objects_from_json(self, cls, file_name):
+        with open(file_name, 'r') as f:
+            data = json.load(f)
+            return [cls.parse_obj(item) for item in data]
+
+    def write_projects_generated_to_file(self, projects: List[GithubProject]):
+        self._write_pydantic_objects_to_json_file(projects, GENERATED_PROJECTS_JSON)
 
     def read_job_description(self):
         with open(DATA_JOB_DESCRIPTION_TXT, 'r') as f:
@@ -69,13 +70,7 @@ class FileHandler:
             return summary_text
 
     def read_generated_projects_from_csv(self):
-        projects = []
-        with open(GENERATED_PROJECTS_CSV, 'r') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                project = GithubProject.parse_obj(row)
-                projects.append(project)
-        return projects
+        return self._read_pydantic_objects_from_json(GithubProject, GENERATED_PROJECTS_JSON)
 
     def write_job_positions(self, job_positions: List[JobPosition]):
         self._write_pydantic_objects_to_json_file(job_positions, GENERATED_JOB_POSITIONS)

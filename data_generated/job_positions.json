@@ -1,0 +1,96 @@
+[
+  {
+    "title": "Data Engineer",
+    "company": "Energinet",
+    "start_date": "2022-12-01T00:00:00+00:00",
+    "end_date": "2023-10-01T00:00:00+00:00",
+    "location": "Copenhagen, Capital Region of Denmark, Denmark",
+    "description": "As a data engineer at Energinet, i was responsible for developing a data project collecting massive amounts of data from the energy island in denmark, from various providers. The main goal was to recieve, perform quality control, and deliver data to the developers wanting to bid on the project. In order to quality control and unpack these wide range of binary offshore sensor data files, we relied on spark and databricks to be able to scale, while at the same time allow for the flexibility of the various data formats. Just to name a few, GDB, DFSU, segy, xtf etc. Some of these datasets had to be unpacked for QC, analytics and visualization purposes, so in order to support geospatial data in spark i used sedona (geospark) to be able to store data in delta parquet format and to perform spatial partitioning on the dataset using geohashing, in order to improve read performance.",
+    "technologies": [
+      "python",
+      "spark",
+      "databricks",
+      "GDB",
+      "DFSU",
+      "segy",
+      "xtf",
+      "sedona",
+      "geospark",
+      "parquet",
+      "geohashing"
+    ]
+  },
+  {
+    "title": "Data Engineer",
+    "company": "\u00c3\u02dcrsted",
+    "start_date": "2020-03-01T00:00:00+00:00",
+    "end_date": "2022-11-01T00:00:00+00:00",
+    "location": "Copenhagen Area, Capital Region, Denmark",
+    "description": "As a data engineer I have been developing a data validation component as a part of our data pipelines, with configurable inputs for what to validate, developed in python, relying on pandas as data abstraction, integrated using Azure Service Bus. I have also been involved with the data modelling in order to provide easy to understand and consume data for various analytics tools. MS Sql Server, Rest api. In order to do iterate faster when implementing the right data model, we used python, sqlalchemy and Sqlite, to implement a mock db, mimicking the production environment, and to test the changes before implementing it, avoiding changes in api and data pipeline. I have also developed different data analytics and visualization tools in python using streamlit, Panel, Dash and bokeh, that helps engineers to make interpretations based on the data. At \u00c3\u02dcrsted i have been using the SAFE framework for project management, Devops has been relying on Azure devops, Docker and K8S.",
+    "technologies": [
+      "python",
+      "pandas",
+      "Azure Service Bus",
+      "MS SQL Server",
+      "REST API",
+      "sqlalchemy",
+      "SQLite",
+      "streamlit",
+      "Panel",
+      "Dash",
+      "bokeh",
+      "SAFE",
+      "Azure DevOps",
+      "Docker",
+      "Kubernetes"
+    ]
+  },
+  {
+    "title": "IT Consultant",
+    "company": "Netcompany",
+    "start_date": "2018-11-01T00:00:00+00:00",
+    "end_date": "2019-11-01T00:00:00+00:00",
+    "location": "K\u00c3\u00b8benhavnsomr\u00c3\u00a5det, Danmark",
+    "description": "At Netcompany i have been working at big projects building custom IT solutions with multiple integrations. The primary tools that i have been using as a backend developer was Oracle, Groovy, REST and a bit of Javascript. For project management and version control Jira and Git with SCRUM.",
+    "technologies": [
+      "Oracle",
+      "Groovy",
+      "REST",
+      "JavaScript",
+      "Jira",
+      "Git",
+      "SCRUM"
+    ]
+  },
+  {
+    "title": "Softwareudvikler",
+    "company": "NIRAS",
+    "start_date": "2016-09-01T00:00:00+00:00",
+    "end_date": "2018-03-01T00:00:00+00:00",
+    "location": "Aller\u00c3\u00b8d, Capital Region, Denmark",
+    "description": "At Niras i have been developing geodata algorithms for data transformation, including processing of lidar data, and images. I have among other developed an image classifier that can identify buildings in spectral orthophotos. I have also developed a model that can based on lidar and gis road data, identify the height profile of the roadsides, and identify the need and cost for cleaning the roadside. This was developed in C# using Postgres, postgis, with parallel processing capabilities. At Niras i have also been developing various plugins for QGIS, using Qt and Python.",
+    "technologies": [
+      "lidar",
+      "image processing",
+      "C#",
+      "PostgreSQL",
+      "PostGIS",
+      "QGIS",
+      "Qt",
+      "python"
+    ]
+  },
+  {
+    "title": "Engineer",
+    "company": "KK Wind Solutions",
+    "start_date": "2014-03-01T00:00:00+00:00",
+    "end_date": "2014-08-01T00:00:00+00:00",
+    "location": "Ikast",
+    "description": "At KK wind solutions I was hired for a project of a half year where I was investigating the effort of switching out a communication chip for the IO boards in the wind turbine control system. This was due to inducing flexibility in the product configuration. This project involved programming the chip in C, investigating communication protocols as Ethercat profinet etc.",
+    "technologies": [
+      "C",
+      "EtherCAT",
+      "PROFINET"
+    ]
+  }
+]

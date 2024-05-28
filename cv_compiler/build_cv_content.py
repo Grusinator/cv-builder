@@ -47,7 +47,7 @@ class CVContentBuilder:
     def build_projects(self, competencies: List[Competency]):
         projects = self.get_projects()
         filtered_projects = self.filter_most_relevant_projects(projects, competencies)
-        self.file_handler.write_projects_generated_to_csv_file(filtered_projects)
+        self.file_handler.write_projects_generated_to_file(filtered_projects)
 
     def filter_most_relevant_projects(self, projects, competencies):
         known_languages = {comp.WorkingArea for comp in competencies}

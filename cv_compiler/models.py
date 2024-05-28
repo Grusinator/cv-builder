@@ -15,7 +15,7 @@ class JobPosition(BaseModel):
 
     class Config:
         json_encoders = {
-            datetime: lambda dt: dt.isoformat()
+            datetime: lambda dt: dt.strftime('%Y-%m-%d')
         }
 
 
