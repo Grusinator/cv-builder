@@ -84,7 +84,7 @@ class LatexContentBuilder:
         \\cvsection{{Skill matrix}}
         \\begin{{tabular}}{{|c|c|c|c|}}
         \\hline
-        name & level & last used & years of experience \\\\
+        name & level & last used & years of exp. \\\\
         \\hline
         {joined_rows}
         \\end{{tabular}}

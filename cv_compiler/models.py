@@ -25,6 +25,7 @@ class Competency(BaseModel):
     category: Optional[str] = None
     last_used: int
     years_of_experience: int
+    attractiveness: Optional[int] = 0
 
     @property
     def level_description(self):

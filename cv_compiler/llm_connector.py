@@ -12,7 +12,7 @@ class ChatGPTInterface:
 
     def ask_question(self, question):
         response = self.client.chat.completions.create(
-            model="gpt-3.5-turbo-0125",
+            model="gpt-4-turbo",
             messages=[{"role": "user", "content": question}],
             max_tokens=500,
         )

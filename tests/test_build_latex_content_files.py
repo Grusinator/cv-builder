@@ -18,7 +18,7 @@ class TestLatexContentBuilder:
             \\cvsection{Skill matrix}
             \\begin{tabular}{|c|c|c|c|}
             \\hline
-            name & level & last used & years of experience \\\\
+            name & level & last used & years of exp. \\\\
             \\hline
             \\textbf{Software Development} & \\cvskill{}{3} & 2022 & 3 \\\\
             \\textbf{Databases} & \\cvskill{}{4} & 2021 & 4 \\\\

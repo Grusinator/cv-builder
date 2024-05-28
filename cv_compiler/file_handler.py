@@ -10,7 +10,7 @@ from cv_compiler.models import JobPosition, Competency, GithubProject
 
 DATA_JOB_DESCRIPTION_TXT = 'job_application_text.txt'
 BACKGROUND_JOB_POSITIONS_JSON = 'data_background/job_positions.json'
-COMPETENCY_MATRIX_CSV = 'data_background/competency_matrix_initial.csv'
+COMPETENCY_MATRIX_CSV = 'data_background/competency_matrix_background.csv'
 
 
 # data generated
@@ -78,3 +78,6 @@ class FileHandler:
     def _write_pydantic_objects_to_json_file(self, objects: List[BaseModel], file_path: str):
         with open(file_path, 'w+', encoding='utf-8') as f:
             json.dump([json.loads(obj.model_dump_json()) for obj in objects], f, indent=2)
+
+    def get_background_competency_matrix(self):
+        return self._read_from_csv(COMPETENCY_MATRIX_CSV, Competency)
