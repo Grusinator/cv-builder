@@ -1,1 +1,4 @@
-WorkingArea,Level,Category,LastUsed,YearsOfExp
+name,level,category,last_used,years_of_experience
+python,0,,2023,5
+spark,0,,2023,1
+C#,0,,2018,2

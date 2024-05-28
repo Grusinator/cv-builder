@@ -20,11 +20,11 @@ class JobPosition(BaseModel):
 
 
 class Competency(BaseModel):
-    WorkingArea: str  # Name?
-    Level: int
-    Category: Optional[str] = None
-    LastUsed: int
-    YearsOfExp: int
+    name: str  # Name?
+    level: int
+    category: Optional[str] = None
+    last_used: int
+    years_of_experience: int
 
     @property
     def level_description(self):
@@ -35,7 +35,7 @@ class Competency(BaseModel):
             4: 'Highly experienced',
             5: 'Expert'
         }
-        return level_mapping.get(self.Level, None)
+        return level_mapping.get(self.level, None)
 
 
 class GithubProject(BaseModel):

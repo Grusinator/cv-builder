@@ -12,6 +12,8 @@ from cv_compiler.models import JobPosition, Competency
 
 load_dotenv()
 
+from loguru import logger
+
 
 class CVContentBuilder:
 
@@ -22,7 +24,7 @@ class CVContentBuilder:
         self._projects = []
 
     def build_all(self):
-        relevant_competencies = self.get_competencies_from_job_desciption_subset_of_job_positions()
+        relevant_competencies = self.get_competencies_from_job_description_subset_of_job_positions()
         self.build_competency_matrix(relevant_competencies)
         self.build_projects(relevant_competencies)
         self.build_summary()
@@ -36,13 +38,27 @@ class CVContentBuilder:
     def build_competency_matrix(self, competencies):
         self.file_handler.write_competency_matrix_generated(competencies)
 
-    def get_competencies_from_job_desciption_subset_of_job_positions(self):
+    def get_competencies_from_job_description_subset_of_job_positions(self):
         jobs = self.file_handler.get_background_job_positions()
         competencies = self.generate_competencies_from_job_positions(jobs)
-        job_description = self.file_handler.read_job_description()
-        job_competencies = self.extract_competencies_from_job_description(job_description, competencies)
-        filtered_competencies = [comp for comp in competencies if comp.WorkingArea in job_competencies]
+        logger.debug(f"Competencies from job positions: {competencies}")
+        job_add_description = self.file_handler.read_job_description()
+        job_add_competencies = self.extract_competencies_from_job_description(job_add_description, competencies)
+        logger.debug(f"Job competencies: {job_add_competencies}")
+        filtered_competencies = self.filter_union_of_competencies(competencies, job_add_competencies)
+        logger.debug(f"Filtered competencies: {filtered_competencies}")
         return filtered_competencies
+
+    def filter_union_of_competencies(self, competencies: List[Competency], job_add_competencies: List[str]) -> List[
+        Competency]:
+        job_add_competencies_stripped = [self.strip_competency_name_for_comparison(comp) for comp in
+                                         job_add_competencies]
+        filtered_competencies = [comp for comp in competencies if
+                                 self.strip_competency_name_for_comparison(comp.name) in job_add_competencies_stripped]
+        return filtered_competencies
+
+    def strip_competency_name_for_comparison(self, competency_name: str) -> str:
+        return competency_name.lower().replace(" ", "").replace("-", "")
 
     def build_projects(self, competencies: List[Competency]):
         projects = self.get_projects()
@@ -50,7 +66,7 @@ class CVContentBuilder:
         self.file_handler.write_projects_generated_to_file(filtered_projects)
 
     def filter_most_relevant_projects(self, projects, competencies):
-        known_languages = {comp.WorkingArea for comp in competencies}
+        known_languages = {comp.name for comp in competencies}
         filtered_projects = [
             proj for proj in projects if
             len(set(proj.languages).union(known_languages)) > 0
@@ -74,27 +90,35 @@ class CVContentBuilder:
         str]:
         question = f"""What are the competencies required for the job: 
         \n\n {job_description} \n\n 
-        formatted as a json List[str], make it short and concise, if possible, select from this list: 
-        \n\n{",".join([comp.WorkingArea for comp in competencies])}\n\n"""
+        The competencies should be formatted as a single list of strings, such as ["python", "javascript"]
+        if any of the competencies mentioned are semantically the same as the competencies in the list below, then use
+        the values from the list below. 
+        \n\n{",".join([comp.name for comp in competencies])}\n\n"""
+
         response = self.chatgpt_interface.ask_question(question)
-        return json.loads(response)
+        competencies = json.loads(response)
+        if isinstance(competencies, list) and all(isinstance(comp, str) for comp in competencies):
+            return competencies
+        else:
+            logger.error(f"Invalid response: {response}")
+            return []
 
     def generate_competencies_from_job_positions(self, job_positions: List[JobPosition]) -> List[Competency]:
-        competencies = defaultdict(lambda: {'LastUsed': 0, 'YearsOfExp': 0})
+        competencies = defaultdict(lambda: {'last_used': 0, 'years_of_experience': 0})
 
         for job in job_positions:
             years_of_exp = (job.end_date - job.start_date).days / 365.25
 
             for tech in job.technologies:
-                competencies[tech]['LastUsed'] = max(job.end_date.year, competencies[tech]['LastUsed'])
-                competencies[tech]['YearsOfExp'] += years_of_exp
+                competencies[tech]['last_used'] = max(job.end_date.year, competencies[tech]['last_used'])
+                competencies[tech]['years_of_experience'] += years_of_exp
 
         return [
             Competency(
-                WorkingArea=tech,
-                Level=0,
-                LastUsed=data['LastUsed'],
-                YearsOfExp=math.ceil(data['YearsOfExp'])
+                name=tech,
+                level=0,
+                last_used=data['last_used'],
+                years_of_experience=math.ceil(data['years_of_experience'])
             ) for tech, data in competencies.items()
         ]
 

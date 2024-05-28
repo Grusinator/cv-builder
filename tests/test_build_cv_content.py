@@ -1,3 +1,4 @@
+import pytest
 from mock.mock import MagicMock
 
 from cv_compiler.build_cv_content import CVContentBuilder
@@ -25,9 +26,9 @@ class TestBuildCvContent:
                         technologies=["Python", "Machine Learning"]),
         ]
         expected_competencies = [
-            Competency(WorkingArea='Python', Level=0, LastUsed=2020, YearsOfExp=2),
-            Competency(WorkingArea='Problem Solving', Level=0, LastUsed=2019, YearsOfExp=1),
-            Competency(WorkingArea='Machine Learning', Level=0, LastUsed=2020, YearsOfExp=1)
+            Competency(name='Python', level=0, last_used=2020, years_of_experience=2),
+            Competency(name='Problem Solving', level=0, last_used=2019, years_of_experience=1),
+            Competency(name='Machine Learning', level=0, last_used=2020, years_of_experience=1)
         ]
         generated_competencies = cv_content_builder.generate_competencies_from_job_positions(job_positions)
         assert generated_competencies == expected_competencies
@@ -44,8 +45,8 @@ class TestBuildCvContent:
                           commits=8),
         ]
         competencies = [
-            Competency(WorkingArea='Python', Level=0, LastUsed=2020, YearsOfExp=2),
-            Competency(WorkingArea='JavaScript', Level=0, LastUsed=2020, YearsOfExp=1),
+            Competency(name='Python', level=0, last_used=2020, years_of_experience=2),
+            Competency(name='JavaScript', level=0, last_used=2020, years_of_experience=1),
         ]
         expected_projects = [
             GithubProject(name="Project 3", owner="me", last_commit="2022-11-02", languages=["Python", "HTML"],
@@ -55,6 +56,23 @@ class TestBuildCvContent:
         ]
         filtered_projects = cv_content_builder.filter_most_relevant_projects(projects, competencies)
         assert filtered_projects == expected_projects
+
+    @pytest.mark.parametrize("competency_names, expected_matched_competencies", [
+        (['Python'], ['Python']),
+        (['python'], ['Python']),
+        (["Delta-lake"], ["Delta Lake"]),
+        (['Java', 'C++', 'HTML', 'CSS'], []),
+        (['Python', 'JavaScript'], ['Python', 'JavaScript']),
+    ])
+    def test_filter_union_of_competencies(self, competency_names, expected_matched_competencies):
+        cv_content_builder = CVContentBuilder()
+
+        competencies = [
+            Competency(name='Python', level=0, last_used=2020, years_of_experience=2),
+            Competency(name='JavaScript', level=0, last_used=2020, years_of_experience=1),
+        ]
+        union_of_competencies = cv_content_builder.filter_union_of_competencies(competencies, competency_names)
+        assert {comp.name for comp in union_of_competencies} == set(expected_matched_competencies)
 
     def test_build_all_mocked(self):
         cv_content_builder = CVContentBuilder()
