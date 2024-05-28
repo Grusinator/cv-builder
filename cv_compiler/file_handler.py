@@ -1,12 +1,10 @@
 import csv
 import json
-from datetime import datetime
 from typing import List
 
-import pandas as pd
+from pydantic import BaseModel
 
 from cv_compiler.models import JobPosition, Competency, GithubProject
-
 
 # data background
 
@@ -24,10 +22,6 @@ GENERATED_JOB_POSITIONS = 'data_generated/job_positions.json'
 
 class FileHandler:
 
-    def read_generated_competencies_csv_file(self) -> pd.DataFrame:
-        table_data = pd.read_csv(GENERATED_COMPETENCY_MATRIX_CSV_FILE)
-        return table_data
-
     def read_generated_competencies_from_csv(self) -> List[Competency]:
         competencies = []
         with open(GENERATED_COMPETENCY_MATRIX_CSV_FILE, 'r') as f:
@@ -44,21 +38,13 @@ class FileHandler:
             for competency in competencies:
                 writer.writerow(competency.dict())
 
-    def get_job_positions(self) -> List[JobPosition]:
+    def get_background_job_positions(self) -> List[JobPosition]:
         # Load job positions from a JSON file manually
         with open(BACKGROUND_JOB_POSITIONS_JSON, 'r') as f:
             data = json.load(f)
+            return [JobPosition.parse_obj(item) for item in data]
 
-            # Parse the data into Pydantic models
-            job_positions = []
-            for item in data:
-                if item['end_date'] == 'Present':
-                    item['end_date'] = datetime.now().isoformat()
-                job_positions.append(JobPosition.parse_obj(item))
-
-            return job_positions
-
-    def write_projects_generated_to_file(self, projects: List[GithubProject]):
+    def write_projects_generated_to_csv_file(self, projects: List[GithubProject]):
         with open(GENERATED_PROJECTS_CSV, 'w', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=projects[0].__fields__.keys())
             writer.writeheader()
@@ -70,12 +56,12 @@ class FileHandler:
             job_description = f.read()
             return job_description
 
-    def _write_to_file(self, output_file, content):
+    def _write_to_txt_file(self, output_file, content):
         with open(output_file, 'w+') as file:
             file.write(content)
 
     def write_summary_to_file(self, summary):
-        self._write_to_file(GENERATED_SUMMARY_TXT_FILE, summary)
+        self._write_to_txt_file(GENERATED_SUMMARY_TXT_FILE, summary)
 
     def read_summary_txt_file(self):
         with open(GENERATED_SUMMARY_TXT_FILE, 'r') as file:
@@ -91,6 +77,9 @@ class FileHandler:
                 projects.append(project)
         return projects
 
-    def write_job_positions(self, job_positions):
-        with open(GENERATED_JOB_POSITIONS, 'w') as f:
-            json.dump([job.dict() for job in job_positions], f)
+    def write_job_positions(self, job_positions: List[JobPosition]):
+        self._write_pydantic_objects_to_json_file(job_positions, GENERATED_JOB_POSITIONS)
+
+    def _write_pydantic_objects_to_json_file(self, objects: List[BaseModel], file_path: str):
+        with open(file_path, 'w') as f:
+            json.dump([json.loads(obj.model_dump_json()) for obj in objects], f, indent=2)

@@ -8,3 +8,4 @@
 job_application_text.txt
 
 *.env
+venv/

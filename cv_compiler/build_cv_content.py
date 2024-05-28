@@ -37,7 +37,7 @@ class CVContentBuilder:
         self.file_handler.write_competency_matrix_generated(competencies)
 
     def get_competencies_from_job_desciption_subset_of_job_positions(self):
-        jobs = self.file_handler.get_job_positions()
+        jobs = self.file_handler.get_background_job_positions()
         competencies = self.generate_competencies_from_job_positions(jobs)
         job_description = self.file_handler.read_job_description()
         job_competencies = self.extract_competencies_from_job_description(job_description, competencies)
@@ -47,7 +47,7 @@ class CVContentBuilder:
     def build_projects(self, competencies: List[Competency]):
         projects = self.get_projects()
         filtered_projects = self.filter_most_relevant_projects(projects, competencies)
-        self.file_handler.write_projects_generated_to_file(filtered_projects)
+        self.file_handler.write_projects_generated_to_csv_file(filtered_projects)
 
     def filter_most_relevant_projects(self, projects, competencies):
         known_languages = {comp.WorkingArea for comp in competencies}
@@ -60,7 +60,7 @@ class CVContentBuilder:
 
     def build_summary(self):
         job_desc = self.file_handler.read_job_description()
-        job_positions = self.file_handler.get_job_positions()
+        job_positions = self.file_handler.get_background_job_positions()
         question = f"""
         give me a summary of how i can contribute to this job description.
         \n\n {job_desc} \n\n
@@ -99,7 +99,7 @@ class CVContentBuilder:
         ]
 
     def build_job_positions(self):
-        job_positions = self.file_handler.get_job_positions()
+        job_positions = self.file_handler.get_background_job_positions()
         job_positions = sorted(job_positions, key=lambda x: x.start_date, reverse=True)[:5]
         self.file_handler.write_job_positions(job_positions)
 

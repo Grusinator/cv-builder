@@ -13,6 +13,11 @@ class JobPosition(BaseModel):
     description: Optional[str] = None
     technologies: List[str] = []
 
+    class Config:
+        json_encoders = {
+            datetime: lambda dt: dt.isoformat()
+        }
+
 
 class Competency(BaseModel):
     WorkingArea: str  # Name?
