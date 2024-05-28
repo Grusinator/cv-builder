@@ -16,7 +16,7 @@ def build_latex(ctx):
 
 @invoke.task(build_content, build_latex)
 def build(ctx):
-    ctx.run("pdflatex main.tex")
+    ctx.run("pdflatex -interaction=nonstopmode main.tex")
 
 
 @invoke.task

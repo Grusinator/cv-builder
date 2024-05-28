@@ -4,9 +4,12 @@ from typing import List
 from cv_compiler.file_handler import FileHandler
 from cv_compiler.models import GenericProject, JobPosition, Competency
 
+CONTENT_PROJECTS_TEX = 'cv_latex_content/projects.tex'
 CONTENT_EXPERIENCE_TEX = 'cv_latex_content/experience.tex'
 CONTENT_SUMMARY_TEX = "cv_latex_content/summary.tex"
 CONTENT_SKILL_MATRIX_TEX = "cv_latex_content/skill_matrix.tex"
+
+from loguru import logger
 
 
 class LatexContentBuilder:
@@ -19,6 +22,11 @@ class LatexContentBuilder:
         self.create_job_experiences_latex()
         self.create_projects_latex()
         self.create_resume_summary_latex()
+        logger.debug("Latex content files created successfully")
+
+    def write_to_file(self, output_file, content):
+        with open(output_file, 'w+', encoding='utf-8') as file:
+            file.write(content)
 
     def create_resume_summary_latex(self):
         summary_text = self.file_handler.read_summary_txt_file()
@@ -26,32 +34,42 @@ class LatexContentBuilder:
         self.write_to_file(CONTENT_SUMMARY_TEX, latex_content)
 
     def create_summary_latex(self, summary_text):
-        return "\\cvsubsection{Summary}\n\n" + summary_text
+        sumary = f"""
+        \\cvsubsection{{Summary}}\n
+        {self.convert_special_chars(self.wrap_lines_dot(summary_text))}
+        """
+        return textwrap.dedent(sumary).lstrip()
+
+    def wrap_lines_dot(self, text):
+        # for readability, add a newline after each dot, so lines are shorter
+        return text.replace(".", ".\n" + " " * 8)
 
     def create_projects_latex(self):
         github_projects = self.file_handler.read_generated_projects_from_csv()
         generic_projects = [proj.map_to_generic_project() for proj in github_projects]
         latex_content = self.convert_projects_to_latex(generic_projects)
-        self.write_to_file('cv_latex_content/projects.tex', latex_content)
+        self.write_to_file(CONTENT_PROJECTS_TEX, latex_content)
 
     def convert_projects_to_latex(self, projects: List[GenericProject]) -> str:
         latex_content = "\\cvsection{Projects}\n"
+        projects_latex = [self.create_project_latex(project) for project in projects]
+        return latex_content + "\\divider\n".join(projects_latex)
 
-        for project in projects:
-            latex_content += "\\cvevent{" + project.name + "}{}{}{}\n\\begin{itemize}\n"
-            latex_content += "\\item " + project.description + "\n"
-            latex_content += "\\end{itemize}\n\\divider\n"
-
-        return latex_content
+    def create_project_latex(self, project: GenericProject) -> str:
+        project = textwrap.dedent(
+            f"""
+            \\cvevent{{{project.name}}}{{}}{{}}{{}}
+            \\begin{{itemize}}
+            \\item {self.convert_special_chars(self.wrap_lines_dot(project.description))}
+            \\end{{itemize}}
+            """
+        ).lstrip()
+        return project
 
     def create_job_experiences_latex(self):
         job_experiences = self.file_handler.get_background_job_positions()
         job_positions_latex = self.convert_experiences_to_latex(job_experiences)
         self.write_to_file(CONTENT_EXPERIENCE_TEX, job_positions_latex)
-
-    def write_to_file(self, output_file, content):
-        with open(output_file, 'w+') as file:
-            file.write(content)
 
     def create_competencies_matrix_latex(self):
         competencies = self.file_handler.read_generated_competencies_from_csv()
@@ -64,7 +82,9 @@ class LatexContentBuilder:
 
         table_structure = f"""
         \\cvsection{{Skill matrix}}
-        \\begin{{tabular}}{{|c|c|}}
+        \\begin{{tabular}}{{|c|c|c|c|}}
+        \\hline
+        name & level & last used & years of experience \\\\
         \\hline
         {joined_rows}
         \\end{{tabular}}
@@ -72,8 +92,13 @@ class LatexContentBuilder:
         return textwrap.dedent(table_structure).lstrip()
 
     def create_latex_competency_matrix_row(self, competency: Competency):
-        row = [competency.name, competency.level_description, competency.last_used, competency.years_of_experience]
-        content = " & ".join(self.convert_special_chars(str(value)) for value in row) + " \\\\"
+        row = [
+            f"\\textbf{{{self.convert_special_chars(competency.name)}}}",
+            f"\\cvskill{{}}{{{competency.level}}}",
+            competency.last_used,
+            competency.years_of_experience
+        ]
+        content = " & ".join(str(cell) for cell in row) + " \\\\"
         return content
 
     def write_skill_table_as_latex(self, output_file, table_data):
@@ -91,12 +116,10 @@ class LatexContentBuilder:
         end_date = job.end_date.strftime('%B %Y')
         competency_tags = " ".join([f"\\cvtag{{{tech}}}" for tech in job.technologies])
         text = f"""
-            \\cvevent{{{job.title}}}{{{job.company}}}{{{start_date} -- {end_date}}}{{{job.location}}}
-            \\begin{{itemize}}
-            {job.description}
-            \\end{{itemize}}
-            {competency_tags}
-            \\divider
+        \\cvevent{{{job.title}}}{{{job.company}}}{{{start_date} -- {end_date}}}{{{job.location}}}
+        {self.convert_special_chars(self.wrap_lines_dot(job.description))}
+        {competency_tags}
+        \\divider
         """
         return textwrap.dedent(text)
 

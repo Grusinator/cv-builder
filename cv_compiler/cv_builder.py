@@ -14,7 +14,7 @@ class CVCompiler:
         self.build_latex_cv()
 
     def build_latex_cv(self):
-        # run pdflatex main.tex
+        # run pdflatex -interaction=nonstopmode main.tex
         pass
 
 

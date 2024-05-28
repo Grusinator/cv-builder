@@ -24,11 +24,11 @@ class CVContentBuilder:
         self._projects = []
 
     def build_all(self):
+        self.build_job_positions()
         relevant_competencies = self.get_competencies_from_job_description_subset_of_job_positions()
         self.build_competency_matrix(relevant_competencies)
         self.build_projects(relevant_competencies)
         self.build_summary()
-        self.build_job_positions()
 
     def get_projects(self):
         if len(self._projects) == 0:

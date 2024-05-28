@@ -16,10 +16,12 @@ class TestLatexContentBuilder:
         expected_content = textwrap.dedent(
             """
             \\cvsection{Skill matrix}
-            \\begin{tabular}{|c|c|}
+            \\begin{tabular}{|c|c|c|c|}
             \\hline
-            Software Development & Experienced & 2022 & 3 \\\\
-            Databases & Highly experienced & 2021 & 4 \\\\
+            name & level & last used & years of experience \\\\
+            \\hline
+            \\textbf{Software Development} & \\cvskill{}{3} & 2022 & 3 \\\\
+            \\textbf{Databases} & \\cvskill{}{4} & 2021 & 4 \\\\
             \\end{tabular}
             """
         ).lstrip()
@@ -52,16 +54,14 @@ class TestLatexContentBuilder:
             """            
             \\cvsection{Experience}
             \\cvevent{Data Engineer}{Energinet}{December 2022 -- October 2023}{Copenhagen}
-            \\begin{itemize}
             Developed a data project in Denmark.
-            \\end{itemize}
+            
             \\cvtag{Spark} \\cvtag{Databricks}
             \\divider
 
             \\cvevent{Data Engineer}{Ørsted}{March 2020 -- November 2022}{Copenhagen}
-            \\begin{itemize}
             Developed a data validation component.
-            \\end{itemize}
+            
             \\cvtag{Python} \\cvtag{Pandas}
             \\divider
             """
@@ -72,7 +72,7 @@ class TestLatexContentBuilder:
     def test_create_resume_summary_latex(self):
         cv_builder = LatexContentBuilder()
         summary_text = "This is a summary of my qualifications and experience."
-        expected_content = "\\cvsubsection{Summary}\n\nThis is a summary of my qualifications and experience."
+        expected_content = "\\cvsubsection{Summary}\n\nThis is a summary of my qualifications and experience.\n\n"
         content = cv_builder.create_summary_latex(summary_text)
         assert content == expected_content
 
@@ -105,7 +105,6 @@ class TestLatexContentBuilder:
             \\begin{itemize}
             \\item This is project B
             \\end{itemize}
-            \\divider
             """
         ).lstrip()
 

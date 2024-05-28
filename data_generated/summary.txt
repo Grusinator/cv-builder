@@ -1,5 +1,1 @@
-Based on your competencies, personal traits, and experiences, you are well-equipped to contribute to the job description outlined by SimCorp. Your experience as a Data Engineer at Energinet and Ørsted has provided you with the necessary skills in T-SQL, Python, Spark, and familiarity with cloud data services such as Azure. Your background in developing data pipelines, data validation components, and data analytics tools aligns well with the responsibilities outlined for this position.
-
-Your experience in developing geodata algorithms and working with lidar data at NIRAS also demonstrates your ability to work with complex data sets and develop innovative solutions. Your problem-solving skills, proactiveness, and ability to collaborate with team members make you an ideal candidate for contributing to the data platform at SimCorp.
-
-Overall, your technical skills, experience with modern data platforms, and collaborative mindset make you well-suited to make a valuable contribution to the evolving DEP data platform and ensuring scalability for future customer needs at SimCorp.
+["Python", "JavaScript"]
