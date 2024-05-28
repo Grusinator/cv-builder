@@ -93,17 +93,22 @@ class TestLatexContentBuilder:
                 competencies=["JavaScript", "React"]
             )
         ]
-        expected_content = ('\\cvsection{Projects}\n'
-                            '\\cvevent{Project A}{}{}{}\n'
-                            '\\begin{itemize}\n'
-                            '\\item This is project A\n'
-                            '\\end{itemize}\n'
-                            '\\divider\n'
-                            '\\cvevent{Project B}{}{}{}\n'
-                            '\\begin{itemize}\n'
-                            '\\item This is project B\n'
-                            '\\end{itemize}\n'
-                            '\\divider\n')
+        expected_content = textwrap.dedent(
+            """
+            \\cvsection{Projects}
+            \\cvevent{Project A}{}{}{}
+            \\begin{itemize}
+            \\item This is project A
+            \\end{itemize}
+            \\divider
+            \\cvevent{Project B}{}{}{}
+            \\begin{itemize}
+            \\item This is project B
+            \\end{itemize}
+            \\divider
+            """
+        ).lstrip()
+
         content = cv_builder.convert_projects_to_latex(projects)
         assert content == expected_content
 
