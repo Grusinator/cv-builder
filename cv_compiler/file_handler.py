@@ -81,3 +81,6 @@ class FileHandler:
 
     def get_background_competency_matrix(self):
         return self._read_from_csv(COMPETENCY_MATRIX_CSV, Competency)
+
+    def write_job_application(self, job_application_text):
+        self._write_to_txt_file(DATA_JOB_DESCRIPTION_TXT, job_application_text)

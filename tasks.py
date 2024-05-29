@@ -42,5 +42,10 @@ def open_pdf(ctx):
     webbrowser.open_new_tab(pdf_path)
 
 
+@invoke.task
+def run_ui(ctx):
+    ctx.run("python ui/ui.py")
+
+
 if __name__ == '__main__':
     pass

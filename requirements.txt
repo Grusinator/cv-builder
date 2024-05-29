@@ -5,5 +5,9 @@ python-dotenv
 pandas
 loguru
 
+dash
+dash-core-components
+dash-html-components
+
 pytest
 pytest-dotenv

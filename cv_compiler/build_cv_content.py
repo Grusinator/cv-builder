@@ -15,8 +15,8 @@ from loguru import logger
 
 class CVContentBuilder:
 
-    def __init__(self):
-        self.file_handler = FileHandler()
+    def __init__(self, file_handler=FileHandler()):
+        self.file_handler = file_handler
         self.github_fetcher = GitHubProjectFetcher()
         self.chatgpt_interface = ChatGPTInterface()
         self.matrix_calc = CompetencyMatrixCalculator(self.chatgpt_interface)

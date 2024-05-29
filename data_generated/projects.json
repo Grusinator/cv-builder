@@ -3,8 +3,15 @@
     "name": "development-workforce",
     "owner": "Grusinator",
     "commits": 21,
+    "description": "experimentation on how to integrate ai agents into existing software development setup. ",
     "number_of_weeks_with_commits": 3,
-    "last_commit": "2024-02-15T19:51:13",
+    "last_commit": "2024-05-29T17:19:47",
+    "topics": [
+      "ai",
+      "azuredevops",
+      "llm",
+      "python"
+    ],
     "languages": [
       "Python"
     ],
@@ -14,8 +21,10 @@
     "name": "ai-test-project",
     "owner": "Grusinator",
     "commits": 14,
+    "description": null,
     "number_of_weeks_with_commits": 1,
     "last_commit": "2024-03-11T07:23:10",
+    "topics": [],
     "languages": [
       "Python"
     ],

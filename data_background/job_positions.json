@@ -1,10 +1,28 @@
 [
   {
     "title": "Data Engineer",
+    "company": "Clever",
+    "start_date": "2024-04-01",
+    "end_date": "2024-05-01",
+    "location": "Copenhagen, Denmark",
+    "description": "Even though it turned out to be a cultural mismatch, i decided to include it in my CV, because i think it has still contributed to my understanding, especially in terms of understanding databricks technologies like unity catalog, and how it can play together with devops tools like terraform, how to test and develop.",
+    "technologies": [
+      "python",
+      "pyspark",
+      "databricks",
+      "terraform",
+      "unity catalog",
+      "devops",
+      "azure devops",
+      "SCRUM"
+    ]
+  },
+  {
+    "title": "Data Engineer",
     "company": "Energinet",
     "start_date": "2022-12-01",
     "end_date": "2023-10-01",
-    "location": "Copenhagen, Denmark",
+    "location": "Fredericia, Denmark",
     "description": "As a data engineer at Energinet, i was responsible for developing a data project collecting massive amounts of data from the energy island in denmark, from various providers. The main goal was to recieve, perform quality control, and deliver data to the developers wanting to bid on the project. In order to quality control and unpack these wide range of binary offshore sensor data files, we relied on spark and databricks to be able to scale, while at the same time allow for the flexibility of the various data formats. Just to name a few, GDB, DFSU, segy, xtf etc. Some of these datasets had to be unpacked for QC, analytics and visualization purposes, so in order to support geospatial data in spark i used sedona (geospark) to be able to store data in delta parquet format and to perform spatial partitioning on the dataset using geohashing, in order to improve read performance.",
     "technologies": [
       "python",
@@ -17,7 +35,10 @@
       "sedona",
       "geospark",
       "parquet",
-      "geohashing"
+      "geohashing",
+      "deltalake",
+      "azure devops",
+      "SCRUM"
     ]
   },
   {

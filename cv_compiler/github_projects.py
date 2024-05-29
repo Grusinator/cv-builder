@@ -3,7 +3,9 @@ from datetime import datetime
 
 import requests
 from typing import Dict, List
+from dotenv import load_dotenv
 
+from cv_compiler.cache import cache
 from cv_compiler.models import GithubProject
 
 
@@ -32,17 +34,29 @@ class GitHubProjectFetcher:
         response.raise_for_status()
         return response.json()
 
+    def fetch_topics(self, owner: str, repo: str) -> List[str]:
+        url = f'https://api.github.com/repos/{owner}/{repo}/topics'
+        self.headers['Accept'] = 'application/vnd.github.mercy-preview+json'
+        response = requests.get(url, headers=self.headers)
+        response.raise_for_status()
+        return list(response.json()["names"])
+
     def fetch_all(self) -> List[GithubProject]:
         repos = self.fetch_all_repos()
         projects = []
         for repo in repos:
-            commit_activity = self.fetch_commit_activity(repo['owner']['login'], repo['name'])
-            languages = self.fetch_languages(repo['owner']['login'], repo['name'])
+            owner = repo['owner']['login']
+            repo_name = repo['name']
+            topics = self.fetch_topics(owner, repo_name)
+            commit_activity = self.fetch_commit_activity(owner, repo_name)
+            languages = self.fetch_languages(owner, repo_name)
             project = GithubProject(
-                name=repo['name'],
-                owner=repo['owner']['login'],
+                name=repo_name,
+                owner=owner,
                 commits=sum(commit_activity['all']),
+                description=repo['description'],
                 number_of_weeks_with_commits=len([week for week in commit_activity['all'] if week > 0]),
+                topics=topics,
                 last_commit=datetime.strptime(repo['updated_at'], '%Y-%m-%dT%H:%M:%SZ'),
                 languages=list(languages.keys()),  # Update this line
                 technologies=[]  # Fill this with actual data
@@ -52,5 +66,6 @@ class GitHubProjectFetcher:
 
 
 if __name__ == "__main__":
+    load_dotenv()
     fetcher = GitHubProjectFetcher()
     fetcher.fetch_all()

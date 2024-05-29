@@ -1,0 +1,36 @@
+# Ignore Git files
+.git
+.gitignore
+
+# Ignore Python cache files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore virtual environments
+venv
+env
+.venv
+
+# Ignore editor and IDE files
+.vscode
+.idea
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+# Ignore compiled files
+*.o
+*.so
+*.exe
+
+# Ignore macOS files
+.DS_Store
+
+# Ignore Windows files
+Thumbs.db
+
+# Ignore any additional files or directories specific to your project
+.env

@@ -5,7 +5,9 @@ services:
     container_name: cv_builder
     build:
       context: ../..
-      dockerfile: cv_builder.Dockerfile
+      dockerfile: devops/docker/cv_builder.Dockerfile
     env_file:
       - ../../.env
-    command: /bin/bash
+    command: python3 -m ui.ui
+    ports:
+      - 8050:8050

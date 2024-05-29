@@ -43,17 +43,19 @@ class GithubProject(BaseModel):
     name: str
     owner: str
     commits: int
+    description: Optional[str] = None
     number_of_weeks_with_commits: Optional[int] = None
     last_commit: datetime
+    topics: Optional[List[str]] = []
     languages: Optional[List[str]] = []
     technologies: Optional[List[str]] = []
 
     def map_to_generic_project(self) -> 'GenericProject':
         return GenericProject(
             name=self.name,
-            description='',
+            description=self.description if self.description else '',
             effort_in_years=self.number_of_weeks_with_commits / 52,
-            competencies=self.technologies + self.languages
+            competencies=set(self.technologies + self.languages + self.topics)
         )
 
 

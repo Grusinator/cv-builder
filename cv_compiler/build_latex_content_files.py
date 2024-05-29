@@ -14,8 +14,8 @@ from loguru import logger
 
 class LatexContentBuilder:
 
-    def __init__(self):
-        self.file_handler = FileHandler()
+    def __init__(self, file_handler=FileHandler()):
+        self.file_handler = file_handler
 
     def build_all(self):
         self.create_competencies_matrix_latex()
@@ -53,15 +53,15 @@ class LatexContentBuilder:
     def convert_projects_to_latex(self, projects: List[GenericProject]) -> str:
         latex_content = "\\cvsection{Projects}\n"
         projects_latex = [self.create_project_latex(project) for project in projects]
-        return latex_content + "\\divider\n".join(projects_latex)
+        return latex_content + "\\divider\n\n".join(projects_latex)
 
     def create_project_latex(self, project: GenericProject) -> str:
+        competency_tags = self.create_list_of_competency_tags(project.competencies)
         project = textwrap.dedent(
             f"""
             \\cvevent{{{project.name}}}{{}}{{}}{{}}
-            \\begin{{itemize}}
-            \\item {self.convert_special_chars(self.wrap_lines_dot(project.description))}
-            \\end{{itemize}}
+            {self.convert_special_chars(self.wrap_lines_dot(project.description))}
+            {competency_tags}
             """
         ).lstrip()
         return project
@@ -114,7 +114,8 @@ class LatexContentBuilder:
     def create_job_position_section(self, job: JobPosition):
         start_date = job.start_date.strftime('%B %Y')
         end_date = job.end_date.strftime('%B %Y')
-        competency_tags = " ".join([f"\\cvtag{{{tech}}}" for tech in job.technologies])
+        technologies = job.technologies
+        competency_tags = self.create_list_of_competency_tags(technologies)
         text = f"""
         \\cvevent{{{job.title}}}{{{job.company}}}{{{start_date} -- {end_date}}}{{{job.location}}}
         {self.convert_special_chars(self.wrap_lines_dot(job.description))}
@@ -122,6 +123,9 @@ class LatexContentBuilder:
         \\divider
         """
         return textwrap.dedent(text)
+
+    def create_list_of_competency_tags(self, competency_names: List[str]):
+        return " ".join([f"\\cvtag{{{tech}}}" for tech in competency_names])
 
     def convert_special_chars(self, string):
         return (
