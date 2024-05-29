@@ -4,7 +4,7 @@ from typing import List, Type
 
 from pydantic import BaseModel
 
-from cv_compiler.models import JobPosition, Competency, GithubProject
+from cv_compiler.models import JobPosition, Competency, GithubProject, JobApplication
 
 # data background
 
@@ -52,10 +52,10 @@ class FileHandler:
     def write_projects_generated_to_file(self, projects: List[GithubProject]):
         self._write_pydantic_objects_to_json_file(projects, GENERATED_PROJECTS_JSON)
 
-    def read_job_description(self):
+    def read_job_application(self) -> JobApplication:
         with open(DATA_JOB_DESCRIPTION_TXT, 'r', encoding='utf-8') as f:
             job_description = f.read()
-            return job_description
+            return JobApplication(company_name="", job_description=job_description)
 
     def _write_to_txt_file(self, output_file, content):
         with open(output_file, 'w+', encoding='utf-8') as file:
@@ -69,7 +69,7 @@ class FileHandler:
             summary_text = file.read()
             return summary_text
 
-    def read_generated_projects_from_csv(self):
+    def read_generated_projects_from_json(self):
         return self._read_pydantic_objects_from_json(GithubProject, GENERATED_PROJECTS_JSON)
 
     def write_job_positions(self, job_positions: List[JobPosition]):

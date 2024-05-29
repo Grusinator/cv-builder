@@ -24,7 +24,7 @@ class Competency(BaseModel):
     level: int
     category: Optional[str] = None
     last_used: int
-    years_of_experience: int
+    years_of_experience: float
     attractiveness: Optional[int] = 0
 
     @property
@@ -62,3 +62,12 @@ class GenericProject(BaseModel):
     description: str
     effort_in_years: float
     competencies: List[str] = []
+
+
+class BuildConfiguration(BaseModel):
+    pass
+
+
+class JobApplication(BaseModel):
+    company_name: str
+    job_description: str

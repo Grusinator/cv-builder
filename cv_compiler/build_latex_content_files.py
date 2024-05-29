@@ -45,7 +45,7 @@ class LatexContentBuilder:
         return text.replace(".", ".\n" + " " * 8)
 
     def create_projects_latex(self):
-        github_projects = self.file_handler.read_generated_projects_from_csv()
+        github_projects = self.file_handler.read_generated_projects_from_json()
         generic_projects = [proj.map_to_generic_project() for proj in github_projects]
         latex_content = self.convert_projects_to_latex(generic_projects)
         self.write_to_file(CONTENT_PROJECTS_TEX, latex_content)
@@ -95,8 +95,8 @@ class LatexContentBuilder:
         row = [
             f"\\textbf{{{self.convert_special_chars(competency.name)}}}",
             f"\\cvskill{{}}{{{competency.level}}}",
-            competency.last_used,
-            competency.years_of_experience
+            int(competency.last_used),
+            int(competency.years_of_experience)
         ]
         content = " & ".join(str(cell) for cell in row) + " \\\\"
         return content

@@ -52,6 +52,5 @@ class GitHubProjectFetcher:
 
 
 if __name__ == "__main__":
-    token = os.getenv('GITHUB_TOKEN')
-    fetcher = GitHubProjectFetcher(token)
+    fetcher = GitHubProjectFetcher()
     fetcher.fetch_all()
