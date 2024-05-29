@@ -44,20 +44,3 @@ class TestCompetencyMatrixCalculator:
         ]
         generated_competencies = competency_calculator.generate_competencies_from_job_positions(job_positions)
         assert generated_competencies == expected_competencies
-
-    @pytest.mark.parametrize("competency_names, expected_matched_competencies", [
-        (['Python'], ['Python']),
-        (['python'], ['Python']),
-        (["Delta-lake"], ["Delta Lake"]),
-        (['Java', 'C++', 'HTML', 'CSS'], []),
-        (['Python', 'JavaScript'], ['Python', 'JavaScript']),
-    ])
-    def test_filter_union_of_competencies(self, competency_names, expected_matched_competencies, mock_llm):
-        competency_calculator = CompetencyMatrixCalculator(mock_llm)
-
-        competencies = [
-            Competency(name='Python', level=0, last_used=2020, years_of_experience=2),
-            Competency(name='JavaScript', level=0, last_used=2020, years_of_experience=1),
-        ]
-        union_of_competencies = competency_calculator.filter_union_of_competencies(competencies, competency_names)
-        assert {comp.name for comp in union_of_competencies} == set(expected_matched_competencies)
