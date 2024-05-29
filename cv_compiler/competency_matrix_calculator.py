@@ -57,19 +57,6 @@ class CompetencyMatrixCalculator:
         competencies_ordered = self.llm_connector.try_load_as_json_list(response)
         return competencies_ordered
 
-    def extract_competencies_from_job_description(self, job_description: str, competencies: List[Competency]) -> List[
-        str]:
-        question = f"""What are the competencies required for the job: 
-        \n\n {job_description} \n\n 
-        The competencies should be formatted as a single list of strings, such as ["python", "javascript"]
-        if any of the competencies mentioned are semantically the same as the competencies in the list below, then use
-        the values from the list below. 
-        \n\n{",".join([comp.name for comp in competencies])}\n\n"""
-
-        response = self.llm_connector.ask_question(question)
-        competencies = self.llm_connector.try_load_as_json_list(response)
-        return competencies
-
     def generate_competencies_from_job_positions(self, job_positions: List[JobPosition]) -> List[Competency]:
         competencies = defaultdict(lambda: {'last_used': 0, 'years_of_experience': 0})
 

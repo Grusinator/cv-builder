@@ -1,0 +1,11 @@
+version: '2.1'
+
+services:
+  cv_builder:
+    container_name: cv_builder
+    build:
+      context: ../..
+      dockerfile: cv_builder.Dockerfile
+    env_file:
+      - ../../.env
+    command: /bin/bash
