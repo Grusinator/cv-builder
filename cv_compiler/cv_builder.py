@@ -1,3 +1,5 @@
+from typing import List
+
 from cv_compiler.build_cv_content import CVContentBuilder
 from cv_compiler.build_latex_content_files import LatexContentBuilder
 import subprocess
@@ -5,6 +7,7 @@ import subprocess
 from loguru import logger
 
 from cv_compiler.file_handler import FileHandler
+from cv_compiler.models import GithubProject
 
 
 class CVCompiler:
@@ -20,6 +23,15 @@ class CVCompiler:
         logger.debug(f"job application: {job_application_text}")
         self.file_handler.write_job_application(job_application_text)
 
+    def fetch_github_projects(self, github_username, github_token):
+        logger.info("Fetching GitHub projects")
+        self.content_builder.github_fetcher.username = github_username
+        self.content_builder.github_fetcher.token = github_token
+        projects = self.content_builder.get_projects()
+        return projects
+
+    def update_generated_projects(self, projects: List[GithubProject]):
+        self.file_handler.write_projects_generated_to_file(projects)
 
     def build_cv(self):
         logger.info("Building CV")
@@ -40,9 +52,19 @@ class CVCompiler:
         else:
             logger.info("CV successfully built")
             return self.load_pdf()
+
     def load_pdf(self):
         with open(self.output_pdf_path, "rb") as f:
             return f.read()
+
+    def fetch_jobs(self):
+        return self.file_handler.get_background_job_positions()
+
+    def build_competencies(self, job_application_text, job_positions, projects):
+        background_competencies = []
+        return self.content_builder.matrix_calc.build(job_positions, projects, job_application_text,
+                                                      background_competencies)
+
 
 if __name__ == '__main__':
     cv_compiler = CVCompiler()

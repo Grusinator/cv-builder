@@ -1,5 +1,5 @@
 # __init__.py in pages directory
-from .step1 import Step1
-from .step2 import Step2
-from .step3 import Step3
-from .step4 import Step4
+from .job_description_step import JobDescriptionStep
+from .fetch_projects_step import FetchProjectsStep
+from .review_content_step import ReviewContentStep
+from .build_pdf import BuildPdfStep

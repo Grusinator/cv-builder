@@ -7,7 +7,7 @@ from panel.pane import Markdown
 from cv_compiler.cv_builder import CVCompiler
 
 
-class Step4(param.Parameterized):
+class BuildPdfStep(param.Parameterized):
     job_application = param.String(default='', doc="Job Application Text")
     build_status = param.String(default='', doc="Build Status")
     pdf_viewer = pn.pane.PDF(width=800, height=800)

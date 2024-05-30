@@ -5,7 +5,7 @@ from panel.widgets import TextAreaInput
 from cv_compiler.cv_builder import CVCompiler
 
 
-class Step1(param.Parameterized):
+class JobDescriptionStep(param.Parameterized):
     info_text = param.String(default='', doc="Personal Information")
     job_description = param.String(default='', doc="Job Description")
 

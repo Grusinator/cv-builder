@@ -3,7 +3,7 @@ import panel as pn
 from panel.widgets import TextAreaInput
 
 
-class Step3(param.Parameterized):
+class ReviewContentStep(param.Parameterized):
     fetch_status = param.String(default='', doc="Fetch Status")
     selected_content = param.String(default='', doc="Selected Content")
 
