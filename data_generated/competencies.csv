@@ -1,16 +1,16 @@
 name,level,category,last_used,years_of_experience,attractiveness
-Agile,4,methodologies,2023,4.0,3
+AWS,2,platforms,2018,1.0,3
+Amazon S3,3,technologies,2020,1.0,4
 Azure Data Factory,4,technologies,2023,1.0,4
 Azure DevOps,1,,2022,3.0,3
-C#,4,programming languages,2024,2.75,4
+Big Data,3,Software Development,2023,1.0,5
 CI/CD,4,methodologies,2023,4.0,5
 Data Engineering,4,methodologies,2023,5.0,5
-Data Modeling,4,Software Development,2022,4.0,4
 Data Transformation,4,Software Development,2022,4.0,4
 Data Visualization,3,methodologies,2023,4.0,5
 DevOps,4,methodologies,2023,3.0,5
+Docker,3,technologies,2022,3.0,5
+Kubernetes,3,development tools,2022,3.0,5
+Machine Learning,3,Software Development,2018,2.0,5
 Microsoft Azure,4,platforms,2023,3.0,5
-Power BI,2,technologies,2023,1.0,4
 Python,5,programming languages,2024,10.75,5
-Spark,4,technologies,2023,2.0,5
-TSQL,1,,2024,0.25,3

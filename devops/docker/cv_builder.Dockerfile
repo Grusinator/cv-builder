@@ -28,4 +28,5 @@ ENV OPENAI_ORG_ID=replace-with-your-token
 ENV OPENAI_PROJECT_ID=replace-with-your-token
 
 # Set the entrypoint command
-ENTRYPOINT ["/bin/bash", "-c", "source /opt/venv/bin/activate && python -m ui.ui"]
+ENTRYPOINT ["/bin/bash", "-c", "source /opt/venv/bin/activate && panel serve cv_app.py --show --autoreload --log-level debug"]
+
