@@ -40,7 +40,6 @@ class BuildPdfStep(param.Parameterized):
 
     def build_cv(self, event):
         self.build_status = "Building CV..."
-        self.compiler.parse_job_application(self.job_application)
         output_pdf = self.compiler.build_cv_from_content(self.job_description, self.selected_jobs,
                                                          self.selected_educations, self.selected_projects,
                                                          self.selected_competencies, self.summary)
