@@ -67,7 +67,7 @@ class LatexContentBuilder:
         return project
 
     def create_job_experiences_latex(self):
-        job_experiences = self.file_handler.get_background_job_positions()
+        job_experiences = self.file_handler.get_generated_job_positions()
         job_positions_latex = self.convert_experiences_to_latex(job_experiences)
         self.write_to_file(CONTENT_EXPERIENCE_TEX, job_positions_latex)
 

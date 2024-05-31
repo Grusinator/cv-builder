@@ -40,13 +40,22 @@ class CVCompiler:
         pdf_file = self.build_latex_cv()
         return pdf_file
 
+    def build_cv_from_content(self, job_application_text: str, selected_jobs, selected_projects, selected_competencies):
+        self.file_handler.write_job_application(job_application_text)
+        self.file_handler.write_job_positions(selected_jobs)
+        self.file_handler.write_projects_generated_to_file(selected_projects)
+        self.file_handler.write_competency_matrix_generated(selected_competencies)
+        self.latex_builder.build_all()
+        pdf_file = self.build_latex_cv()
+        return pdf_file
+
     def build_latex_cv(self):
         command = "pdflatex -interaction=nonstopmode main.tex"
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
         logger.debug(result.stdout)
         logger.debug("return code: " + str(result.returncode))
         logger.debug(result.stderr)
-        if result.returncode != 1:
+        if result.returncode != 1 or "Error" in result.stderr:
             logger.error(result.stderr)
             raise Exception(f"Error building CV: \n {result.stderr}")
         else:
@@ -70,6 +79,7 @@ class CVCompiler:
     def match_competencies_with_job_description(self, competencies: List[Competency], job_description: str, n=15):
         return self.content_builder.matrix_calc.find_most_relevant_competencies_to_job_add(job_description,
                                                                                            competencies, n=n)
+
 
 
 if __name__ == '__main__':

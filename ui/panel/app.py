@@ -6,7 +6,7 @@ from ui.panel.pages.build_competency_matrix_step import BuildCompetencyMatrixSte
 from ui.panel.pages.fetch_jobs_step import FetchJobsStep
 from .pages import JobDescriptionStep, FetchProjectsStep, ReviewContentStep, BuildPdfStep
 
-pn.extension('tabulator')
+pn.extension('tabulator', 'ace', 'jsoneditor')
 
 
 class CVBuilderApp:

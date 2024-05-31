@@ -9,8 +9,8 @@ from cv_compiler.cv_builder import CVCompiler
 
 class BuildCompetencyMatrixStep(param.Parameterized):
     job_description = param.String(default='', doc="Job Description")
-    projects = param.List(default=[], doc="Jobs")
-    jobs = param.List(default=[], doc="Selected Jobs")
+    projects = param.List(default=[], doc="Projects")
+    jobs = param.List(default=[], doc="Jobs")
     competencies = param.List(default=[], doc="Competencies")
 
     def __init__(self, **params):
@@ -52,7 +52,6 @@ class BuildCompetencyMatrixStep(param.Parameterized):
                                                                 self.projects)
         self.table_view.value = pd.DataFrame([c.dict() for c in self.competencies])
 
-    @param.output(competencies=param.List)
+    @param.output(selected_competencies=param.List)
     def output(self):
-        selected_competency_names = self.table_view.selection["name"]
-        return [comp for comp in self.competencies if comp.name in selected_competency_names]
+        return [comp for i, comp in enumerate(self.competencies) if i in self.table_view.selection]

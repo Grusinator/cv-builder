@@ -30,8 +30,6 @@ class FetchProjectsStep(param.Parameterized):
             TextAreaInput(name='GitHub Username', value=self.github_username, height=50),
             TextAreaInput(name='Github token', value=self.github_token, height=50),
             Button(name='Fetch Info', button_type='primary', on_click=self.fetch_info),
-            pn.pane.Markdown(self.job_description),
-            TextAreaInput(name='Job Description', value=self.job_description, height=200),
             self.cross_selector,
             self.save_button
         )

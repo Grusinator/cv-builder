@@ -44,6 +44,9 @@ class FileHandler:
     def get_background_job_positions(self) -> List[JobPosition]:
         return self._read_pydantic_objects_from_json(JobPosition, BACKGROUND_JOB_POSITIONS_JSON)
 
+    def get_generated_job_positions(self) -> List[JobPosition]:
+        return self._read_pydantic_objects_from_json(JobPosition, GENERATED_JOB_POSITIONS)
+
     def _read_pydantic_objects_from_json(self, cls, file_name):
         with open(file_name, 'r', encoding='utf-8') as f:
             data = json.load(f)
