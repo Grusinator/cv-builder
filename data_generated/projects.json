@@ -1,1 +1,435 @@
-[]
+[
+  {
+    "name": "Aander-android-app",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "kivy",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2017-09-28T20:57:20",
+    "topics": [],
+    "languages": [
+      "Python",
+      "C",
+      "Makefile",
+      "Shell",
+      "C++",
+      "Objective-C",
+      "Assembly",
+      "TeX",
+      "HTML",
+      "Java",
+      "M4",
+      "CMake",
+      "Roff",
+      "Perl",
+      "Batchfile",
+      "PLSQL",
+      "Emacs Lisp",
+      "Inno Setup",
+      "JavaScript",
+      "DIGITAL Command Language",
+      "PowerShell",
+      "Vim Script",
+      "CSS",
+      "Ruby",
+      "GLSL",
+      "Visual Basic"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "Aander-backend",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "django",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2018-04-06T07:30:39",
+    "topics": [],
+    "languages": [
+      "Python"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "Aander-ETL",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "data processing",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2017-09-28T21:06:18",
+    "topics": [],
+    "languages": [
+      "Jupyter Notebook",
+      "Python"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "ai-test-project",
+    "owner": "Grusinator",
+    "commits": 14,
+    "description": null,
+    "number_of_weeks_with_commits": 1,
+    "last_commit": "2024-03-11T07:23:10",
+    "topics": [],
+    "languages": [
+      "Python"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "BirdClassification",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "image segmentation of birds",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2018-04-16T19:01:48",
+    "topics": [],
+    "languages": [
+      "Python",
+      "Jupyter Notebook",
+      "Shell",
+      "Batchfile",
+      "Makefile"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "build-it",
+    "owner": "Grusinator",
+    "commits": 4,
+    "description": null,
+    "number_of_weeks_with_commits": 1,
+    "last_commit": "2023-08-12T11:23:25",
+    "topics": [],
+    "languages": [
+      "Python",
+      "JavaScript",
+      "HTML"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "ChangeDetection",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "Change detection program including IRMAD, MM, MRF etc. python",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2023-10-30T05:31:11",
+    "topics": [],
+    "languages": [
+      "Python"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "co-opinion",
+    "owner": "Grusinator",
+    "commits": 11,
+    "description": null,
+    "number_of_weeks_with_commits": 1,
+    "last_commit": "2023-08-05T09:59:01",
+    "topics": [],
+    "languages": [
+      "TypeScript",
+      "Svelte",
+      "CSS",
+      "JavaScript",
+      "HTML",
+      "SCSS"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "cv-builder",
+    "owner": "Grusinator",
+    "commits": 20,
+    "description": "This project automates the cv building process using latex, ai and data",
+    "number_of_weeks_with_commits": 2,
+    "last_commit": "2024-05-30T21:56:24",
+    "topics": [],
+    "languages": [
+      "Python",
+      "TeX",
+      "Dockerfile"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "development-workforce",
+    "owner": "Grusinator",
+    "commits": 21,
+    "description": "experimentation on how to integrate ai agents into existing software development setup. ",
+    "number_of_weeks_with_commits": 4,
+    "last_commit": "2024-05-29T17:19:47",
+    "topics": [
+      "ai",
+      "azuredevops",
+      "llm",
+      "python"
+    ],
+    "languages": [
+      "Python"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "django-celery-model",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "Keep track of Celery tasks assigned to Django models",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2021-02-20T08:29:15",
+    "topics": [],
+    "languages": [
+      "Python",
+      "Makefile"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "django-generic-serializer",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "django base class for generic serialization of model",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2020-02-24T11:29:22",
+    "topics": [],
+    "languages": [
+      "Python"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "django-json2model",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "create django models dynamically from json data structures",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2021-02-27T07:12:57",
+    "topics": [],
+    "languages": [
+      "Python"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "django-mutant",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "Dynamic model definition and alteration (evolving schemas)",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2021-02-20T08:41:25",
+    "topics": [],
+    "languages": [
+      "Python"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "GeoFileHandle",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "personal library for GDAL and OGR abstaction",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2023-01-28T16:59:34",
+    "topics": [],
+    "languages": [
+      "Python"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "gotta-process-em-all",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": null,
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2022-10-26T14:13:48",
+    "topics": [],
+    "languages": [
+      "Python"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "HuntingTrainerVR",
+    "owner": "Grusinator",
+    "commits": 5,
+    "description": "a VR hunting simulator for practice, not for fun. ",
+    "number_of_weeks_with_commits": 2,
+    "last_commit": "2024-05-29T18:05:16",
+    "topics": [
+      "hunting",
+      "unity3d",
+      "vr"
+    ],
+    "languages": [
+      "ShaderLab",
+      "C#",
+      "HLSL",
+      "Rich Text Format"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "meta-data-client",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "python client for meta-data-api",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2020-02-20T12:47:49",
+    "topics": [],
+    "languages": [
+      "Jupyter Notebook",
+      "Python"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "MetaDataApi",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "Platform to fetch personal data from providers using Oauth. ",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2024-05-29T18:06:30",
+    "topics": [
+      "python3",
+      "django",
+      "oath2",
+      "rest-api"
+    ],
+    "languages": [
+      "CSS",
+      "Python",
+      "JavaScript",
+      "HTML",
+      "Jupyter Notebook",
+      "PowerShell",
+      "Shell",
+      "Dockerfile",
+      "TSQL"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "NaGeoS_lib",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "National geofencing system written in python",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2023-01-28T16:59:34",
+    "topics": [],
+    "languages": [
+      "Python"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "open-collective",
+    "owner": "Grusinator",
+    "commits": 7,
+    "description": null,
+    "number_of_weeks_with_commits": 2,
+    "last_commit": "2023-03-19T19:19:41",
+    "topics": [],
+    "languages": [
+      "Python",
+      "HTML",
+      "CSS",
+      "Dockerfile"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "optimize-life",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "simple toy project to do simple economic calculations based on choices in life related to house, job, pension, investments etc",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2024-05-29T17:20:50",
+    "topics": [
+      "economy",
+      "panel",
+      "visualization"
+    ],
+    "languages": [
+      "Python"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "personal-data-api",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "django graphql api that serves a variety of personal data",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2023-01-28T18:07:33",
+    "topics": [],
+    "languages": [
+      "Python",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "PowerShell"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "PersonalDataApp",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "xamarin app that records data and stores in backend",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2018-08-19T19:58:12",
+    "topics": [],
+    "languages": [
+      "C#"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "rpi-window-controller",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": null,
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2019-12-07T11:03:48",
+    "topics": [],
+    "languages": [
+      "Python",
+      "Shell"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "RPI_wildlife_tracker",
+    "owner": "Grusinator",
+    "commits": 0,
+    "description": "track wildlife using raspberry pi",
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2018-02-04T16:52:28",
+    "topics": [],
+    "languages": [
+      "Python"
+    ],
+    "technologies": []
+  },
+  {
+    "name": "EITC-route-planning",
+    "owner": "mhthNet",
+    "commits": 0,
+    "description": null,
+    "number_of_weeks_with_commits": 0,
+    "last_commit": "2024-05-17T10:15:11",
+    "topics": [],
+    "languages": [
+      "JavaScript",
+      "C#",
+      "HTML",
+      "CSS",
+      "ASP"
+    ],
+    "technologies": []
+  }
+]

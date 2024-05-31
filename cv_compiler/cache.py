@@ -1,8 +1,11 @@
 import json
+from datetime import datetime, date
 from typing import Callable
 from functools import wraps
 
 from loguru import logger
+from pydantic import BaseModel
+from pydantic.v1.main import ModelMetaclass
 
 
 class Cache:
@@ -35,23 +38,25 @@ class Cache:
         self.save()
 
 
+def to_string_if_class_or_instance(obj):
+    if isinstance(obj, (dict, tuple, list, float, int, str, bool, datetime, date)):
+        return obj
+    elif hasattr(obj, "__name__"):
+        return obj.__name__
+    elif hasattr(obj, "__class__"):
+        return obj.__class__.__name__
+    else:
+        return obj
+
+
 def cache(func: Callable) -> Callable:
     _cache = Cache()
 
     @wraps(func)
     def wrapper(*args, **kwargs):
         func_name = func.__name__
-        if args:
-            # Handle the case when the first argument is not a native type
-            first_arg = args[0]
-            try:
-                first_arg_json = json.dumps(first_arg)
-            except TypeError:
-                first_arg_json = str(first_arg)
-            key = func_name + first_arg_json + json.dumps((args[1:], kwargs))
-        else:
-            key = func_name + json.dumps((args, kwargs))
-
+        _args = [to_string_if_class_or_instance(arg) for arg in args]
+        key = f"{func_name}__{json.dumps((_args, kwargs))}"
         result = _cache.get(key)
         if result is not None:
             return result

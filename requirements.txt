@@ -8,7 +8,7 @@ loguru
 panel
 holoviews
 bokeh
-PyPDF2
+pdfplumber
 
 pytest
 pytest-dotenv

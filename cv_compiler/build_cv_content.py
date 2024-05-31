@@ -1,7 +1,7 @@
 import io
+import json
 from typing import List
 
-import PyPDF2
 import pdfplumber
 from dotenv import load_dotenv
 
@@ -110,6 +110,7 @@ class CVContentBuilder:
         return job
 
     def get_job_positions_from_pdf(self, pdf):
+        logger.debug(f"Extracting job positions from pdf")
         pdf_content = self.extract_text_from_pdf(pdf)
         question = f"""
         Extract job positions from this pdf. it has to be stored in json format, with these fields, 
@@ -119,8 +120,7 @@ class CVContentBuilder:
         ------------------
         {pdf_content}
         """
-        response = self.chatgpt_interface.ask_question(question)
-        return self.chatgpt_interface.try_load_as_pydantic_list(response, JobPosition)
+        return self.chatgpt_interface.ask_question_that_returns_pydantic_list(question, JobPosition)
 
     def extract_text_from_pdf(self, pdf_bytes):
         text = ''
@@ -130,6 +130,7 @@ class CVContentBuilder:
         return text
 
     def get_education_from_pdf(self, pdf):
+
         pdf_content = self.extract_text_from_pdf(pdf)
         question = f"""
          Extract education from this pdf. it has to be stored in json format, with these fields:
@@ -139,8 +140,8 @@ class CVContentBuilder:
          ------------------
          {pdf_content}
          """
-        response = self.chatgpt_interface.ask_question(question)
-        return self.chatgpt_interface.try_load_as_pydantic_list(response, Education)
+        return self.chatgpt_interface.ask_question_that_returns_pydantic_list(question, Education)
+
 
 if __name__ == '__main__':
     cv_content_builder = CVContentBuilder()

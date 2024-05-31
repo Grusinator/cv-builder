@@ -21,7 +21,6 @@ class ChatGPTInterface:
 
     @cache
     def ask_question(self, question):
-
         response = self.client.chat.completions.create(
             model=self.model_name,
             messages=[{"role": "user", "content": question}],
@@ -44,9 +43,29 @@ class ChatGPTInterface:
             json_data = json.loads(response)
         except json.JSONDecodeError:
             logger.error(f"Invalid response: {response}")
-            json_data = json.loads(re.findall( r'\[.*\]', response, re.DOTALL)[0])
+            json_string = re.findall(r'\[.*\]', response, re.DOTALL)[0]
+            json_data = json.loads(json_string)
         response_objects = [model(**comp) for comp in json_data]
         return response_objects
+
+    def ask_question_that_returns_pydantic_list(self, question, model):
+        response = self.ask_question(question)
+        try:
+            return self.try_load_as_pydantic_list(response, model)
+        except json.JSONDecodeError as e:
+            modified_question = f"""
+            {question}
+            ----------------
+            the above question did not return a valid response, the response was: 
+            {response}
+            ----------------
+            The error was: 
+            {e}
+            ----------------
+            please fix the Json decode error.            
+            """
+            response = self.ask_question(modified_question)
+            return self.try_load_as_pydantic_list(response, model)
 
     def is_list_of_strings(self, input_list):
         return isinstance(input_list, list) and all(isinstance(elm, str) for elm in input_list)
