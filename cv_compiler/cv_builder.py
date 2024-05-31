@@ -40,9 +40,11 @@ class CVCompiler:
         pdf_file = self.build_latex_cv()
         return pdf_file
 
-    def build_cv_from_content(self, job_application_text: str, selected_jobs, selected_projects, selected_competencies):
+    def build_cv_from_content(self, job_application_text: str, selected_jobs, selected_education, selected_projects, selected_competencies, summary):
+        self.file_handler.write_summary_to_file(summary)
         self.file_handler.write_job_application(job_application_text)
         self.file_handler.write_job_positions(selected_jobs)
+        self.file_handler.write_generated_educations(selected_education)
         self.file_handler.write_projects_generated_to_file(selected_projects)
         self.file_handler.write_competency_matrix_generated(selected_competencies)
         self.latex_builder.build_all()
@@ -80,6 +82,13 @@ class CVCompiler:
         return self.content_builder.matrix_calc.find_most_relevant_competencies_to_job_add(job_description,
                                                                                            competencies, n=n)
 
+    def load_job_positions_and_education_from_pdf(self, pdf):
+        job_positions = self.content_builder.get_job_positions_from_pdf(pdf)
+        education = self.content_builder.get_education_from_pdf(pdf)
+        return job_positions, education
+
+    def generate_summary(self, job_description: str, job_positions: List[JobPosition], educations, projects):
+        return self.content_builder.generate_summary_from_llm(job_description, job_positions, educations, projects)
 
 
 if __name__ == '__main__':

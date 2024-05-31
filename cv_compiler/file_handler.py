@@ -4,7 +4,8 @@ from typing import List, Type
 
 from pydantic import BaseModel
 
-from cv_compiler.models import JobPosition, Competency, GithubProject, JobApplication
+from cv_compiler.models import JobPosition, Competency, GithubProject, JobApplication, Education
+
 
 # data background
 
@@ -18,6 +19,7 @@ GENERATED_PROJECTS_JSON = 'data_generated/projects.json'
 GENERATED_COMPETENCY_MATRIX_CSV_FILE = 'data_generated/competencies.csv'
 GENERATED_SUMMARY_TXT_FILE = 'data_generated/summary.txt'
 GENERATED_JOB_POSITIONS = 'data_generated/job_positions.json'
+GENERATED_EDUCATIONS_JSON = 'data_generated/educations.json'
 
 
 class FileHandler:
@@ -87,3 +89,9 @@ class FileHandler:
 
     def write_job_application(self, job_application_text):
         self._write_to_txt_file(DATA_JOB_DESCRIPTION_TXT, job_application_text)
+
+    def write_generated_educations(self, educations: List[Education]):
+        self._write_pydantic_objects_to_json_file(educations, GENERATED_EDUCATIONS_JSON)
+
+    def read_generated_educations(self):
+        return self._read_pydantic_objects_from_json(Education, GENERATED_EDUCATIONS_JSON)

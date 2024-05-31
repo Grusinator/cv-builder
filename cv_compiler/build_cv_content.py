@@ -1,12 +1,15 @@
+import io
 from typing import List
 
+import PyPDF2
+import pdfplumber
 from dotenv import load_dotenv
 
 from cv_compiler.competency_matrix_calculator import CompetencyMatrixCalculator
 from cv_compiler.file_handler import FileHandler
-from cv_compiler.github_projects import GitHubProjectFetcher
+from cv_compiler.github_project_fetcher import GitHubProjectFetcher
 from cv_compiler.llm_connector import ChatGPTInterface
-from cv_compiler.models import JobPosition, Competency
+from cv_compiler.models import JobPosition, Competency, Education
 
 load_dotenv()
 
@@ -65,19 +68,34 @@ class CVContentBuilder:
     def build_summary(self):
         job_desc = self.file_handler.read_job_application()
         job_positions = self.file_handler.get_background_job_positions()
+        education = self.file_handler.read_generated_educations()
+        projects = self.file_handler.read_generated_projects_from_json()
+        summary = self.generate_summary_from_llm(job_desc, job_positions, education, projects)
+        self.file_handler.write_summary_to_file(summary)
+
+    def generate_summary_from_llm(self, job_desc, job_positions, education, projects):
         question = f"""
         Write a intro phrase for my cv of how i can contribute to this job. 4 lines of why im a good fit for this job.
-        ------------------
+        Please dont overexaggerate, just be honest, based on what you know about me, jobs and projects,
+        if im not a great fit, just say so, but be constructive, about other things that i can contribute with.
+        Feel free to mention the company name and job title. 
+        Here is the job post description. 
          {job_desc} 
         ------------------
         consider the following job positions:
         {job_positions}
         ------------------
+        consider the following education:
+        {education}
+        ------------------
+        consider the following projects:
+        {projects}
+        ------------------
         make it short. its for a cv intro section. max 4 sentences.
         """
         summary = self.chatgpt_interface.ask_question(question)
         logger.debug(f"Summary: {summary}")
-        self.file_handler.write_summary_to_file(summary)
+        return summary
 
     def build_job_positions(self, competencies):
         job_positions = self.file_handler.get_background_job_positions()
@@ -91,6 +109,38 @@ class CVContentBuilder:
         job.technologies = [tech for tech in job.technologies if tech in competency_names]
         return job
 
+    def get_job_positions_from_pdf(self, pdf):
+        pdf_content = self.extract_text_from_pdf(pdf)
+        question = f"""
+        Extract job positions from this pdf. it has to be stored in json format, with these fields, 
+        please save dates as yyyy-mm-dd, just assume first in month if day is not given.
+        {JobPosition.__fields__.keys()}
+        Job positions can be found in the following text:
+        ------------------
+        {pdf_content}
+        """
+        response = self.chatgpt_interface.ask_question(question)
+        return self.chatgpt_interface.try_load_as_pydantic_list(response, JobPosition)
+
+    def extract_text_from_pdf(self, pdf_bytes):
+        text = ''
+        with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
+            for page in pdf.pages:
+                text += page.extract_text() if page.extract_text() else ''
+        return text
+
+    def get_education_from_pdf(self, pdf):
+        pdf_content = self.extract_text_from_pdf(pdf)
+        question = f"""
+         Extract education from this pdf. it has to be stored in json format, with these fields:
+         please save dates as yyyy-mm-dd, just assume first in month if day is not given.
+         {Education.__fields__.keys()}
+         Education can be found in the following text:
+         ------------------
+         {pdf_content}
+         """
+        response = self.chatgpt_interface.ask_question(question)
+        return self.chatgpt_interface.try_load_as_pydantic_list(response, Education)
 
 if __name__ == '__main__':
     cv_content_builder = CVContentBuilder()

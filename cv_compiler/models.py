@@ -18,6 +18,10 @@ class JobPosition(BaseModel):
             datetime: lambda dt: dt.strftime('%Y-%m-%d')
         }
 
+    @property
+    def unique_id(self):
+        return f"{self.company}-{self.start_date.strftime('%Y-%m-%d')}"
+
 
 class Competency(BaseModel):
     name: str  # Name?
@@ -73,3 +77,12 @@ class BuildConfiguration(BaseModel):
 class JobApplication(BaseModel):
     company_name: str
     job_description: str
+
+
+class Education(BaseModel):
+    degree: str
+    school: str
+    start_date: datetime
+    end_date: datetime
+    description: Optional[str] = None
+    location: Optional[str] = None

@@ -1,9 +1,12 @@
 import os
 from datetime import datetime
 
+THIS_MONTH = datetime.now().strftime("%Y %m")
+
 import requests
 from typing import Dict, List
 from dotenv import load_dotenv
+from loguru import logger
 
 from cv_compiler.cache import cache
 from cv_compiler.models import GithubProject
@@ -16,32 +19,8 @@ class GitHubProjectFetcher:
             raise ValueError('GitHub token is required')
         self.headers = {'Authorization': f'token {self.token}'}
 
-    def fetch_all_repos(self) -> List[Dict]:
-        url = 'https://api.github.com/user/repos'
-        response = requests.get(url, headers=self.headers)
-        response.raise_for_status()
-        return response.json()
-
-    def fetch_commit_activity(self, owner: str, repo: str) -> Dict:
-        url = f'https://api.github.com/repos/{owner}/{repo}/stats/participation'
-        response = requests.get(url, headers=self.headers)
-        response.raise_for_status()
-        return response.json()
-
-    def fetch_languages(self, owner: str, repo: str) -> Dict[str, int]:
-        url = f'https://api.github.com/repos/{owner}/{repo}/languages'
-        response = requests.get(url, headers=self.headers)
-        response.raise_for_status()
-        return response.json()
-
-    def fetch_topics(self, owner: str, repo: str) -> List[str]:
-        url = f'https://api.github.com/repos/{owner}/{repo}/topics'
-        self.headers['Accept'] = 'application/vnd.github.mercy-preview+json'
-        response = requests.get(url, headers=self.headers)
-        response.raise_for_status()
-        return list(response.json()["names"])
-
     def fetch_all(self) -> List[GithubProject]:
+        logger.debug(f'Fetching all projects from GitHub')
         repos = self.fetch_all_repos()
         projects = []
         for repo in repos:
@@ -63,6 +42,35 @@ class GitHubProjectFetcher:
             )
             projects.append(project)
         return projects
+
+    @cache
+    def fetch_all_repos(self, fetch_date_for_caching=THIS_MONTH) -> List[Dict]:
+        url = 'https://api.github.com/user/repos'
+        response = requests.get(url, headers=self.headers)
+        response.raise_for_status()
+        return response.json()
+
+    @cache
+    def fetch_topics(self, owner: str, repo: str, fetch_date_for_caching=THIS_MONTH) -> List[str]:
+        url = f'https://api.github.com/repos/{owner}/{repo}/topics'
+        self.headers['Accept'] = 'application/vnd.github.mercy-preview+json'
+        response = requests.get(url, headers=self.headers)
+        response.raise_for_status()
+        return list(response.json()["names"])
+
+    @cache
+    def fetch_commit_activity(self, owner: str, repo: str, fetch_date_for_caching=THIS_MONTH) -> Dict:
+        url = f'https://api.github.com/repos/{owner}/{repo}/stats/participation'
+        response = requests.get(url, headers=self.headers)
+        response.raise_for_status()
+        return response.json()
+
+    @cache
+    def fetch_languages(self, owner: str, repo: str, fetch_date_for_caching=THIS_MONTH) -> Dict[str, int]:
+        url = f'https://api.github.com/repos/{owner}/{repo}/languages'
+        response = requests.get(url, headers=self.headers)
+        response.raise_for_status()
+        return response.json()
 
 
 if __name__ == "__main__":

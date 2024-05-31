@@ -1,50 +1,53 @@
-from typing import List
-
-import param
 import panel as pn
-from panel.widgets import TextAreaInput, Button, CrossSelector
+import param
+from panel.widgets import Button, FileInput, JSONEditor
 
 from cv_compiler.cv_builder import CVCompiler
-from cv_compiler.models import JobPosition
+from cv_compiler.models import JobPosition, Education
 
 
-class FetchJobsStep(param.Parameterized):
-    info_text = param.String(default='', doc="Personal Information")
-    job_description = param.String(default='', doc="Job Description")
+class FetchJobsAndEducationStep(param.Parameterized):
+    job_description = param.String(default="", doc="Job Description")
     projects = param.List(default=[], doc="Projects")
     jobs = param.List(default=[], doc="Jobs")
-    selected_jobs = param.List(default=[], doc="Selected Jobs")
+    educations = param.List(default=[], doc="Educations")
 
     def __init__(self, **params):
         super().__init__(**params)
         self.cv_compiler = CVCompiler()
-        self.fetch_button = Button(name='Fetch Jobs', button_type='primary', on_click=self.fetch_info)
-        self.cross_selector = CrossSelector(name='Jobs', value=[], options=[])
-        self.save_button = Button(name='Select Jobs', button_type='primary', on_click=self.select_jobs)
+        self.pdf_file_upload = FileInput(accept=".pdf", name="Upload PDF")
+        self.load_from_pdf_button = Button(name='Load from PDF', button_type='primary', on_click=self.load_from_pdf)
+        self.jobs_editor = JSONEditor(value=[job.dict() for job in self.jobs], mode="tree")
+        self.educations_editor = JSONEditor(value=[edu.dict() for edu in self.educations], mode="tree")
 
-    @param.depends('jobs', watch=True)
-    def update_job_options(self):
-        self.cross_selector.options = [job.company for job in self.jobs]
+    def panel(self):
+        return self.view()
 
     def view(self):
         return pn.Column(
-            "### Fetch and Select Jobs",
-            self.fetch_button,
-            self.cross_selector,
-            self.save_button
+            "### Fetch and edit job positions and educations, "
+            "download the PDF from linkedin or other sources and upload it here.",
+            self.pdf_file_upload,
+            self.load_from_pdf_button,
+            pn.Row(
+                pn.Column(
+                    "### Jobs",
+                    self.jobs_editor),
+                pn.Column(
+                    "### Educations",
+                    self.educations_editor
+                )
+            )
         )
 
-    def fetch_info(self, event):
-        # Simulate fetching jobs or integrate with an API
-        self.jobs: List[JobPosition] = self.cv_compiler.fetch_jobs()
-        self.update_job_options()
+    def load_from_pdf(self, event):
+        pdf = self.pdf_file_upload.value
+        self.jobs, self.educations = self.cv_compiler.load_job_positions_and_education_from_pdf(pdf)
+        self.jobs_editor.value = [job.dict() for job in self.jobs]
+        self.educations_editor.value = [edu.dict() for edu in self.educations]
 
-    def select_jobs(self, event):
-        self.selected_jobs = [job for job in self.jobs if job.company in self.cross_selector.value]
-
-    @param.output(jobs=param.List)
+    @param.output(jobs=param.List, educations=param.List)
     def output(self):
-        return self.jobs
-
-    def panel(self):
-        return pn.Row(self.view)
+        self.jobs = [JobPosition(**j) for j in self.jobs_editor.value]
+        self.educations = [Education(**e) for e in self.educations_editor.value]
+        return self.jobs, self.educations

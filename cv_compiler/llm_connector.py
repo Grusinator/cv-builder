@@ -25,7 +25,7 @@ class ChatGPTInterface:
         response = self.client.chat.completions.create(
             model=self.model_name,
             messages=[{"role": "user", "content": question}],
-            max_tokens=500,
+            max_tokens=3000,
         )
         answer = response.choices[0].message.content
         return answer
@@ -38,6 +38,15 @@ class ChatGPTInterface:
             competencies_ordered = json.loads(re.findall(r'\[.*?\]', response, re.DOTALL)[0])
         assert self.is_list_of_strings(competencies_ordered), ValueError
         return competencies_ordered
+
+    def try_load_as_pydantic_list(self, response, model):
+        try:
+            json_data = json.loads(response)
+        except json.JSONDecodeError:
+            logger.error(f"Invalid response: {response}")
+            json_data = json.loads(re.findall( r'\[.*\]', response, re.DOTALL)[0])
+        response_objects = [model(**comp) for comp in json_data]
+        return response_objects
 
     def is_list_of_strings(self, input_list):
         return isinstance(input_list, list) and all(isinstance(elm, str) for elm in input_list)

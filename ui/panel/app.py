@@ -3,7 +3,8 @@ import os
 import panel as pn
 
 from ui.panel.pages.build_competency_matrix_step import BuildCompetencyMatrixStep
-from ui.panel.pages.fetch_jobs_step import FetchJobsStep
+from ui.panel.pages.build_summary_step import BuildSummaryStep
+from ui.panel.pages.fetch_jobs_step import FetchJobsAndEducationStep
 from .pages import JobDescriptionStep, FetchProjectsStep, ReviewContentStep, BuildPdfStep
 
 pn.extension('tabulator', 'ace', 'jsoneditor')
@@ -14,7 +15,8 @@ class CVBuilderApp:
         self.pipeline = pn.pipeline.Pipeline(stages=[
             ("Job Description", JobDescriptionStep),
             ("Fetch Projects", FetchProjectsStep),
-            ("Fetch jobs", FetchJobsStep),
+            ("Fetch jobs", FetchJobsAndEducationStep),
+            ("Build Summary", BuildSummaryStep),
             ("Build Competency Matrix", BuildCompetencyMatrixStep),
             ("review Content", ReviewContentStep),
             ('Build Pdf', BuildPdfStep),

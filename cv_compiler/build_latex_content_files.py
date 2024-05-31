@@ -2,7 +2,7 @@ import textwrap
 from typing import List
 
 from cv_compiler.file_handler import FileHandler
-from cv_compiler.models import GenericProject, JobPosition, Competency
+from cv_compiler.models import GenericProject, JobPosition, Competency, Education
 
 CONTENT_PROJECTS_TEX = 'cv_latex_content/projects.tex'
 CONTENT_EXPERIENCE_TEX = 'cv_latex_content/experience.tex'
@@ -22,6 +22,7 @@ class LatexContentBuilder:
         self.create_job_experiences_latex()
         self.create_projects_latex()
         self.create_resume_summary_latex()
+        self.create_educations_latex()
         logger.debug("Latex content files created successfully")
 
     def write_to_file(self, output_file, content):
@@ -133,6 +134,25 @@ class LatexContentBuilder:
             .replace("_", "\\_")
             .replace("#", "\\#")
         )
+
+    def create_educations_latex(self):
+        educations = self.file_handler.read_generated_educations()
+        latex_content = self.convert_educations_to_latex(educations)
+        self.write_to_file("cv_latex_content/education.tex", latex_content)
+
+    def convert_educations_to_latex(self, educations: List[Education]) -> str:
+        latex_content = "\\cvsection{Education}"
+        edu_section = [self.create_education_section(edu) for edu in educations]
+        latex_content += "\\divider\n\n".join(edu_section)
+        return latex_content
+
+    def create_education_section(self, education: Education):
+        start_date = education.start_date.strftime('%Y')
+        end_date = education.end_date.strftime('%Y')
+        text = f"""
+        \\cvevent{{{education.degree}}}{{{education.school}}}{{{start_date} -- {end_date}}}{{}}
+        """
+        return textwrap.dedent(text)
 
 
 if __name__ == '__main__':
