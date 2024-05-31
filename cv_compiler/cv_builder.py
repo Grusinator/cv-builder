@@ -55,7 +55,7 @@ class CVCompiler:
         logger.debug(result.stdout)
         logger.debug("return code: " + str(result.returncode))
         logger.debug(result.stderr)
-        if result.returncode != 1 or "Error" in result.stderr:
+        if result.returncode != 1 and "Error" in result.stderr:
             logger.error(result.stderr)
             raise Exception(f"Error building CV: \n {result.stderr}")
         else:
