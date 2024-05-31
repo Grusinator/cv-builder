@@ -11,7 +11,7 @@ from cv_compiler.models import JobPosition
 class FetchJobsStep(param.Parameterized):
     info_text = param.String(default='', doc="Personal Information")
     job_description = param.String(default='', doc="Job Description")
-    fetch_status = param.String(default='', doc="Fetch Status")
+    projects = param.List(default=[], doc="Projects")
     jobs = param.List(default=[], doc="Jobs")
     selected_jobs = param.List(default=[], doc="Selected Jobs")
 
@@ -30,7 +30,6 @@ class FetchJobsStep(param.Parameterized):
         return pn.Column(
             "### Fetch and Select Jobs",
             self.fetch_button,
-            pn.pane.Markdown(self.fetch_status),
             self.cross_selector,
             self.save_button
         )
@@ -39,15 +38,13 @@ class FetchJobsStep(param.Parameterized):
         # Simulate fetching jobs or integrate with an API
         self.jobs: List[JobPosition] = self.cv_compiler.fetch_jobs()
         self.update_job_options()
-        self.fetch_status = "Fetched jobs successfully."
 
     def select_jobs(self, event):
         self.selected_jobs = [job for job in self.jobs if job.company in self.cross_selector.value]
-        self.fetch_status = f"Selected {len(self.selected_jobs)} jobs."
 
-    @param.output(('selected_jobs', param.List), ('fetch_status', param.String))
+    @param.output(jobs=param.List)
     def output(self):
-        return self.selected_jobs, self.fetch_status
+        return self.jobs
 
     def panel(self):
         return pn.Row(self.view)

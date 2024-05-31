@@ -20,9 +20,7 @@ class CompetencyMatrixCalculator:
         job_competencies = self.generate_competencies_from_job_positions(jobs)
         project_competencies = self.generate_competencies_from_projects(projects)
         competencies = self.merge_competencies(background_competencies, job_competencies, project_competencies)
-        relevant_competencies = self.find_most_relevant_competencies_to_job_add(job_application.job_description,
-                                                                                competencies)
-        return relevant_competencies
+        return competencies
 
     def find_most_relevant_competencies_to_job_add(self, job_description: str, competencies, n=15) -> List[
         Competency]:
@@ -54,8 +52,8 @@ class CompetencyMatrixCalculator:
         """
         response = self.llm_connector.ask_question(question)
         logger.debug(f"Response: {response}")
-        competencies_ordered = self.llm_connector.try_load_as_json_list(response)
-        return competencies_ordered
+        competencies_matching = self.llm_connector.try_load_as_json_list(response)
+        return competencies_matching
 
     def generate_competencies_from_job_positions(self, job_positions: List[JobPosition]) -> List[Competency]:
         competencies = defaultdict(lambda: {'last_used': 0, 'years_of_experience': 0})
@@ -79,7 +77,8 @@ class CompetencyMatrixCalculator:
         logger.debug(f"job competencies: {[comp.name for comp in competencies]}")
         return competencies
 
-    def strip_competency_name_for_comparison(self, competency_name: str) -> str:
+    @staticmethod
+    def strip_competency_name_for_comparison(competency_name: str) -> str:
         return competency_name.lower().replace(" ", "").replace("-", "")
 
     def generate_competencies_from_projects(self, projects: List[GithubProject]) -> List[Competency]:
@@ -87,7 +86,7 @@ class CompetencyMatrixCalculator:
         for project in projects:
             for competency_name in project.technologies + project.languages:
                 competency = next(filter(lambda x: x.name == competency_name, competencies), None)
-                year_of_experience = max(0.25, project.number_of_weeks_with_commits / 47)
+                year_of_experience = max(0.25, project.number_of_weeks_with_commits or 0 / 47)
                 if competency:
                     competency.years_of_experience += year_of_experience
                     competency.last_used = max(competency.last_used, project.last_commit.year)
@@ -104,9 +103,9 @@ class CompetencyMatrixCalculator:
     def merge_competencies(self, background_competencies: List[Competency], job_competencies: List[Competency],
                            project_competencies: List[Competency]) -> List[Competency]:
         # make a group by name and sum on experience, max on last used, and
-        background_competencies_pd = self.pydantic_list_to_pandas(background_competencies)
-        job_competencies_pd = self.pydantic_list_to_pandas(job_competencies)
-        project_competencies_pd = self.pydantic_list_to_pandas(project_competencies)
+        background_competencies_pd = self.pydantic_list_to_pandas(background_competencies, Competency)
+        job_competencies_pd = self.pydantic_list_to_pandas(job_competencies, Competency)
+        project_competencies_pd = self.pydantic_list_to_pandas(project_competencies, Competency)
 
         job_project_competencies_grouped = self.sum_years_of_experience_on_jobs_and_projects(job_competencies_pd,
                                                                                              project_competencies_pd)
@@ -125,24 +124,34 @@ class CompetencyMatrixCalculator:
     def aggregate_max_with_background_competencies(self, background_competencies_pd, job_project_competencies_grouped):
         job_project_competencies_pd = pd.concat([background_competencies_pd, job_project_competencies_grouped],
                                                 ignore_index=True)
-        competencies_merged = job_project_competencies_pd.groupby('name').agg({
+        self.df_add_stripped_name_for_comparison(job_project_competencies_pd)
+        competencies_merged = job_project_competencies_pd.groupby('name_compare').agg({
+            "name": "first",
             "years_of_experience": 'max',
             'last_used': 'max',
             "level": "max",
             "category": "first",
             "attractiveness": "max",
         })
-        return competencies_merged.reset_index()
+        return competencies_merged
+
+    def df_add_stripped_name_for_comparison(self, job_project_competencies_pd, column_name='name'):
+        job_project_competencies_pd[column_name + "_compare"] = job_project_competencies_pd.apply(
+            lambda x: self.strip_competency_name_for_comparison(x[column_name]), axis=1)
 
     def sum_years_of_experience_on_jobs_and_projects(self, job_competencies_pd, project_competencies_pd):
         job_project_competencies_pd = pd.concat([job_competencies_pd, project_competencies_pd], ignore_index=True)
-        job_project_competencies_grouped = job_project_competencies_pd.groupby('name').agg({
+        self.df_add_stripped_name_for_comparison(job_project_competencies_pd)
+        job_project_competencies_grouped = job_project_competencies_pd.groupby('name_compare').agg({
+            "name": "first",
             "years_of_experience": 'sum',
             'last_used': 'max',
             "level": "max",
             "category": "first",
         })
-        return job_project_competencies_grouped.reset_index()
+        return job_project_competencies_grouped
 
-    def pydantic_list_to_pandas(self, list_of_objects):
-        return pd.DataFrame([c.dict() for c in list_of_objects])
+    def pydantic_list_to_pandas(self, list_of_objects, model):
+        column_names = model.__fields__.keys()
+        logger.debug(f"column names: {column_names}")
+        return pd.DataFrame([c.dict() for c in list_of_objects], columns=column_names)

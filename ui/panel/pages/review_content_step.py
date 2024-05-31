@@ -4,7 +4,7 @@ from panel.widgets import TextAreaInput
 
 
 class ReviewContentStep(param.Parameterized):
-    fetch_status = param.String(default='', doc="Fetch Status")
+
     selected_content = param.String(default='', doc="Selected Content")
 
     def panel(self):

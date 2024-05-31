@@ -1,7 +1,6 @@
 import pandas as pd
 import panel as pn
 import param
-from bokeh.models import DateFormatter, NumberFormatter
 from loguru import logger
 from panel.widgets import Button, Tabulator
 
@@ -18,6 +17,8 @@ class BuildCompetencyMatrixStep(param.Parameterized):
         super().__init__(**params)
         self.cv_compiler = CVCompiler()
         self.build_button = Button(name='Build Competencies', button_type='primary', on_click=self.build_competencies)
+        self.analyze_button = Button(name='Analyze Competencies', button_type='primary',
+                                     on_click=self.analyze_competencies)
 
         self.table_view = Tabulator(show_index=False, selectable='checkbox', formatters={
             # "last_used": DateFormatter("YYYY"),
@@ -31,19 +32,27 @@ class BuildCompetencyMatrixStep(param.Parameterized):
         return pn.Column(
             "### Fetch and Select Jobs",
             self.build_button,
+            self.analyze_button,
             self.table_view
         )
 
+    def analyze_competencies(self, event):
+        filtered_competencies = self.cv_compiler.match_competencies_with_job_description(self.competencies,
+                                                                                         self.job_description,
+                                                                                         10)
+        self.table_view.selection = self.create_selection_indexes_from_filtered_list(filtered_competencies,
+                                                                                     self.competencies)
+
+    def create_selection_indexes_from_filtered_list(self, filtered_list, full_list):
+        return [i for i, elm in enumerate(full_list) if elm.name in [filt_elm.name for filt_elm in filtered_list]]
+
     def build_competencies(self, event):
-        # TODO should get them from prev steps.
-        # self.projects = self.cv_compiler.file_handler.read_generated_projects_from_json()
-        # self.jobs = self.cv_compiler.file_handler.get_background_job_positions()
-        # self.job_description = self.cv_compiler.file_handler.get_job_description()
-        # logger.debug("Building competencies...")
-        # logger.debug(f"job description: {self.job_description}")
-        # logger.debug(f"jobs: {self.jobs}")
-        # logger.debug(f"projects: {self.projects}")
-        # self.competencies = self.cv_compiler.build_competencies(self.job_description, self.jobs,
-        #                                                         self.projects)
-        self.competencies = self.cv_compiler.file_handler.get_background_competency_matrix()
+        logger.debug("Building competencies...")
+        self.competencies = self.cv_compiler.build_competencies(self.job_description, self.jobs,
+                                                                self.projects)
         self.table_view.value = pd.DataFrame([c.dict() for c in self.competencies])
+
+    @param.output(competencies=param.List)
+    def output(self):
+        selected_competency_names = self.table_view.selection["name"]
+        return [comp for comp in self.competencies if comp.name in selected_competency_names]

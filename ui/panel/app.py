@@ -1,3 +1,5 @@
+import os
+
 import panel as pn
 
 from ui.panel.pages.build_competency_matrix_step import BuildCompetencyMatrixStep
@@ -16,7 +18,7 @@ class CVBuilderApp:
             ("Build Competency Matrix", BuildCompetencyMatrixStep),
             ("review Content", ReviewContentStep),
             ('Build Pdf', BuildPdfStep),
-        ])
+        ], debug=os.getenv("PANEL_DEBUG") == "True", inherit_params=True)
 
     def servable(self):
         return self.pipeline

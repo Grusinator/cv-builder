@@ -13,26 +13,25 @@ class FetchProjectsStep(param.Parameterized):
     fetch_status = param.String(default='', doc="Fetch Status")
     projects = param.List(default=[], doc="Projects")
 
-
     def __init__(self, **params):
         super().__init__(**params)
         self.cv_compiler = CVCompiler()
         self.save_button = Button(name='Select Projects', button_type='primary', on_click=self.select_projects)
-        self.cross_selector = pn.widgets.CrossSelector(name='Fruits', value=[],
+        self.cross_selector = pn.widgets.CrossSelector(name='Projects', value=[],
                                                        options=[proj.name for proj in self.projects])
 
     def panel(self):
-        return pn.Row(self.view)
+        return self.view()
 
-    @param.depends("projects")
+    @param.depends("projects", "job_description", "github_username", "github_token")
     def view(self):
-
         return pn.Column(
             "### Step 2: Fetch Information from Providers",
             TextAreaInput(name='GitHub Username', value=self.github_username, height=50),
             TextAreaInput(name='Github token', value=self.github_token, height=50),
             Button(name='Fetch Info', button_type='primary', on_click=self.fetch_info),
-            pn.pane.Markdown(self.fetch_status),
+            pn.pane.Markdown(self.job_description),
+            TextAreaInput(name='Job Description', value=self.job_description, height=200),
             self.cross_selector,
             self.save_button
         )
@@ -45,6 +44,6 @@ class FetchProjectsStep(param.Parameterized):
         selected_projects = [proj for proj in self.projects if proj.name in self.cross_selector.value]
         self.cv_compiler.update_generated_projects(selected_projects)
 
-    @param.output(('projects', param.List), ('fetch_status', param.String))
+    @param.output(projects=param.List)
     def output(self):
-        return self.projects, self.fetch_status
+        return self.projects

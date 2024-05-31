@@ -7,7 +7,7 @@ import subprocess
 from loguru import logger
 
 from cv_compiler.file_handler import FileHandler
-from cv_compiler.models import GithubProject
+from cv_compiler.models import GithubProject, JobApplication, JobPosition, Competency
 
 
 class CVCompiler:
@@ -60,10 +60,16 @@ class CVCompiler:
     def fetch_jobs(self):
         return self.file_handler.get_background_job_positions()
 
-    def build_competencies(self, job_application_text, job_positions, projects):
+    def build_competencies(self, job_application_text: str, job_positions: List[JobPosition],
+                           projects: List[GithubProject]):
         background_competencies = []
-        return self.content_builder.matrix_calc.build(job_positions, projects, job_application_text,
+        job_app = JobApplication(company_name="", job_description=job_application_text)
+        return self.content_builder.matrix_calc.build(job_positions, projects, job_app,
                                                       background_competencies)
+
+    def match_competencies_with_job_description(self, competencies: List[Competency], job_description: str, n=15):
+        return self.content_builder.matrix_calc.find_most_relevant_competencies_to_job_add(job_description,
+                                                                                           competencies, n=n)
 
 
 if __name__ == '__main__':
