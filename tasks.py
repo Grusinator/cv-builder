@@ -17,7 +17,7 @@ def build_content(ctx):
 @invoke.task
 def build_latex(ctx):
     logger.debug("Building LaTeX content")
-    LatexContentBuilder().build_all()
+    LatexContentBuilder().build_all_legacy()
 
 
 @invoke.task(build_content, build_latex)

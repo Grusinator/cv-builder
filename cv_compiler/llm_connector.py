@@ -8,7 +8,7 @@ from openai import OpenAI
 from cv_compiler.cache import cache
 
 
-class ChatGPTInterface:
+class LlmConnector:
     def __init__(self):
         self.client = OpenAI(
             organization=os.getenv("OPENAI_ORG_ID"),

@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
 
@@ -86,3 +87,12 @@ class Education(BaseModel):
     end_date: datetime
     description: Optional[str] = None
     location: Optional[str] = None
+
+
+@dataclass
+class CvContent:
+    job_positions: List[JobPosition]
+    github_projects: List[GithubProject]
+    educations: List[Education]
+    competences: List[Competency]
+    summary: str

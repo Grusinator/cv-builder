@@ -6,14 +6,14 @@ from typing import List
 import pandas as pd
 from loguru import logger
 
-from cv_compiler.llm_connector import ChatGPTInterface
+from cv_compiler.llm_connector import LlmConnector
 from cv_compiler.models import Competency, JobPosition, JobApplication, GithubProject
 
 
 class CompetencyMatrixCalculator:
 
-    def __init__(self, llm_connector: ChatGPTInterface):
-        self.llm_connector = llm_connector
+    def __init__(self):
+        self.llm_connector = LlmConnector()
 
     def build(self, jobs: List[JobPosition], projects: List[GithubProject], job_application: JobApplication,
               background_competencies: List[Competency]):

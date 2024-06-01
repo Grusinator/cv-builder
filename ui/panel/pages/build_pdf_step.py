@@ -31,7 +31,7 @@ class BuildPdfStep(param.Parameterized):
     @param.depends('build_status', "pdf_viewer")
     def view(self):
         return pn.Column(
-            "### Step 4: Build and Review",
+            "### Build PDF",
             self.build_button,
             Markdown(self.build_status),
             self.pdf_viewer,
@@ -40,9 +40,9 @@ class BuildPdfStep(param.Parameterized):
 
     def build_cv(self, event):
         self.build_status = "Building CV..."
-        output_pdf = self.compiler.build_cv_from_content(self.job_description, self.selected_jobs,
-                                                         self.selected_educations, self.selected_projects,
-                                                         self.selected_competencies, self.summary)
+        output_pdf = self.compiler.build_cv_from_content(self.selected_jobs, self.selected_educations,
+                                                         self.selected_projects, self.selected_competencies,
+                                                         self.summary)
         self.pdf_viewer.object = output_pdf
         self.download_button.file = output_pdf
         self.build_status = "CV built successfully!"

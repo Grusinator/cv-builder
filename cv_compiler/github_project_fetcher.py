@@ -18,8 +18,14 @@ class GitHubProjectFetcher:
         if not self.token:
             raise ValueError('GitHub token is required')
         self.headers = {'Authorization': f'token {self.token}'}
+        self._projects = []
 
-    def fetch_all(self) -> List[GithubProject]:
+    def get_projects(self):
+        if len(self._projects) == 0:
+            self._projects = self._fetch_all()
+        return self._projects
+
+    def _fetch_all(self) -> List[GithubProject]:
         logger.debug(f'Fetching all projects from GitHub')
         repos = self.fetch_all_repos()
         projects = []
@@ -40,6 +46,7 @@ class GitHubProjectFetcher:
                 languages=list(languages.keys()),  # Update this line
                 technologies=[]  # Fill this with actual data
             )
+            logger.debug(f'Fetched project: {project}')
             projects.append(project)
         return projects
 
@@ -76,4 +83,4 @@ class GitHubProjectFetcher:
 if __name__ == "__main__":
     load_dotenv()
     fetcher = GitHubProjectFetcher()
-    fetcher.fetch_all()
+    fetcher._fetch_all()

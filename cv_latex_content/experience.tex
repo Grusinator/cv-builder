@@ -1,1 +1,39 @@
 \cvsection{Experience}
+\cvevent{Data Engineer}{Energinet}{December 2022 -- October 2023}{Denmark}
+As a data engineer at Energinet, I was responsible for developing a data project collecting massive amounts of data from the energy island in Denmark, from various providers.
+ The main goal was to receive, perform quality control, and deliver data to the developers wanting to bid on the project.
+ In order to quality control and unpack these wide range of binary offshore sensor data files, we relied on spark and databricks to be able to scale, while at the same time allow for the flexibility of the various data formats.
+ Just to name a few, GDB, DFSU, segy, xtf etc.
+ Some of these datasets had to be unpacked for QC, analytics and visualization purposes, so in order to support geospatial data in spark I used sedona (geospark) to be able to store data in delta parquet format and to perform spatial partitioning on the dataset using geohashing, in order to improve read performance.
+
+\cvtag{Spark} \cvtag{Databricks} \cvtag{GDB} \cvtag{DFSU} \cvtag{Segy} \cvtag{XTF} \cvtag{Sedona (GeoSpark)} \cvtag{Delta Parquet}
+\divider
+
+\cvevent{Data Engineer}{Ørsted}{March 2020 -- November 2022}{Copenhagen Area, Capital Region, Denmark}
+As a data engineer I developed a data validation component as a part of our data pipelines, with configurable inputs for what to validate, developed in Python, relying on pandas as data abstraction, integrated using Azure Service Bus.
+ I have been involved with the data modelling to provide easy to understand and consume data for various analytics tools.
+ MS SQL Server, Rest api.
+ In order to iterate faster when implementing the right data model, we used Python, SQLAlchemy and SQLite, to implement a mock db, mimicking the production environment, and to test the changes before implementing it, avoiding changes in api and data pipeline.
+ I also developed different data analytics and visualization tools in Python using Streamlit, Panel, Dash and Bokeh, that help engineers to make interpretations based on the data.
+ At Ørsted I have been using the SAFE framework for project management, Devops has been relying on Azure Devops, Docker, and K8S.
+
+\cvtag{Python} \cvtag{Pandas} \cvtag{Azure Service Bus} \cvtag{MS SQL Server} \cvtag{REST API} \cvtag{SQLAlchemy} \cvtag{SQLite} \cvtag{Streamlit} \cvtag{Panel} \cvtag{Dash} \cvtag{Bokeh} \cvtag{Azure DevOps} \cvtag{Docker} \cvtag{K8S}
+\divider
+
+\cvevent{IT Consultant}{Netcompany}{November 2018 -- November 2019}{Københavnsområdet, Danmark}
+At Netcompany I have been working at big projects building custom IT solutions with multiple integrations.
+ The primary tools that I have been using as a backend developer were Oracle, Groovy, REST and a bit of JavaScript.
+ For project management and version control Jira and Git with SCRUM.
+
+\cvtag{Oracle} \cvtag{Groovy} \cvtag{REST} \cvtag{JavaScript} \cvtag{Jira} \cvtag{Git} \cvtag{SCRUM}
+\divider
+
+\cvevent{Softwareudvikler}{NIRAS}{September 2016 -- March 2018}{Allerød, Capital Region, Denmark}
+At NIRAS I have been developing geodata algorithms for data transformation, including processing of lidar data, and images.
+ I have among other developed an image classifier that can identify buildings in spectral orthophotos.
+ I also developed a model that can, based on lidar and GIS road data, identify the height profile of the roadsides, and identify the need and cost for cleaning the roadside.
+ This was developed in C\# using Postgres, PostGIS, with parallel processing capabilities.
+ At NIRAS I have also been developing various plugins for QGIS, using Qt and Python.
+
+\cvtag{C#} \cvtag{Postgres} \cvtag{PostGIS} \cvtag{QGIS} \cvtag{Qt} \cvtag{Python}
+\divider

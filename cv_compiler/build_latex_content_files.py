@@ -2,7 +2,9 @@ import textwrap
 from typing import List
 
 from cv_compiler.file_handler import FileHandler
-from cv_compiler.models import GenericProject, JobPosition, Competency, Education
+from cv_compiler.models import GenericProject, JobPosition, Competency, Education, CvContent, GithubProject
+
+CONTENT_EDUCATION_TEX = "cv_latex_content/education.tex"
 
 CONTENT_PROJECTS_TEX = 'cv_latex_content/projects.tex'
 CONTENT_EXPERIENCE_TEX = 'cv_latex_content/experience.tex'
@@ -14,23 +16,19 @@ from loguru import logger
 
 class LatexContentBuilder:
 
-    def __init__(self, file_handler=FileHandler()):
-        self.file_handler = file_handler
-
-    def build_all(self):
-        self.create_competencies_matrix_latex()
-        self.create_job_experiences_latex()
-        self.create_projects_latex()
-        self.create_resume_summary_latex()
-        self.create_educations_latex()
+    def build_content(self, cv: CvContent):
+        self.create_competencies_matrix_latex(cv.competences)
+        self.create_job_experiences_latex(cv.job_positions)
+        self.create_projects_latex(cv.github_projects)
+        self.create_resume_summary_latex(cv.summary)
+        self.create_educations_latex(cv.educations)
         logger.debug("Latex content files created successfully")
 
     def write_to_file(self, output_file, content):
         with open(output_file, 'w+', encoding='utf-8') as file:
             file.write(content)
 
-    def create_resume_summary_latex(self):
-        summary_text = self.file_handler.read_summary_txt_file()
+    def create_resume_summary_latex(self, summary_text):
         latex_content = self.create_summary_latex(summary_text)
         self.write_to_file(CONTENT_SUMMARY_TEX, latex_content)
 
@@ -45,8 +43,7 @@ class LatexContentBuilder:
         # for readability, add a newline after each dot, so lines are shorter
         return text.replace(".", ".\n" + " " * 8)
 
-    def create_projects_latex(self):
-        github_projects = self.file_handler.read_generated_projects_from_json()
+    def create_projects_latex(self, github_projects: List[GithubProject]):
         generic_projects = [proj.map_to_generic_project() for proj in github_projects]
         latex_content = self.convert_projects_to_latex(generic_projects)
         self.write_to_file(CONTENT_PROJECTS_TEX, latex_content)
@@ -67,13 +64,11 @@ class LatexContentBuilder:
         ).lstrip()
         return project
 
-    def create_job_experiences_latex(self):
-        job_experiences = self.file_handler.get_generated_job_positions()
-        job_positions_latex = self.convert_experiences_to_latex(job_experiences)
+    def create_job_experiences_latex(self, job_positions: List[JobPosition]):
+        job_positions_latex = self.convert_experiences_to_latex(job_positions)
         self.write_to_file(CONTENT_EXPERIENCE_TEX, job_positions_latex)
 
-    def create_competencies_matrix_latex(self):
-        competencies = self.file_handler.read_generated_competencies_from_csv()
+    def create_competencies_matrix_latex(self, competencies):
         latex_content = self.create_competencies_matrix_table_latex(competencies)
         self.write_to_file(CONTENT_SKILL_MATRIX_TEX, latex_content)
 
@@ -135,10 +130,9 @@ class LatexContentBuilder:
             .replace("#", "\\#")
         )
 
-    def create_educations_latex(self):
-        educations = self.file_handler.read_generated_educations()
+    def create_educations_latex(self, educations: List[Education]):
         latex_content = self.convert_educations_to_latex(educations)
-        self.write_to_file("cv_latex_content/education.tex", latex_content)
+        self.write_to_file(CONTENT_EDUCATION_TEX, latex_content)
 
     def convert_educations_to_latex(self, educations: List[Education]) -> str:
         latex_content = "\\cvsection{Education}"
@@ -157,4 +151,3 @@ class LatexContentBuilder:
 
 if __name__ == '__main__':
     latex_builder = LatexContentBuilder()
-    latex_builder.build_all()

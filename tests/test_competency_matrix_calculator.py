@@ -2,7 +2,7 @@ import pytest
 
 from cv_compiler.competency_matrix_calculator import CompetencyMatrixCalculator
 from cv_compiler.file_handler import FileHandler
-from cv_compiler.llm_connector import ChatGPTInterface
+from cv_compiler.llm_connector import LlmConnector
 from cv_compiler.models import JobPosition, Competency, GithubProject, JobApplication
 
 
@@ -11,7 +11,7 @@ class TestCompetencyMatrixCalculator:
     def test_build(self):
         fh = FileHandler()
         jobs = fh.get_background_job_positions()
-        llm = ChatGPTInterface()
+        llm = LlmConnector()
         background_competencies = fh.get_background_competency_matrix()
         projects = fh.read_generated_projects_from_json()
         job_app = fh.read_job_application()

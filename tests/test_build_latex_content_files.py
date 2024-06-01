@@ -111,6 +111,6 @@ class TestLatexContentBuilder:
         content = cv_builder.convert_projects_to_latex(projects)
         assert content == expected_content
 
-    def test_build_all(self):
+    def test_build_all(self, cv_content):
         cv_builder = LatexContentBuilder()
-        cv_builder.build_all()
+        cv_builder.build_content(cv_content)

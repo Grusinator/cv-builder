@@ -20,7 +20,7 @@ class BuildCompetencyMatrixStep(param.Parameterized):
         self.cv_compiler = CVCompiler()
         self.build_button = Button(name='Build Competencies', button_type='primary', on_click=self.build_competencies)
         self.analyze_button = Button(name='Analyze Competencies', button_type='primary',
-                                     on_click=self.analyze_competencies)
+                                     on_click=self.update_table_selection_to_match_job_desc)
 
         self.table_view = Tabulator(show_index=False, selectable='checkbox', formatters={
             # "last_used": DateFormatter("YYYY"),
@@ -44,7 +44,7 @@ class BuildCompetencyMatrixStep(param.Parameterized):
                                                                 self.projects)
         self.table_view.value = pd.DataFrame([c.dict() for c in self.competencies])
 
-    def analyze_competencies(self, event):
+    def update_table_selection_to_match_job_desc(self, event):
         filtered_competencies = self.cv_compiler.match_competencies_with_job_description(self.competencies,
                                                                                          self.job_description,
                                                                                          10)

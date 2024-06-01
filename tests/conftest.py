@@ -1,13 +1,14 @@
 import pytest
 from mock.mock import MagicMock
 
-from cv_compiler.llm_connector import ChatGPTInterface
-from cv_compiler.models import GithubProject, JobPosition, Competency, JobApplication
+from cv_compiler.file_handler import FileHandler
+from cv_compiler.llm_connector import LlmConnector
+from cv_compiler.models import GithubProject, JobPosition, Competency, JobApplication, CvContent
 
 
 @pytest.fixture
 def mock_llm():
-    llm = ChatGPTInterface()
+    llm = LlmConnector()
     llm.ask_question = MagicMock(return_value="mocked response")
     llm.try_load_as_json_list = MagicMock(return_value=['Python', 'Java'])
     return llm
@@ -59,3 +60,17 @@ def competencies():
 def job_app():
     return JobApplication(company_name="Google",
                           job_description="Job description for Software Engineer, requires svelte")
+
+
+@pytest.fixture
+def cv_content():
+    file_handler = FileHandler()
+    competencies = file_handler.read_generated_competencies_from_csv()
+    job_positions = file_handler.get_generated_job_positions()
+    github_projects = file_handler.read_generated_projects_from_json()
+    summary_text = file_handler.read_summary_txt_file()
+    educations = file_handler.read_generated_educations()
+
+    cv = CvContent(job_positions=job_positions, github_projects=github_projects, educations=educations,
+                   competences=competencies, summary=summary_text)
+    return cv
