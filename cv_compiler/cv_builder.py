@@ -76,6 +76,12 @@ class CVCompiler:
 
     def generate_summary(self, job_description: str, job_positions: List[JobPosition], educations, projects):
         return self.content_builder.generate_summary_from_llm(job_description, job_positions, educations, projects)
+    
+    def save_competencies(self, competencies: List[Competency]):
+        self.file_handler.write_competency_matrix_generated(competencies)
+
+    def get_competencies(self):
+        return self.file_handler.read_generated_competencies_from_csv()
 
 
 if __name__ == '__main__':

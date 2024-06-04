@@ -25,7 +25,7 @@ class JobPosition(BaseModel):
 
 
 class Competency(BaseModel):
-    name: str  # Name?
+    name: str
     level: int
     category: Optional[str] = None
     last_used: int

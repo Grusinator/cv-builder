@@ -102,6 +102,10 @@ class CompetencyMatrixCalculator:
 
     def merge_competencies(self, background_competencies: List[Competency], job_competencies: List[Competency],
                            project_competencies: List[Competency]) -> List[Competency]:
+        if len(job_competencies) == 0 and len(project_competencies) == 0:
+            logger.info("No competencies found in jobs or projects")
+            return background_competencies
+
         # make a group by name and sum on experience, max on last used, and
         background_competencies_pd = self.pydantic_list_to_pandas(background_competencies, Competency)
         job_competencies_pd = self.pydantic_list_to_pandas(job_competencies, Competency)
@@ -135,7 +139,7 @@ class CompetencyMatrixCalculator:
         })
         return competencies_merged
 
-    def df_add_stripped_name_for_comparison(self, job_project_competencies_pd, column_name='name'):
+    def df_add_stripped_name_for_comparison(self, job_project_competencies_pd: pd.DataFrame, column_name='name'):
         job_project_competencies_pd[column_name + "_compare"] = job_project_competencies_pd.apply(
             lambda x: self.strip_competency_name_for_comparison(x[column_name]), axis=1)
 

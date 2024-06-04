@@ -5,6 +5,7 @@ from loguru import logger
 from panel.widgets import Button, Tabulator
 
 from cv_compiler.cv_builder import CVCompiler
+from cv_compiler.model_utils import ModelUtils
 from cv_compiler.models import Competency
 
 
@@ -22,8 +23,10 @@ class BuildCompetencyMatrixStep(param.Parameterized):
         self.build_button = Button(name='Build Competencies', button_type='primary', on_click=self.build_competencies)
         self.analyze_button = Button(name='Analyze Competencies', button_type='primary',
                                      on_click=self.update_table_selection_to_match_job_desc)
+        competencies = self.cv_compiler.get_competencies()
+        competencies_pd = ModelUtils.pydantic_list_to_pandas(competencies, Competency)
 
-        self.table_view = Tabulator(show_index=False, selectable='checkbox', formatters={
+        self.table_view = Tabulator(value=competencies_pd, show_index=False, selectable='checkbox', formatters={
             # "last_used": DateFormatter("YYYY"),
             # "years_of_experience": NumberFormatter(format="0.0")
         })
@@ -43,7 +46,7 @@ class BuildCompetencyMatrixStep(param.Parameterized):
         logger.debug("Building competencies...")
         self.competencies = self.cv_compiler.build_competencies(self.job_description, self.jobs,
                                                                 self.projects)
-        self.table_view.value = pd.DataFrame([c.dict() for c in self.competencies])
+        self.table_view.value = pd.DataFrame([c.model_dump() for c in self.competencies])
 
     def update_table_selection_to_match_job_desc(self, event):
         filtered_competencies = self.cv_compiler.match_competencies_with_job_description(self.competencies,
@@ -57,5 +60,6 @@ class BuildCompetencyMatrixStep(param.Parameterized):
 
     @param.output(selected_competencies=param.List)
     def output(self):
-        self.competencies = [Competency(**comp) for comp in self.table_view.value.to_dict(orient='records')]
+        self.competencies = ModelUtils.convert_pandas_to_pydantic(self.table_view.value, Competency)
+        self.cv_compiler.save_competencies(self.competencies)
         return [comp for i, comp in enumerate(self.competencies) if i in self.table_view.selection]
