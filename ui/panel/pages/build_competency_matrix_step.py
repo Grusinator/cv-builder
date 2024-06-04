@@ -5,6 +5,7 @@ from loguru import logger
 from panel.widgets import Button, Tabulator
 
 from cv_compiler.cv_builder import CVCompiler
+from cv_compiler.models import Competency
 
 
 class BuildCompetencyMatrixStep(param.Parameterized):
@@ -56,4 +57,5 @@ class BuildCompetencyMatrixStep(param.Parameterized):
 
     @param.output(selected_competencies=param.List)
     def output(self):
+        self.competencies = [Competency(**comp) for comp in self.table_view.value.to_dict(orient='records')]
         return [comp for i, comp in enumerate(self.competencies) if i in self.table_view.selection]

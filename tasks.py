@@ -32,7 +32,7 @@ def pdflatex(ctx):
 
 @invoke.task
 def docker_run(ctx):
-    ctx.run("docker-compose -f devops/docker/compose.yml up")
+    ctx.run("docker-compose -f devops/docker/compose.yml up --build")
 
 
 @invoke.task
@@ -44,7 +44,7 @@ def open_pdf(ctx):
 
 @invoke.task
 def run_ui(ctx):
-    ctx.run("python ui/ui.py")
+    ctx.run("panel serve --show cv_app.py --autoreload --port 5006")
 
 
 if __name__ == '__main__':
