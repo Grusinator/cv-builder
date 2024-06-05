@@ -2,7 +2,7 @@ import textwrap
 from datetime import datetime
 
 from cv_compiler.build_latex_content_files import LatexContentBuilder
-from cv_compiler.models import JobPosition, Competency, GenericProject
+from cv_compiler.models import JobPosition, Competency, Project
 
 
 class TestLatexContentBuilder:
@@ -80,13 +80,13 @@ class TestLatexContentBuilder:
         cv_builder = LatexContentBuilder()
 
         projects = [
-            GenericProject(
+            Project(
                 name="Project A",
                 description="This is project A",
                 effort_in_years=1,
                 competencies=["Python", "Django"]
             ),
-            GenericProject(
+            Project(
                 name="Project B",
                 description="This is project B",
                 effort_in_years=0.5,

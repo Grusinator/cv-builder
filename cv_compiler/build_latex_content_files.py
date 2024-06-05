@@ -2,7 +2,7 @@ import textwrap
 from typing import List
 
 from cv_compiler.file_handler import FileHandler
-from cv_compiler.models import GenericProject, JobPosition, Competency, Education, CvContent, GithubProject
+from cv_compiler.models import Project, JobPosition, Competency, Education, CvContent, GithubProject
 
 CONTENT_EDUCATION_TEX = "cv_latex_content/education.tex"
 
@@ -48,12 +48,12 @@ class LatexContentBuilder:
         latex_content = self.convert_projects_to_latex(generic_projects)
         self.write_to_file(CONTENT_PROJECTS_TEX, latex_content)
 
-    def convert_projects_to_latex(self, projects: List[GenericProject]) -> str:
+    def convert_projects_to_latex(self, projects: List[Project]) -> str:
         latex_content = "\\cvsection{Projects}\n"
         projects_latex = [self.create_project_latex(project) for project in projects]
         return latex_content + "\\divider\n\n".join(projects_latex)
 
-    def create_project_latex(self, project: GenericProject) -> str:
+    def create_project_latex(self, project: Project) -> str:
         competency_tags = self.create_list_of_competency_tags(project.competencies)
         project = textwrap.dedent(
             f"""

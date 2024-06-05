@@ -8,6 +8,10 @@ loguru
 panel
 holoviews
 bokeh
+django
+django-ninja
+channels
+bokeh_django
 pdfplumber
 
 pytest

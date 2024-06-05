@@ -22,14 +22,14 @@ class CVBuilderApp:
             ('Build Pdf', BuildPdfStep),
         ], debug=os.getenv("PANEL_DEBUG") == "True", inherit_params=True)
 
-    def servable(self):
-        return self.pipeline
+    def view(self):
+        return pn.Row(self.pipeline)
 
 
 if __name__.startswith('bokeh'):
     app = CVBuilderApp()
-    app.servable().servable()
+    app.view().servable()
 
 if __name__ == '__main__':
     app = CVBuilderApp()
-    app.servable().show()
+    app.view().show()

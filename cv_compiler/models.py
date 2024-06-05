@@ -55,8 +55,8 @@ class GithubProject(BaseModel):
     languages: Optional[List[str]] = []
     technologies: Optional[List[str]] = []
 
-    def map_to_generic_project(self) -> 'GenericProject':
-        return GenericProject(
+    def map_to_generic_project(self) -> 'Project':
+        return Project(
             name=self.name,
             description=self.description if self.description else '',
             effort_in_years=self.number_of_weeks_with_commits / 52,
@@ -64,7 +64,7 @@ class GithubProject(BaseModel):
         )
 
 
-class GenericProject(BaseModel):
+class Project(BaseModel):
     name: str
     description: str
     effort_in_years: float

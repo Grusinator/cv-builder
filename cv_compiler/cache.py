@@ -1,11 +1,9 @@
 import json
 from datetime import datetime, date
-from typing import Callable
 from functools import wraps
+from typing import Callable
 
 from loguru import logger
-from pydantic import BaseModel
-from pydantic.v1.main import ModelMetaclass
 
 
 class Cache:
