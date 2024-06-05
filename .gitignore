@@ -9,3 +9,8 @@ job_application_text.txt
 
 *.env
 venv/
+
+staticfiles/
+media
+db.sqlite3
+
