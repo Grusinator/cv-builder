@@ -1,6 +1,6 @@
-from azure.functions._abc import HttpResponse
+
 from bokeh.embed import server_document
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 

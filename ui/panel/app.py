@@ -23,7 +23,12 @@ class CVBuilderApp:
         ], debug=os.getenv("PANEL_DEBUG") == "True", inherit_params=True)
 
     def view(self):
-        return pn.Row(self.pipeline)
+        return pn.Row(
+            pn.Column(
+                pn.pane.Markdown(f"User ID: {pn.state.user_id}" if pn.state.user_id else "No user ID provided."),
+                self.pipeline
+            )
+        )
 
 
 if __name__.startswith('bokeh'):

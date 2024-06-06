@@ -16,6 +16,9 @@ if __name__ == '__main__':
 
 def app(doc):
     """This function is necessary for the app to be served by Django."""
-    sw = CVBuilderApp()
-    row = pn.Row(sw.view())
-    row.server_doc(doc)
+    user_id = doc.session_context.request.arguments.get('user_id', [""])[0]
+
+    # Store the user ID in pn.state for access throughout the session
+    pn.state.user_id = user_id
+    _app = CVBuilderApp().view()
+    _app.server_doc(doc)

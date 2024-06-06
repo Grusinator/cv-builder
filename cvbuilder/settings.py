@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'channels',
     'bokeh_django',
+    'core',
     "buildcv",
     "users"
 ]
@@ -57,7 +58,7 @@ ROOT_URLCONF = "cvbuilder.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        'DIRS': [BASE_DIR / 'buildcv' / 'templates'],
+        'DIRS': [BASE_DIR / 'core' / 'templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

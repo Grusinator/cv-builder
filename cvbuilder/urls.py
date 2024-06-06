@@ -20,22 +20,15 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path, include
 
 import cv_app
-from ui.panel.app import CVBuilderApp
 
 pn_app_config = apps.get_app_config('bokeh_django')
 
 urlpatterns = [
-    path('', include('buildcv.urls')),
+    path('buildcv/', include('buildcv.urls')),
+    path("", include("core.urls")),
     path('users/', include('users.urls')),
     path('admin/', admin.site.urls),
 ]
-
-
-def app(doc):
-    """This function is necessary for the app to be served by Django."""
-    app = CVBuilderApp().view()
-    app.server_doc(doc)
-
 
 bokeh_apps = [
     autoload("buildcv", cv_app.app),
