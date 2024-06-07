@@ -24,8 +24,8 @@ class CvContentRepository:
         return JobPosition.from_orm(JobPositionModel.objects.get(id=job_position_id))
 
     @staticmethod
-    def delete_job_position(job_position_id: int):
-        JobPositionModel.objects.get(id=job_position_id).delete()
+    def delete_job_position(user: User, job_position_id: int):
+        JobPositionModel.objects.get(user=user, job_position_id=job_position_id).delete()
 
     @staticmethod
     def create_competency(user: User, data: Competency) -> Competency:
@@ -78,8 +78,17 @@ class CvContentRepository:
         return Education.from_orm(education)
 
     @staticmethod
+    def delete_education(user: User, education_id: int):
+        EducationModel.objects.get(education_id=education_id, user=user).delete()
+
+    @staticmethod
     def get_educations(user: User) -> List[Education]:
         return [Education.from_orm(edu) for edu in EducationModel.objects.filter(user=user)]
+
+    def update_education(self, education_id, data):
+        EducationModel.objects.filter(id=education_id).update(**data)
+        return data
+
 
     def create_competencies(self, user, competencies):
         with transaction.atomic():
@@ -96,5 +105,6 @@ class CvContentRepository:
             for job_position in job_positions:
                 self.create_job_position(user, job_position)
 
-    def get_logged_in_user(self):
-        return User.objects
+
+
+

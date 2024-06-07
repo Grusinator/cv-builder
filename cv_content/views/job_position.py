@@ -4,11 +4,11 @@ from django.shortcuts import redirect
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_POST
 
-from .forms import FileUploadForm
-from .forms import JobPositionForm
+from cv_content.forms import FileUploadForm
+from cv_content.forms import JobPositionForm
 
-from .models import JobPositionModel
-from .services import CVBuilderService
+from cv_content.models import JobPositionModel
+from cv_content.services import CVBuilderService
 
 
 @login_required
@@ -27,8 +27,8 @@ def update_job_position(request, job_id):
 @login_required
 @require_POST  # Ensure that this view can only be accessed via POST request
 def delete_job_position(request, job_id):
-    job = JobPositionModel.objects.get(pk=job_id)
-    job.delete()
+    service = CVBuilderService()
+    service.repository.delete_job_position(user=request.user, job_position_id=job_id)
     return redirect('list_job_positions')
 
 
@@ -69,5 +69,4 @@ def add_job_position(request):
     return render(request, 'add_job_position.html', {'form': form})
 
 
-def show_content(request):
-    return render(request, 'cv_content_base.html')
+

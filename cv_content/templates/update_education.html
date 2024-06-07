@@ -2,13 +2,13 @@
 
 {% block content %}
 <header class="major">
-    <h2>Add Job Position</h2>
+    <h2>Edit Education</h2>
 </header>
 <section>
-    <form method="post">
+    <form method="post" novalidate>
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Add Job Position</button>
+        <button type="submit">Update Education</button>
     </form>
 </section>
 {% endblock %}

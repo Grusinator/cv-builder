@@ -13,6 +13,7 @@ django-ninja
 channels
 bokeh_django
 pdfplumber
+mixer
 
 pytest
 pytest-dotenv

@@ -1,4 +1,4 @@
-{% extends "cv_content_base.html" %}
+{% extends "base_cv_content.html" %}
 
 {% block content %}
 <header class="major">
@@ -9,6 +9,7 @@
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Upload PDF</button>
+        <a href="add-job/">Add Job Manually</a>
     </form>
     <h3>Work Experience</h3>
     <ul>

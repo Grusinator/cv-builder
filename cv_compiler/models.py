@@ -28,6 +28,7 @@ class JobPosition(BaseModel):
 
 
 class Competency(BaseModel):
+    competency_id: int
     name: str
     level: int
     category: Optional[str] = None
@@ -71,6 +72,7 @@ class GithubProject(BaseModel):
 
 
 class Project(BaseModel):
+    project_id: int
     name: str
     description: str
     effort_in_years: float
@@ -90,6 +92,7 @@ class JobApplication(BaseModel):
 
 
 class Education(BaseModel):
+    education_id: int
     degree: str
     school: str
     start_date: datetime

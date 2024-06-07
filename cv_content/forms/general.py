@@ -1,7 +1,5 @@
 from django import forms
-from django.forms.widgets import DateInput
-
-from cv_content.models import JobPositionModel
+from django.forms import ModelForm
 
 
 class CommaSeparatedInput(forms.CharField):
@@ -21,24 +19,9 @@ class FileUploadForm(forms.Form):
                            widget=forms.FileInput(attrs={'accept': 'application/pdf'}))
 
 
-class JobPositionForm(forms.ModelForm):
-    competencies = CommaSeparatedInput(
-        help_text="Enter competencies separated by commas"
-    )
-    start_date = forms.DateField(
-        widget=DateInput(attrs={'type': 'date'}),
-        help_text="Select a start date"
-    )
-    end_date = forms.DateField(
-        widget=DateInput(attrs={'type': 'date'}),
-        help_text="Select an end date"
-    )
-
-    class Meta:
-        model = JobPositionModel
-        fields = ['title', 'company', 'location', 'start_date', 'end_date', 'description', 'competencies']
-
+class ModelFormWithUserInfo(ModelForm):
     def __init__(self, *args, **kwargs):
+
         self.user = kwargs.pop('user',
                                None)  # Extract user from kwargs and ensure it does not interfere with other form data
         super().__init__(*args, **kwargs)

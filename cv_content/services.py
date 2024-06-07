@@ -15,7 +15,7 @@ class CVBuilderService:
     output_pdf_path = "main.pdf"
 
     def __init__(self, repository=CvContentRepository()):
-        self.repository = repository
+        self.repository: CvContentRepository = repository
         self.content_builder = CVContentBuilder()
         self.github_fetcher = GitHubProjectFetcher()
         self.competency_calculator = CompetencyMatrixCalculator()
@@ -98,5 +98,3 @@ class CVBuilderService:
     def get_competencies(self, user):
         return self.repository.get_competencies(user)
 
-    def get_logged_in_user(self):
-        return self.repository.get_logged_in_user()
