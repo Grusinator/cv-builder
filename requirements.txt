@@ -16,3 +16,4 @@ pdfplumber
 
 pytest
 pytest-dotenv
+pytest-django

@@ -110,7 +110,7 @@ class LatexContentBuilder:
     def create_job_position_section(self, job: JobPosition):
         start_date = job.start_date.strftime('%B %Y')
         end_date = job.end_date.strftime('%B %Y')
-        technologies = job.technologies
+        technologies = job.competencies
         competency_tags = self.create_list_of_competency_tags(technologies)
         text = f"""
         \\cvevent{{{job.title}}}{{{job.company}}}{{{start_date} -- {end_date}}}{{{job.location}}}

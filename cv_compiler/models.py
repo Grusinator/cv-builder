@@ -6,15 +6,18 @@ from pydantic import BaseModel
 
 
 class JobPosition(BaseModel):
+    job_position_id: int
     title: str
     company: str
     start_date: datetime
     end_date: datetime
     location: Optional[str] = None
     description: Optional[str] = None
-    technologies: List[str] = []
+    competencies: List[str] = []
 
     class Config:
+        from_attributes = True  # This line is needed to use from_orm properly
+
         json_encoders = {
             datetime: lambda dt: dt.strftime('%Y-%m-%d')
         }
@@ -31,6 +34,9 @@ class Competency(BaseModel):
     last_used: int
     years_of_experience: float
     attractiveness: Optional[int] = 0
+
+    class Config:
+        from_attributes = True  # This line is needed to use from_orm properly
 
     @property
     def level_description(self):
@@ -70,6 +76,9 @@ class Project(BaseModel):
     effort_in_years: float
     competencies: List[str] = []
 
+    class Config:
+        from_attributes = True  # This line is needed to use from_orm properly
+
 
 class BuildConfiguration(BaseModel):
     pass
@@ -87,6 +96,9 @@ class Education(BaseModel):
     end_date: datetime
     description: Optional[str] = None
     location: Optional[str] = None
+
+    class Config:
+        from_attributes = True  # This line is needed to use from_orm properly
 
 
 @dataclass

@@ -26,11 +26,20 @@
         <nav id="nav">
             <ul>
                 {% if user.is_superuser %}
-                <li><a class="active" href="/admin/">Admin</a></li>
+                <li><a class="active" href="/admin/">Admin Panel</a></li>
                 {% endif %}
                 {% if user.is_authenticated %}
+
+
+                <li><a href="/">Home</a></li>
+                <li><a href="/buildcv/">Build CV</a></li>
+                <li><a href="/cv_content/">Create CV content</a></li>
+                {% block nav %}
+                <li> </li>
+                {% endblock %}
+
                 <li><p>Logged as {{ user.username }}</p></li>
-                <li><a class="button primary" href="/buildcv/">Build CV</a></li>
+
                 <li><a class="button primary" href="/users/logout/">Logout</a></li>
                 {% else %}
                 <li><a class="button primary" href="/users/signup/">Sign Up</a></li>

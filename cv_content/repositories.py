@@ -7,20 +7,11 @@ from cv_compiler.models import JobPosition, Competency, Education, Project
 from .models import JobPositionModel, CompetencyModel, ProjectModel, EducationModel
 
 
-class CvBuilderRepository:
+class CvContentRepository:
 
     @staticmethod
-    def create_job_position(user: User, data: JobPosition) -> JobPosition:
-        job_position = JobPositionModel.objects.create(
-            user=user,
-            title=data.title,
-            company=data.company,
-            start_date=data.start_date,
-            end_date=data.end_date,
-            location=data.location,
-            description=data.description,
-            technologies=data.technologies
-        )
+    def create_job_position(user: User, job_position: JobPosition) -> JobPosition:
+        job_position = JobPositionModel.objects.create(**job_position.dict(), user=user)
         return JobPosition.from_orm(job_position)
 
     @staticmethod

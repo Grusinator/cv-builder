@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header class="major">
+    <h2>Add Job Position</h2>
+</header>
+<section>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Job Position</button>
+    </form>
+</section>
+{% endblock %}

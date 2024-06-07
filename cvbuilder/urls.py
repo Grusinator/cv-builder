@@ -27,6 +27,7 @@ urlpatterns = [
     path('buildcv/', include('buildcv.urls')),
     path("", include("core.urls")),
     path('users/', include('users.urls')),
+    path("cv_content/", include("cv_content.urls")),
     path('admin/', admin.site.urls),
 ]
 

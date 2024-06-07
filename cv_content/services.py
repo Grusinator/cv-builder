@@ -8,26 +8,27 @@ from cv_compiler.competency_matrix_calculator import CompetencyMatrixCalculator
 from cv_compiler.github_project_fetcher import GitHubProjectFetcher
 from cv_compiler.models import GithubProject, JobApplication, JobPosition, Competency, CvContent
 from cv_compiler.pdf_reader import PdfReader
-from .cv_builder_repository import CvBuilderRepository
+from .repositories import CvContentRepository
 
 
 class CVBuilderService:
     output_pdf_path = "main.pdf"
 
-    def __init__(self, repository=CvBuilderRepository()):
+    def __init__(self, repository=CvContentRepository()):
         self.repository = repository
         self.content_builder = CVContentBuilder()
         self.github_fetcher = GitHubProjectFetcher()
         self.competency_calculator = CompetencyMatrixCalculator()
         self.latex_content_builder = LatexContentBuilder()
 
-    def fetch_github_projects(self, github_username, github_token):
+    def fetch_github_projects(self, user, github_username, github_token):
         logger.info("Fetching GitHub projects")
         self.github_fetcher.username = github_username
         self.github_fetcher.token = github_token
         projects = self.github_fetcher.get_projects()
+        projects = [project.map_to_generic_project() for project in projects]
         for project in projects:
-            self.repository.create_project(project)
+            self.repository.create_project(user, project)
         return projects
 
     def build_cv_from_content(self, selected_jobs, selected_education, selected_projects,
@@ -68,13 +69,25 @@ class CVBuilderService:
     def match_projects_with_competencies(self, projects: List[GithubProject], competencies: List[Competency]):
         return self.content_builder.filter_most_relevant_projects(projects, competencies)
 
-    def load_job_positions_and_education_from_pdf(self, pdf_bytes: bytes):
+    def load_job_positions_and_education_from_pdf(self, user, pdf_bytes: bytes):
         pdf_cv_content = PdfReader().extract_text_from_pdf(pdf_bytes)
         job_positions = self.content_builder.get_job_positions_from_pdf(pdf_cv_content)
         educations = self.content_builder.get_educations_from_pdf(pdf_cv_content)
         self.repository.create_job_positions(user, job_positions)
         self.repository.create_educations(user, educations)
         return job_positions, educations
+
+    def load_job_positions_from_pdf(self, user, pdf_bytes: bytes):
+        pdf_cv_content = PdfReader().extract_text_from_pdf(pdf_bytes)
+        job_positions = self.content_builder.get_job_positions_from_pdf(pdf_cv_content)
+        self.repository.create_job_positions(user, job_positions)
+        return job_positions
+
+    def load_educations_from_pdf(self, user, pdf_bytes: bytes):
+        pdf_cv_content = PdfReader().extract_text_from_pdf(pdf_bytes)
+        educations = self.content_builder.get_educations_from_pdf(pdf_cv_content)
+        self.repository.create_educations(user, educations)
+        return educations
 
     def generate_summary(self, job_description: str, job_positions: List[JobPosition], educations, projects):
         return self.content_builder.generate_summary_from_llm(job_description, job_positions, educations, projects)

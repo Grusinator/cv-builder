@@ -61,9 +61,9 @@ class CompetencyMatrixCalculator:
         for job in job_positions:
             years_of_exp = (job.end_date - job.start_date).days / 365.25
 
-            for tech in job.technologies:
-                competencies[tech]['last_used'] = max(job.end_date.year, competencies[tech]['last_used'])
-                competencies[tech]['years_of_experience'] += years_of_exp
+            for comp_name in job.competencies:
+                competencies[comp_name]['last_used'] = max(job.end_date.year, competencies[comp_name]['last_used'])
+                competencies[comp_name]['years_of_experience'] += years_of_exp
 
         competencies = [
             Competency(
