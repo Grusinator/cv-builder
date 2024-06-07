@@ -27,9 +27,7 @@ class CVBuilderService:
         self.github_fetcher.token = github_token
         projects = self.github_fetcher.get_projects()
         projects = [project.map_to_generic_project() for project in projects]
-        for project in projects:
-            self.repository.create_project(user, project)
-        return projects
+        return self.repository.create_projects(user, projects)
 
     def build_cv_from_content(self, selected_jobs, selected_education, selected_projects,
                               selected_competencies, summary):
@@ -58,10 +56,18 @@ class CVBuilderService:
             return f.read()
 
     def build_competencies(self, job_application_text: str, job_positions: List[JobPosition],
-                           projects: List[GithubProject]):
+                           projects: List[GithubProject], existing_competencies: List[Competency] = None):
         job_app = JobApplication(company_name="", job_description=job_application_text)
         background_competencies = self.repository.get_competencies()
-        return self.competency_calculator.build(job_positions, projects, job_app, background_competencies)
+        return
+
+    def build_competencies_from_projects_and_jobs(self, user):
+        job_positions = self.repository.get_job_positions(user=user)
+        projects = self.repository.get_projects(user=user)
+        existing_competencies = self.repository.get_competencies(user=user)
+        competencies = self.competency_calculator.build(job_positions, projects, existing_competencies)
+        self.repository.create_competencies(user, competencies)
+        return competencies
 
     def match_competencies_with_job_description(self, competencies: List[Competency], job_description: str, n=15):
         return self.competency_calculator.find_most_relevant_competencies_to_job_add(job_description, competencies, n=n)
@@ -97,4 +103,12 @@ class CVBuilderService:
 
     def get_competencies(self, user):
         return self.repository.get_competencies(user)
+
+    def build_competencies_from_projects_and_jobs(self, user):
+        job_positions = self.repository.get_job_positions(user=user)
+        projects = self.repository.get_projects(user=user)
+        job_application_text = ""  # Retrieve job application text if needed
+        competencies = self.build_competencies(job_application_text, job_positions, projects)
+        self.repository.create_competencies(user, competencies)
+        return competencies
 

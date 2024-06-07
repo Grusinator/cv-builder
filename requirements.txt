@@ -18,3 +18,4 @@ mixer
 pytest
 pytest-dotenv
 pytest-django
+pytest-mock

@@ -89,22 +89,19 @@ class CvContentRepository:
         EducationModel.objects.filter(id=education_id).update(**data)
         return data
 
-
     def create_competencies(self, user, competencies):
         with transaction.atomic():
-            for competency in competencies:
-                self.create_competency(user, competency)
+            return [self.create_competency(user, competency) for competency in competencies]
 
     def create_educations(self, user, educations):
         with transaction.atomic():
-            for education in educations:
-                self.create_education(user, education)
+            return [self.create_education(user, education) for education in educations]
 
     def create_job_positions(self, user, job_positions):
         with transaction.atomic():
-            for job_position in job_positions:
-                self.create_job_position(user, job_position)
+            return [self.create_job_position(user, job_position) for job_position in job_positions]
 
-
-
+    def create_projects(self, user, projects):
+        with transaction.atomic():
+            return [self.create_project(user, project) for project in projects]
 

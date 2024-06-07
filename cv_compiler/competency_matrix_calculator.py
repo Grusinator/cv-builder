@@ -7,7 +7,7 @@ import pandas as pd
 from loguru import logger
 
 from cv_compiler.llm_connector import LlmConnector
-from cv_compiler.models import Competency, JobPosition, JobApplication, GithubProject
+from cv_compiler.models import Competency, JobPosition, JobApplication, GithubProject, Project
 
 
 class CompetencyMatrixCalculator:
@@ -15,10 +15,9 @@ class CompetencyMatrixCalculator:
     def __init__(self):
         self.llm_connector = LlmConnector()
 
-    def build(self, jobs: List[JobPosition], projects: List[GithubProject], job_application: JobApplication,
-              background_competencies: List[Competency]):
+    def build(self, jobs: List[JobPosition], projects: List[GithubProject], background_competencies: List[Competency]):
         job_competencies = self.generate_competencies_from_job_positions(jobs)
-        project_competencies = self.generate_competencies_from_projects(projects)
+        project_competencies = self.generate_competencies_from_github_projects(projects)
         competencies = self.merge_competencies(background_competencies, job_competencies, project_competencies)
         return competencies
 
@@ -81,10 +80,31 @@ class CompetencyMatrixCalculator:
     def strip_competency_name_for_comparison(competency_name: str) -> str:
         return competency_name.lower().replace(" ", "").replace("-", "")
 
-    def generate_competencies_from_projects(self, projects: List[GithubProject]) -> List[Competency]:
+    def generate_competencies_from_github_projects(self, projects: List[GithubProject]) -> List[Competency]:
         competencies: List[Competency] = []
         for project in projects:
             for competency_name in project.technologies + project.languages:
+                competency = next(filter(lambda x: x.name == competency_name, competencies), None)
+                year_of_experience = max(0.25, project.number_of_weeks_with_commits or 0 / 47)
+                if competency:
+                    competency.years_of_experience += year_of_experience
+                    competency.last_used = max(competency.last_used, project.last_commit.year)
+                else:
+                    competencies.append(Competency(
+                        name=competency_name,
+                        level=1,
+                        last_used=project.last_commit.year,
+                        years_of_experience=year_of_experience
+                    ))
+        logger.debug(f"project competencies: {[comp.name for comp in competencies]}")
+        return competencies
+
+    def generate_competencies_from_generic_projects(self, projects: List[Project]) -> List[Competency]:
+        # TODO split this into 2 functions. one that calculates the year effort, and last activity,
+        #  and one that creates the competencies
+        competencies: List[Competency] = []
+        for project in projects:
+            for competency_name in project.competencies:
                 competency = next(filter(lambda x: x.name == competency_name, competencies), None)
                 year_of_experience = max(0.25, project.number_of_weeks_with_commits or 0 / 47)
                 if competency:
