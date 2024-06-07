@@ -56,11 +56,11 @@ class CVCompiler:
         with open(self.output_pdf_path, "rb") as f:
             return f.read()
 
-    def build_competencies(self, job_application_text: str, job_positions: List[JobPosition],
+    def build_competencies(self, job_positions: List[JobPosition],
                            projects: List[GithubProject]):
         background_competencies = []
-        job_app = JobApplication(company_name="", job_description=job_application_text)
-        return self.competency_calculator.build(job_positions, projects, job_app, background_competencies)
+        generic_projects = [project.map_to_generic_project() for project in projects]
+        return self.competency_calculator.build(job_positions, generic_projects, background_competencies)
 
     def match_competencies_with_job_description(self, competencies: List[Competency], job_description: str, n=15):
         return self.competency_calculator.find_most_relevant_competencies_to_job_add(job_description, competencies, n=n)

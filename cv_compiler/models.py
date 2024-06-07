@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class JobPosition(BaseModel):
-    job_position_id: int
+    job_position_id: Optional[int]
     title: str
     company: str
     start_date: datetime
@@ -28,7 +28,7 @@ class JobPosition(BaseModel):
 
 
 class Competency(BaseModel):
-    competency_id: int
+    competency_id: Optional[int]
     name: str
     level: int
     category: Optional[str] = None
@@ -66,16 +66,18 @@ class GithubProject(BaseModel):
         return Project(
             name=self.name,
             description=self.description if self.description else '',
-            effort_in_years=self.number_of_weeks_with_commits / 52,
+            effort_in_years=max(0.1, self.number_of_weeks_with_commits or 0 / 47),
+            last_updated=self.last_commit,
             competencies=set(self.technologies + self.languages + self.topics)
         )
 
 
 class Project(BaseModel):
-    project_id: int
+    project_id: Optional[int]
     name: str
     description: str
     effort_in_years: float
+    last_updated: datetime
     competencies: List[str] = []
 
     class Config:
@@ -92,7 +94,7 @@ class JobApplication(BaseModel):
 
 
 class Education(BaseModel):
-    education_id: int
+    education_id: Optional[int]
     degree: str
     school: str
     start_date: datetime

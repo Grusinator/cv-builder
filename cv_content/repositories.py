@@ -105,3 +105,5 @@ class CvContentRepository:
         with transaction.atomic():
             return [self.create_project(user, project) for project in projects]
 
+    def delete_competency(self, user, competency_id):
+        CompetencyModel.objects.get(user=user, competency_id=competency_id).delete()

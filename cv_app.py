@@ -6,6 +6,7 @@ from ui.panel.app import CVBuilderApp
 load_dotenv()
 
 if __name__.startswith('bokeh'):
+    pn.state.user_id = 1
     app = CVBuilderApp()
     app.view().servable()
 

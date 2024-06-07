@@ -44,8 +44,7 @@ class BuildCompetencyMatrixStep(param.Parameterized):
 
     def build_competencies(self, event):
         logger.debug("Building competencies...")
-        self.competencies = self.cv_compiler.build_competencies(self.job_description, self.jobs,
-                                                                self.projects)
+        self.competencies = self.cv_compiler.build_competencies(self.jobs, self.projects)
         self.table_view.value = pd.DataFrame([c.model_dump() for c in self.competencies])
 
     def update_table_selection_to_match_job_desc(self, event):

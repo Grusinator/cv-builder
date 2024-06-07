@@ -55,12 +55,6 @@ class CVBuilderService:
         with open(self.output_pdf_path, "rb") as f:
             return f.read()
 
-    def build_competencies(self, job_application_text: str, job_positions: List[JobPosition],
-                           projects: List[GithubProject], existing_competencies: List[Competency] = None):
-        job_app = JobApplication(company_name="", job_description=job_application_text)
-        background_competencies = self.repository.get_competencies()
-        return
-
     def build_competencies_from_projects_and_jobs(self, user):
         job_positions = self.repository.get_job_positions(user=user)
         projects = self.repository.get_projects(user=user)
@@ -103,12 +97,4 @@ class CVBuilderService:
 
     def get_competencies(self, user):
         return self.repository.get_competencies(user)
-
-    def build_competencies_from_projects_and_jobs(self, user):
-        job_positions = self.repository.get_job_positions(user=user)
-        projects = self.repository.get_projects(user=user)
-        job_application_text = ""  # Retrieve job application text if needed
-        competencies = self.build_competencies(job_application_text, job_positions, projects)
-        self.repository.create_competencies(user, competencies)
-        return competencies
 
