@@ -1,11 +1,11 @@
-from cv_compiler.build_cv_content import CVContentBuilder
+from cv_content.services.extract_cv_content_from_pdf_service import ExtractCvContentFromPdfService
 from cv_content.schemas import Competency, GithubProject
 
 
 class TestBuildCvContent:
 
     def test_filter_most_relevant_projects(self):
-        cv_content_builder = CVContentBuilder()
+        cv_content_builder = ExtractCvContentFromPdfService()
         projects = [
             GithubProject(name="Project 1", owner="me", last_commit="2022-11-02", languages=["Python", "JavaScript"],
                           commits=10),

@@ -1,8 +1,7 @@
 import textwrap
 from typing import List
 
-from cv_compiler.file_handler import FileHandler
-from cv_compiler.models import CvContent
+from buildcv.schemas import CvContent
 from cv_content.schemas import JobPosition, Competency, GithubProject, Project, Education
 
 CONTENT_EDUCATION_TEX = "cv_latex_content/education.tex"
@@ -15,7 +14,7 @@ CONTENT_SKILL_MATRIX_TEX = "cv_latex_content/skill_matrix.tex"
 from loguru import logger
 
 
-class LatexContentBuilder:
+class LatexContentBuilderService:
 
     def build_content(self, cv: CvContent):
         self.create_competencies_matrix_latex(cv.competences)
@@ -151,4 +150,4 @@ class LatexContentBuilder:
 
 
 if __name__ == '__main__':
-    latex_builder = LatexContentBuilder()
+    latex_builder = LatexContentBuilderService()

@@ -1,12 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from loguru import logger
 
 from buildcv.forms.cv_creation_form import CvCreationForm
 from buildcv.models import JobPost
 from cv_content.models import ProjectModel, CompetencyModel, EducationModel
 
 from django.http import JsonResponse
+
+from cv_content.services import CVContentCreaterService
 
 
 @login_required
@@ -48,8 +51,11 @@ def generate_summary(request):
         competencies = CompetencyModel.objects.filter(user=request.user)
         educations = EducationModel.objects.filter(user=request.user)
 
-
-        # Assuming you have a service function to generate the summary
-        summary = your_service_function(job_post, projects, competencies, educations)
+        CVContentCreaterService()
+        try:
+            summary = your_service_function(job_post, projects, competencies, educations)
+        except Exception as e:
+            logger.exception(f'Error generating summary')
+            return JsonResponse({'error': str(e)}, status=500)
 
         return JsonResponse({'summary': summary})

@@ -3,7 +3,7 @@ from mock.mock import MagicMock
 
 from cv_compiler.file_handler import FileHandler
 from cv_compiler.llm_connector import LlmConnector
-from cv_compiler.models import JobApplication, CvContent
+from buildcv.schemas import JobApplication, CvContent
 from cv_content.schemas import JobPosition, Competency, GithubProject
 
 

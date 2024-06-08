@@ -1,10 +1,10 @@
 import csv
 import json
-from typing import List, Type
+from typing import List
 
 from pydantic import BaseModel
 
-from cv_compiler.models import JobApplication
+from buildcv.schemas import JobApplication
 from cv_content.schemas import JobPosition, Competency, GithubProject, Education
 
 # data background
