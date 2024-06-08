@@ -1,10 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 from loguru import logger
 
 from buildcv.forms.cv_creation_form import CvCreationForm
 from buildcv.models import JobPost
+from buildcv.services.generate_summary_service import GenerateSummaryService
 from cv_content.models import ProjectModel, CompetencyModel, EducationModel
 
 from django.http import JsonResponse
@@ -41,21 +43,18 @@ def create_cv(request, job_post_id):
     })
 
 
-
 @login_required
+@require_POST
 def generate_summary(request):
-    if request.method == 'POST':
-        job_post_id = request.POST.get('job_post_id')
-        job_post = get_object_or_404(JobPost, job_post_id=job_post_id, user=request.user)
-        projects = ProjectModel.objects.filter(user=request.user)
-        competencies = CompetencyModel.objects.filter(user=request.user)
-        educations = EducationModel.objects.filter(user=request.user)
+    job_post_id = request.POST.get('job_post_id')
+    job_post = get_object_or_404(JobPost, job_post_id=job_post_id, user=request.user)
+    projects = ProjectModel.objects.filter(user=request.user)
+    competencies = CompetencyModel.objects.filter(user=request.user)
+    educations = EducationModel.objects.filter(user=request.user)
 
-        CVContentCreaterService()
-        try:
-            summary = your_service_function(job_post, projects, competencies, educations)
-        except Exception as e:
-            logger.exception(f'Error generating summary')
-            return JsonResponse({'error': str(e)}, status=500)
-
+    try:
+        summary = GenerateSummaryService().generate_summary_from_llm(job_post, projects, competencies, educations)
         return JsonResponse({'summary': summary})
+    except Exception as e:
+        logger.exception(f'Error generating summary')
+        return JsonResponse({'error': str(e)}, status=500)

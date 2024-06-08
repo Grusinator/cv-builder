@@ -1,6 +1,6 @@
 from loguru import logger
 
-from cv_compiler.llm_connector import LlmConnector
+from utils.llm_connector import LlmConnector
 
 
 class GenerateSummaryService:

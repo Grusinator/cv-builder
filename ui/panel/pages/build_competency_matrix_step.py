@@ -4,9 +4,9 @@ import param
 from loguru import logger
 from panel.widgets import Button, Tabulator
 
-from cv_compiler.cv_builder import CVCompiler
-from cv_compiler.model_utils import ModelUtils
 from cv_content.schemas import Competency
+from cv_content.services import CVContentCreaterService
+from utils.model_utils import ModelUtils
 
 
 class BuildCompetencyMatrixStep(param.Parameterized):
@@ -19,11 +19,11 @@ class BuildCompetencyMatrixStep(param.Parameterized):
 
     def __init__(self, **params):
         super().__init__(**params)
-        self.cv_compiler = CVCompiler()
+        self.cv_compiler = CVContentCreaterService()
         self.build_button = Button(name='Build Competencies', button_type='primary', on_click=self.build_competencies)
         self.analyze_button = Button(name='Analyze Competencies', button_type='primary',
                                      on_click=self.update_table_selection_to_match_job_desc)
-        competencies = self.cv_compiler.get_competencies()
+        competencies = self.cv_compiler.repository.get_competencies()
         competencies_pd = ModelUtils.pydantic_list_to_pandas(competencies, Competency)
 
         self.table_view = Tabulator(value=competencies_pd, show_index=False, selectable='checkbox', formatters={

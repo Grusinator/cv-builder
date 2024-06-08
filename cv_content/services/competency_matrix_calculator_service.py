@@ -6,7 +6,7 @@ from typing import List
 import pandas as pd
 from loguru import logger
 
-from cv_compiler.llm_connector import LlmConnector
+from utils.llm_connector import LlmConnector
 from cv_content.schemas import JobPosition, Competency, Project
 
 

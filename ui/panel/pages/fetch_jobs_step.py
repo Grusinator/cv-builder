@@ -2,8 +2,9 @@ import panel as pn
 import param
 from panel.widgets import Button, FileInput, JSONEditor
 
-from cv_compiler.cv_builder import CVCompiler
+
 from cv_content.schemas import JobPosition, Education
+from cv_content.services import CVContentCreaterService
 
 
 class FetchJobsAndEducationStep(param.Parameterized):
@@ -14,7 +15,7 @@ class FetchJobsAndEducationStep(param.Parameterized):
 
     def __init__(self, **params):
         super().__init__(**params)
-        self.cv_compiler = CVCompiler()
+        self.cv_compiler = CVContentCreaterService()
         self.pdf_file_upload = FileInput(accept=".pdf", name="Upload PDF")
         self.load_from_pdf_button = Button(name='Load from PDF', button_type='primary', on_click=self.load_from_pdf)
         self.jobs_editor = JSONEditor(value=[job.dict() for job in self.jobs], mode="tree")
@@ -42,7 +43,8 @@ class FetchJobsAndEducationStep(param.Parameterized):
 
     def load_from_pdf(self, event):
         pdf = self.pdf_file_upload.value
-        self.jobs, self.educations = self.cv_compiler.load_job_positions_and_education_from_pdf(pdf)
+        self.educations = self.cv_compiler.load_educations_from_pdf(pdf)
+        self.jobs = self.cv_compiler.load_job_positions_from_pdf(pdf)
         self.jobs_editor.value = [job.dict() for job in self.jobs]
         self.educations_editor.value = [edu.dict() for edu in self.educations]
 

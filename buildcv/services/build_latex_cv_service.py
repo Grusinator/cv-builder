@@ -2,15 +2,16 @@ import subprocess
 
 from loguru import logger
 
-from cv_compiler.build_latex_content_files import LatexContentBuilder
+
 from buildcv.schemas import CvContent
+from buildcv.services.latex_content_builder_service import LatexContentBuilderService
 
 
 class BuildLatexCVService:
     output_pdf_path = "main.pdf"
 
     def __init__(self):
-        self.latex_content_builder = LatexContentBuilder()
+        self.latex_content_builder = LatexContentBuilderService()
 
     def build_cv_from_content(self, selected_jobs, selected_education, selected_projects,
                               selected_competencies, summary):

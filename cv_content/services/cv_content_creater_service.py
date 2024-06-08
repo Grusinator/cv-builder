@@ -6,7 +6,7 @@ from cv_content.services.extract_cv_content_from_pdf_service import ExtractCvCon
 from cv_content.services.competency_matrix_calculator_service import CompetencyMatrixCalculatorService
 from cv_content.repositories.github_projects_repository import GitHubProjectsRepository
 from cv_content.schemas import Competency
-from cv_compiler.pdf_reader import PdfReader
+from utils.pdf_reader import PdfReader
 from cv_content.repositories import CvContentRepository
 
 

@@ -2,8 +2,9 @@ import param
 import panel as pn
 from panel.widgets import TextAreaInput, Button, JSONEditor
 
-from cv_compiler.cv_builder import CVCompiler
+
 from cv_content.schemas import GithubProject
+from cv_content.services import CVContentCreaterService
 
 
 class FetchProjectsStep(param.Parameterized):
@@ -16,7 +17,7 @@ class FetchProjectsStep(param.Parameterized):
 
     def __init__(self, **params):
         super().__init__(**params)
-        self.cv_compiler = CVCompiler()
+        self.cv_compiler = CVContentCreaterService()
         self.projects_editor = JSONEditor(value=[proj.dict() for proj in self.projects], mode="tree")
 
     def panel(self):

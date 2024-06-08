@@ -1,13 +1,13 @@
 import textwrap
 from datetime import datetime
 
-from cv_compiler.build_latex_content_files import LatexContentBuilder
+from buildcv.services.latex_content_builder_service import LatexContentBuilderService
 from cv_content.schemas import JobPosition, Competency, Project
 
 
 class TestLatexContentBuilder:
     def test_create_skill_table_content(self):
-        cv_builder = LatexContentBuilder()
+        cv_builder = LatexContentBuilderService()
 
         competencies = [
             Competency(name='Software Development', level=3, last_used=2022, years_of_experience=3),
@@ -29,7 +29,7 @@ class TestLatexContentBuilder:
         assert content == expected_content
 
     def test_convert_experiences_to_latex(self):
-        cv_builder = LatexContentBuilder()
+        cv_builder = LatexContentBuilderService()
         experiences = [
             JobPosition(
                 title="Data Engineer",
@@ -70,14 +70,14 @@ class TestLatexContentBuilder:
         assert content == expected_content
 
     def test_create_resume_summary_latex(self):
-        cv_builder = LatexContentBuilder()
+        cv_builder = LatexContentBuilderService()
         summary_text = "This is a summary of my qualifications and experience."
         expected_content = "\\cvsubsection{Summary}\n\nThis is a summary of my qualifications and experience.\n\n"
         content = cv_builder.create_summary_latex(summary_text)
         assert content == expected_content
 
     def test_create_projects_latex(self):
-        cv_builder = LatexContentBuilder()
+        cv_builder = LatexContentBuilderService()
 
         projects = [
             Project(
@@ -112,5 +112,5 @@ class TestLatexContentBuilder:
         assert content == expected_content
 
     def test_build_all(self, cv_content):
-        cv_builder = LatexContentBuilder()
+        cv_builder = LatexContentBuilderService()
         cv_builder.build_content(cv_content)

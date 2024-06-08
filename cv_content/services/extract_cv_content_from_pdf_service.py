@@ -1,9 +1,7 @@
 from dotenv import load_dotenv
 
-from dotenv import load_dotenv
-
-from cv_compiler.llm_connector import LlmConnector
 from cv_content.schemas import JobPosition, Education
+from utils.llm_connector import LlmConnector
 
 load_dotenv()
 
@@ -12,7 +10,6 @@ class ExtractCvContentFromPdfService:
 
     def __init__(self):
         self.chatgpt_interface = LlmConnector()
-
 
     def get_job_positions_from_pdf(self, cv_text_with_job_positions):
         question = f"""

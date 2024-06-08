@@ -2,7 +2,10 @@ import panel as pn
 import param
 from panel.widgets import CrossSelector
 
-from cv_compiler.cv_builder import CVCompiler
+
+
+from buildcv.services.filter_relevant_content_service import FilterRelevantContentService
+from cv_content.services import CVContentCreaterService
 
 
 class ReviewContentStep(param.Parameterized):
@@ -19,12 +22,13 @@ class ReviewContentStep(param.Parameterized):
 
     selected_competencies = param.List(default=[], doc="Selected Competencies")
 
-    cv_compiler = CVCompiler()
+    cv_compiler = CVContentCreaterService()
 
     def __init__(self, **params):
         super().__init__(**params)
-        projects_matching_with_comp = self.cv_compiler.match_projects_with_competencies(self.projects,
-                                                                                        self.selected_competencies)
+        filter_service = FilterRelevantContentService()
+        projects_matching_with_comp = filter_service.filter_most_relevant_projects(self.projects,
+                                                                                   self.selected_competencies)
         project_selection = [project.name for project in projects_matching_with_comp]
         project_selection = project_selection[:10] if len(project_selection) > 10 else project_selection
         project_options = [project.name for project in self.projects]

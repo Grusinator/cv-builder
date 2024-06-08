@@ -2,7 +2,7 @@ import param
 import panel as pn
 from panel.widgets import TextAreaInput, Button
 
-from cv_compiler.cv_builder import CVCompiler
+from buildcv.services.generate_summary_service import GenerateSummaryService
 
 
 class BuildSummaryStep(param.Parameterized):
@@ -12,7 +12,7 @@ class BuildSummaryStep(param.Parameterized):
     projects = param.List(default=[], doc="Projects")
     educations = param.List(default=[], doc="Educations")
 
-    cv_compiler = CVCompiler()
+
 
     @param.depends('summary', watch=True)
     def view(self):
@@ -24,7 +24,8 @@ class BuildSummaryStep(param.Parameterized):
         )
 
     def generate_summary(self, event):
-        self.summary = self.cv_compiler.generate_summary(self.job_description, self.jobs, self.educations,
+        service = GenerateSummaryService()
+        self.summary = service.generate_summary_from_llm(self.job_description, self.jobs, self.educations,
                                                          self.projects)
 
     @param.output(summary=param.String)

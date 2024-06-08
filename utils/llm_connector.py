@@ -5,7 +5,7 @@ import re
 from loguru import logger
 from openai import OpenAI
 
-from cv_compiler.cache import cache
+from utils.cache import cache
 
 
 class LlmConnector:

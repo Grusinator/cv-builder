@@ -3,7 +3,7 @@ import param
 from panel.pane import Markdown
 from panel.widgets import Button
 
-from cv_compiler.cv_builder import CVCompiler
+from cv_content.services import CVContentCreaterService
 
 
 class BuildPdfStep(param.Parameterized):
@@ -18,7 +18,7 @@ class BuildPdfStep(param.Parameterized):
     build_status = param.String(default='', doc="Build Status")
     pdf_viewer = pn.pane.PDF(width=800, height=800)
     download_button = pn.widgets.FileDownload(filename='output.pdf', button_type='primary', width=200)
-    compiler = CVCompiler()
+    compiler = CVContentCreaterService()
 
     def __init__(self, **params):
         super().__init__(**params)
