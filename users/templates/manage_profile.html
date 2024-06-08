@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header class="major">
+    <h2>Manage Profile</h2>
+</header>
+<section>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Profile</button>
+    </form>
+    {% if profile.profilepicture %}
+    <img src="{{ profile.profilepicture.url }}" alt="Profile Picture" style="max-width: 200px; max-height: 200px;">
+    {% endif %}
+</section>
+{% endblock %}

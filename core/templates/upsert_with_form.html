@@ -1,0 +1,35 @@
+{% extends "base_cv_content.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <header class="mb-4">
+        <h2>{{ form_title }}</h2>
+    </header>
+    <section>
+        <form method="post" class="form-horizontal" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group row">
+                <label for="{{ field.id_for_label }}" class="col-sm-2 col-form-label">{{ field.label }}</label>
+                <div class="col-sm-10">
+                    {{ field }}
+                    {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% if field.errors %}
+                    <div class="alert alert-danger">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            <div class="form-group row">
+                <div class="col-sm-10 offset-sm-2">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}

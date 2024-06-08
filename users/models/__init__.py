@@ -1,1 +1,1 @@
-from users.models.profile import Profile, Languages
+from users.models.profilemodel import ProfileModel

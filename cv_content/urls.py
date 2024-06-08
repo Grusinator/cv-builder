@@ -10,6 +10,8 @@ from .views import add_competency, update_competency, delete_competency, list_co
     build_competencies_from_content
 
 urlpatterns = [
+    path("", show_content, name="show_content"),
+
     path('competencies/', list_competencies, name='list_competencies'),
     path('competency/add/', add_competency, name='add_competency'),
     path('competency/update/<int:competency_id>/', update_competency, name='update_competency'),
@@ -20,10 +22,10 @@ urlpatterns = [
     path('projects/add/', add_project, name='add_project'),
     path('projects/update/<int:project_id>/', update_project, name='update_project'),
     path('projects/delete/<int:project_id>/', delete_project, name='delete_project'),
-    path('projects/fetch/', fetch_github_projects, name='fetch_github_projects'),
-    path("", show_content, name="show_content"),
-    path('add-job/', add_job_position, name='add_job_position'),
+    path('projects/fetch_from_github/', fetch_github_projects, name='fetch_github_projects'),
+
     path('jobs/', list_job_positions, name='list_job_positions'),
+    path('job/add/', add_job_position, name='add_job_position'),
     path('job/update/<int:job_id>/', update_job_position, name='update_job_position'),
     path('job/delete/<int:job_id>/', delete_job_position, name='delete_job_position'),
 
@@ -32,3 +34,4 @@ urlpatterns = [
     path('education/delete/<int:education_id>/', delete_education, name='delete_education'),
     path('educations/', list_educations, name='list_educations'),
 ]
+

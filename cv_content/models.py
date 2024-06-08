@@ -12,6 +12,9 @@ class EducationModel(models.Model):
     description = models.TextField(blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
 
+    def __str__(self):
+        return f"{self.degree} at {self.school}"
+
 
 class JobPositionModel(models.Model):
     job_position_id = models.AutoField(primary_key=True)
@@ -24,6 +27,9 @@ class JobPositionModel(models.Model):
     description = models.TextField(blank=True, null=True)
     competencies = models.JSONField(default=list)  # Storing list of strings in JSONField
 
+    def __str__(self):
+        return f"{self.title} at {self.company}"
+
 
 class CompetencyModel(models.Model):
     competency_id = models.AutoField(primary_key=True)
@@ -34,6 +40,9 @@ class CompetencyModel(models.Model):
     last_used = models.IntegerField()
     years_of_experience = models.FloatField()
     attractiveness = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.name
 
     @property
     def level_description(self):

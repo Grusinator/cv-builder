@@ -4,7 +4,7 @@ import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
 
-import users.models.profile
+import users.models.profilemodel
 
 
 class Migration(migrations.Migration):
@@ -20,8 +20,6 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('birthdate', models.DateField(blank=True, null=True)),
-                ('language', models.TextField(choices=[('dk', 'Danish'), ('en', 'English')],
-                                              default=users.models.profile.Languages('dk'), max_length=2)),
                 ('profilepicture', models.ImageField(blank=True, null=True, upload_to='profilepictures')),
                 ('profile_description', models.TextField(blank=True, null=True)),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='profile',
