@@ -1,5 +1,5 @@
 from cv_compiler.build_cv_content import CVContentBuilder
-from cv_compiler.models import Competency, GithubProject
+from cv_content.schemas import Competency, GithubProject
 
 
 class TestBuildCvContent:

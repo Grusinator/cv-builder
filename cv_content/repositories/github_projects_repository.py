@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from loguru import logger
 
 from cv_compiler.cache import cache
-from cv_compiler.models import GithubProject
+from cv_content.schemas import GithubProject
 
 
 class GitHubProjectsRepository:

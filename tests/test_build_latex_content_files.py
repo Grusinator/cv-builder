@@ -2,7 +2,7 @@ import textwrap
 from datetime import datetime
 
 from cv_compiler.build_latex_content_files import LatexContentBuilder
-from cv_compiler.models import JobPosition, Competency, Project
+from cv_content.schemas import JobPosition, Competency, Project
 
 
 class TestLatexContentBuilder:

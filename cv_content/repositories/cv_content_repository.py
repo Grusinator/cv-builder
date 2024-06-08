@@ -3,7 +3,7 @@ from typing import List
 from django.contrib.auth.models import User
 from django.db import transaction
 
-from cv_compiler.models import JobPosition, Competency, Education, Project
+from cv_content.schemas import JobPosition, Competency, Project, Education
 from cv_content.models import JobPositionModel, CompetencyModel, ProjectModel, EducationModel
 
 

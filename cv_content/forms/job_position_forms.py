@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.widgets import DateInput
 
-from cv_content.forms.general import CommaSeparatedInput, ModelFormWithUserInfo
+from cv_content.forms.cv_content_util_forms import CommaSeparatedInput, ModelFormWithUserInfo
 from cv_content.models import JobPositionModel
 
 

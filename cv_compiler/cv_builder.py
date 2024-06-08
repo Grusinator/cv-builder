@@ -9,7 +9,8 @@ from loguru import logger
 from cv_content.services.competency_matrix_calculator_service import CompetencyMatrixCalculatorService
 from cv_compiler.file_handler import FileHandler
 from cv_content.repositories.github_projects_repository import GitHubProjectsRepository
-from cv_compiler.models import GithubProject, JobPosition, Competency, CvContent
+from cv_compiler.models import CvContent
+from cv_content.schemas import JobPosition, Competency, GithubProject
 from cv_compiler.pdf_reader import PdfReader
 
 

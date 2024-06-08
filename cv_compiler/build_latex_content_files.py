@@ -2,7 +2,8 @@ import textwrap
 from typing import List
 
 from cv_compiler.file_handler import FileHandler
-from cv_compiler.models import Project, JobPosition, Competency, Education, CvContent, GithubProject
+from cv_compiler.models import CvContent
+from cv_content.schemas import JobPosition, Competency, GithubProject, Project, Education
 
 CONTENT_EDUCATION_TEX = "cv_latex_content/education.tex"
 

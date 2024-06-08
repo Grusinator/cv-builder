@@ -1,4 +1,4 @@
-from cv_compiler.models import JobPosition
+from cv_content.schemas import JobPosition
 
 
 class TestLlmConnector:

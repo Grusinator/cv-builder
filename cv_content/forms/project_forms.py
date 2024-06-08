@@ -1,6 +1,6 @@
 from django.forms import DateField, DateInput
 
-from cv_content.forms.general import ModelFormWithUserInfo, CommaSeparatedInput
+from cv_content.forms.cv_content_util_forms import ModelFormWithUserInfo, CommaSeparatedInput
 from cv_content.models import ProjectModel
 
 

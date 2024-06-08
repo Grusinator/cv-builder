@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 
 from cv_content.forms import FileUploadForm
-from cv_content.forms.education import EducationForm
+from cv_content.forms.education_forms import EducationForm
 from cv_content.models import EducationModel
 from cv_content.services import CVContentCreaterService
 

@@ -1,4 +1,4 @@
-from cv_content.forms.general import ModelFormWithUserInfo
+from cv_content.forms.cv_content_util_forms import ModelFormWithUserInfo
 from cv_content.models import CompetencyModel
 
 

@@ -3,7 +3,7 @@ import panel as pn
 from panel.widgets import TextAreaInput, Button, JSONEditor
 
 from cv_compiler.cv_builder import CVCompiler
-from cv_compiler.models import GithubProject
+from cv_content.schemas import GithubProject
 
 
 class FetchProjectsStep(param.Parameterized):

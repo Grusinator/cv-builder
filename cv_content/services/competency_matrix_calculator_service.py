@@ -7,7 +7,7 @@ import pandas as pd
 from loguru import logger
 
 from cv_compiler.llm_connector import LlmConnector
-from cv_compiler.models import Competency, JobPosition, Project
+from cv_content.schemas import JobPosition, Competency, Project
 
 
 class CompetencyMatrixCalculatorService:

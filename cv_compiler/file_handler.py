@@ -4,8 +4,8 @@ from typing import List, Type
 
 from pydantic import BaseModel
 
-from cv_compiler.models import JobPosition, Competency, GithubProject, JobApplication, Education
-
+from cv_compiler.models import JobApplication
+from cv_content.schemas import JobPosition, Competency, GithubProject, Education
 
 # data background
 

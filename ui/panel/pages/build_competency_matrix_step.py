@@ -6,7 +6,7 @@ from panel.widgets import Button, Tabulator
 
 from cv_compiler.cv_builder import CVCompiler
 from cv_compiler.model_utils import ModelUtils
-from cv_compiler.models import Competency
+from cv_content.schemas import Competency
 
 
 class BuildCompetencyMatrixStep(param.Parameterized):

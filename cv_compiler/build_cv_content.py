@@ -3,7 +3,7 @@ from typing import List
 from dotenv import load_dotenv
 
 from cv_compiler.llm_connector import LlmConnector
-from cv_compiler.models import JobPosition, Competency, Education, GithubProject
+from cv_content.schemas import JobPosition, Competency, GithubProject, Education
 
 load_dotenv()
 
