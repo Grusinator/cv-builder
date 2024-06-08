@@ -63,8 +63,13 @@ class CVContentCreaterService:
         projects = self.repository.get_projects(user=user)
         existing_competencies = self.repository.get_competencies(user=user)
         competencies = self.competency_calculator.build(job_positions, projects, existing_competencies)
-        self.repository.create_competencies(user, competencies)
-        return competencies
+        new_competencies = [comp for comp in competencies if
+                            comp not in existing_competencies and comp.competency_id is None]
+        existing_competencies = [comp for comp in competencies if
+                                 comp in existing_competencies and comp.competency_id is not None]
+        new_competencies = self.repository.create_competencies(user, new_competencies)
+        existing_competencies = self.repository.update_competencies(user, existing_competencies)
+        return sorted(existing_competencies + new_competencies, key=lambda x: x.name)
 
     def match_competencies_with_job_description(self, competencies: List[Competency], job_description: str, n=15):
         return self.competency_calculator.find_most_relevant_competencies_to_job_add(job_description, competencies, n=n)
@@ -100,4 +105,3 @@ class CVContentCreaterService:
 
     def get_competencies(self, user):
         return self.repository.get_competencies(user)
-

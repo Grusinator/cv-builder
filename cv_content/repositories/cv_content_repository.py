@@ -80,3 +80,13 @@ class CvContentRepository:
     def create_projects(self, user, projects):
         with transaction.atomic():
             return [self.create_project(user, project) for project in projects]
+
+    def update_competency(self, user: User, competency: Competency):
+        competency_dict = competency.dict()
+        competency_id = competency_dict.pop('competency_id')
+        CompetencyModel.objects.filter(user=user, competency_id=competency_id).update(**competency_dict)
+        return competency
+
+    def update_competencies(self, user, competencies: List[Competency]):
+        with transaction.atomic():
+            return [self.update_competency(user, competency) for competency in competencies]

@@ -6,7 +6,7 @@
 </header>
 <section>
     <a href="{% url 'add_competency' %}">Add Competency Manually</a>
-    <a href="{% url 'fetch_competencies' %}">Fetch Competencies</a>
+    <a href="{% url 'build_competencies_from_content' %}">Fetch Competencies</a>
     <h3>Competencies List</h3>
     <ul>
         {% for competency in competencies %}

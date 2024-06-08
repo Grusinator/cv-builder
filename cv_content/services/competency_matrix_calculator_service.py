@@ -95,7 +95,7 @@ class CompetencyMatrixCalculatorService:
                     competencies.append(Competency(
                         name=competency_name,
                         level=1,
-                        last_used=project.last_commit.year,
+                        last_used=project.last_updated.year,
                         years_of_experience=project.effort_in_years
                     ))
         logger.debug(f"project competencies: {[comp.name for comp in competencies]}")

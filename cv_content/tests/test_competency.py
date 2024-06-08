@@ -1,8 +1,11 @@
 import pytest
-from django.urls import reverse
 from django.contrib.auth.models import User
+from django.urls import reverse
 from mixer.backend.django import mixer
+
 from cv_content.models import CompetencyModel
+from cv_content.repositories import CvContentRepository
+
 
 @pytest.mark.django_db
 class TestCompetencyViews:
@@ -59,11 +62,13 @@ class TestCompetencyViews:
         assert response.status_code == 302
         assert CompetencyModel.objects.count() == 0
 
-    def test_fetch_competencies(self, client, mocker):
+    def test_build_competencies_from_content(self, client, competencies, job_positions):
         user = mixer.blend(User)
         client.force_login(user)
-        mock_service = mocker.patch('cv_content.services.CVContentCreaterService.build_competencies_from_projects_and_jobs')
-        url = reverse('fetch_competencies')
+        cv_content_repository = CvContentRepository()
+        cv_content_repository.create_job_positions(user, job_positions)
+        cv_content_repository.create_competencies(user, competencies)
+        url = reverse('build_competencies_from_content')
         response = client.get(url)
         assert response.status_code == 302
-        assert mock_service.called
+        assert CompetencyModel.objects.count() > 2

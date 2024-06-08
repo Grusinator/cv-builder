@@ -3,20 +3,23 @@ from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.decorators.http import require_POST
+from loguru import logger
 
 from cv_content.forms import CompetencyForm
 from cv_content.models import CompetencyModel
 from cv_content.services import CVContentCreaterService
 
 @login_required
-def fetch_competencies(request):
+def build_competencies_from_content(request):
     service = CVContentCreaterService()
     user = request.user
     try:
-        competencies = service.build_competencies_from_projects_and_jobs(user)
+        service.build_competencies_from_projects_and_jobs(user)
         messages.success(request, 'Competencies successfully analyzed and created.')
     except Exception as e:
-        messages.error(request, f'Error fetching competencies: {str(e)}')
+        msg = f'Error fetching competencies'
+        logger.exception(msg)
+        messages.error(request, msg)
     return redirect('list_competencies')
 
 @login_required
