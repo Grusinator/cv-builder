@@ -7,8 +7,9 @@ from django.views.decorators.http import require_POST
 from cv_content.forms import FileUploadForm
 from cv_content.forms.education import EducationForm
 from cv_content.models import EducationModel
-from cv_content.services import CVBuilderService
+from cv_content.services import CVContentCreaterService
 
+CVContentCreaterService = CVContentCreaterService
 
 @login_required
 def add_education(request):
@@ -19,7 +20,7 @@ def add_education(request):
             return redirect('list_educations')
     else:
         form = EducationForm(user=request.user)
-    return render(request, 'add_education.html', {'form': form})
+    return render(request, 'upsert_with_form.html', {'form': form})
 
 
 @login_required
@@ -32,13 +33,13 @@ def update_education(request, education_id):
             return redirect('list_educations')
     else:
         form = EducationForm(instance=education)
-    return render(request, 'update_education.html', {'form': form})
+    return render(request, 'upsert_with_form.html', {'form': form})
 
 
 @login_required
 @require_POST
 def delete_education(request, education_id):
-    service = CVBuilderService()
+    service = CVContentCreaterService()
     try:
         service.repository.delete_education(user=request.user, education_id=education_id)
     except Exception as e:
@@ -49,12 +50,12 @@ def delete_education(request, education_id):
 
 @login_required
 def list_educations(request):
-    service = CVBuilderService()
+    service = CVContentCreaterService()
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
             pdf_file = request.FILES['file']
-            service = CVBuilderService()
+            service = CVContentCreaterService()
             try:
                 # Assuming your service class has a method to handle PDF bytes
                 messages.info(request, 'Processing file... Please wait.')

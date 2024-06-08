@@ -1,0 +1,2 @@
+from .cv_content_repository import CvContentRepository
+from .github_projects_repository import GitHubProjectsRepository

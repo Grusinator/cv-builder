@@ -62,7 +62,7 @@ class TestCompetencyViews:
     def test_fetch_competencies(self, client, mocker):
         user = mixer.blend(User)
         client.force_login(user)
-        mock_service = mocker.patch('cv_content.services.CVBuilderService.build_competencies_from_projects_and_jobs')
+        mock_service = mocker.patch('cv_content.services.CVContentCreaterService.build_competencies_from_projects_and_jobs')
         url = reverse('fetch_competencies')
         response = client.get(url)
         assert response.status_code == 302

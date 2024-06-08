@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class JobPosition(BaseModel):
-    job_position_id: Optional[int]
+    job_position_id: Optional[int] = None
     title: str
     company: str
     start_date: datetime
@@ -28,7 +28,7 @@ class JobPosition(BaseModel):
 
 
 class Competency(BaseModel):
-    competency_id: Optional[int]
+    competency_id: Optional[int] = None
     name: str
     level: int
     category: Optional[str] = None
@@ -73,7 +73,7 @@ class GithubProject(BaseModel):
 
 
 class Project(BaseModel):
-    project_id: Optional[int]
+    project_id: Optional[int] = None
     name: str
     description: str
     effort_in_years: float

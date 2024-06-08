@@ -8,8 +8,7 @@ from cv_content.forms import FileUploadForm
 from cv_content.forms import JobPositionForm
 
 from cv_content.models import JobPositionModel
-from cv_content.services import CVBuilderService
-
+from cv_content.services import CVContentCreaterService
 
 @login_required
 def update_job_position(request, job_id):
@@ -21,25 +20,25 @@ def update_job_position(request, job_id):
             return redirect('list_job_positions')
     else:
         form = JobPositionForm(instance=job)
-    return render(request, 'update_job_position.html', {'form': form})
+    return render(request, 'upsert_with_form.html', {'form': form})
 
 
 @login_required
 @require_POST  # Ensure that this view can only be accessed via POST request
 def delete_job_position(request, job_id):
-    service = CVBuilderService()
+    service = CVContentCreaterService()
     service.repository.delete_job_position(user=request.user, job_position_id=job_id)
     return redirect('list_job_positions')
 
 
 @login_required
 def list_job_positions(request):
-    service = CVBuilderService()
+    service = CVContentCreaterService()
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
             pdf_file = request.FILES['file']
-            service = CVBuilderService()
+            service = CVContentCreaterService()
             try:
                 # Assuming your service class has a method to handle PDF bytes
                 messages.info(request, 'Processing file... Please wait.')
@@ -54,7 +53,7 @@ def list_job_positions(request):
 
     # Assuming you have a method to get all job positions
     job_positions = service.repository.get_job_positions(user=request.user)
-    return render(request, 'job_positions.html', {'form': form, 'job_positions': job_positions})
+    return render(request, 'list_job_positions.html', {'form': form, 'job_positions': job_positions})
 
 
 @login_required
@@ -66,7 +65,7 @@ def add_job_position(request):
             return redirect('list_job_positions')  # Redirect to a new URL
     else:
         form = JobPositionForm(user=request.user)
-    return render(request, 'add_job_position.html', {'form': form})
+    return render(request, 'upsert_with_form.html', {'form': form})
 
 
 

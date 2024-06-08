@@ -6,11 +6,11 @@ from django.views.decorators.http import require_POST
 
 from cv_content.forms import CompetencyForm
 from cv_content.models import CompetencyModel
-from cv_content.services import CVBuilderService
+from cv_content.services import CVContentCreaterService
 
 @login_required
 def fetch_competencies(request):
-    service = CVBuilderService()
+    service = CVContentCreaterService()
     user = request.user
     try:
         competencies = service.build_competencies_from_projects_and_jobs(user)
@@ -28,7 +28,7 @@ def add_competency(request):
             return redirect('list_competencies')
     else:
         form = CompetencyForm(user=request.user)
-    return render(request, 'add_competency.html', {'form': form})
+    return render(request, 'upsert_with_form.html', {'form': form})
 
 @login_required
 def update_competency(request, competency_id):
@@ -40,12 +40,12 @@ def update_competency(request, competency_id):
             return redirect('list_competencies')
     else:
         form = CompetencyForm(instance=competency)
-    return render(request, 'update_competency.html', {'form': form})
+    return render(request, 'upsert_with_form.html', {'form': form})
 
 @login_required
 @require_POST
 def delete_competency(request, competency_id):
-    service = CVBuilderService()
+    service = CVContentCreaterService()
     try:
         service.repository.delete_competency(user=request.user, competency_id=competency_id)
     except Exception as e:
@@ -55,6 +55,6 @@ def delete_competency(request, competency_id):
 
 @login_required
 def list_competencies(request):
-    service = CVBuilderService()
+    service = CVContentCreaterService()
     competencies = service.repository.get_competencies(user=request.user)
     return render(request, 'list_competencies.html', {'competencies': competencies})

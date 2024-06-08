@@ -1,13 +1,7 @@
-import io
-import json
 from typing import List
 
-import pdfplumber
 from dotenv import load_dotenv
 
-from cv_compiler.competency_matrix_calculator import CompetencyMatrixCalculator
-from cv_compiler.file_handler import FileHandler
-from cv_compiler.github_project_fetcher import GitHubProjectFetcher
 from cv_compiler.llm_connector import LlmConnector
 from cv_compiler.models import JobPosition, Competency, Education, GithubProject
 

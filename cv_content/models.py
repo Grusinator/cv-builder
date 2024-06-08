@@ -53,6 +53,7 @@ class ProjectModel(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     effort_in_years = models.FloatField()
+    last_updated = models.DateField()
     competencies = models.JSONField()
     def __str__(self):
         return self.name

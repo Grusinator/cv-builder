@@ -2,10 +2,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.contrib import messages
+from loguru import logger
 
 from cv_content.forms import ProjectForm
 from cv_content.models import ProjectModel
-from cv_content.services import CVBuilderService
+from cv_content.services import CVContentCreaterService
 
 
 @login_required
@@ -17,7 +18,7 @@ def add_project(request):
             return redirect('list_projects')
     else:
         form = ProjectForm(user=request.user)
-    return render(request, 'upsert_project.html', {'form': form})
+    return render(request, 'upsert_with_form.html', {'form': form})
 
 
 @login_required
@@ -30,7 +31,7 @@ def update_project(request, project_id):
             return redirect('list_projects')
     else:
         form = ProjectForm(instance=project)
-    return render(request, 'upsert_project.html', {'form': form})
+    return render(request, 'upsert_with_form.html', {'form': form})
 
 
 @login_required
@@ -43,7 +44,7 @@ def delete_project(request, project_id):
 
 @login_required
 def list_projects(request):
-    service = CVBuilderService()
+    service = CVContentCreaterService()
     if request.method == 'POST':
         github_username = request.POST.get('github_username')
         github_token = request.POST.get('github_token')
@@ -63,11 +64,13 @@ def fetch_github_projects(request):
     if request.method == 'POST':
         github_username = request.POST.get('github_username')
         github_token = request.POST.get('github_token')
-        service = CVBuilderService()
+        service = CVContentCreaterService()
         try:
             service.fetch_github_projects(request.user, github_username, github_token)
             messages.success(request, 'Projects fetched successfully from GitHub.')
         except Exception as e:
-            messages.error(request, f'Error fetching projects from GitHub: {str(e)}')
+            msg = f"Error fetching projects from GitHub"
+            logger.error(msg, exc_info=True)
+            messages.error(request, msg)
     return redirect('list_projects')
 

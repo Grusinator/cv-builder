@@ -1,24 +1,25 @@
-from typing import List
-from cv_compiler.build_cv_content import CVContentBuilder
-from cv_compiler.build_latex_content_files import LatexContentBuilder
 import subprocess
+from typing import List
 
 from loguru import logger
-from cv_compiler.competency_matrix_calculator import CompetencyMatrixCalculator
-from cv_compiler.github_project_fetcher import GitHubProjectFetcher
-from cv_compiler.models import GithubProject, JobApplication, JobPosition, Competency, CvContent
+
+from cv_compiler.build_cv_content import CVContentBuilder
+from cv_compiler.build_latex_content_files import LatexContentBuilder
+from cv_content.services.competency_matrix_calculator_service import CompetencyMatrixCalculatorService
+from cv_content.repositories.github_projects_repository import GitHubProjectsRepository
+from cv_compiler.models import GithubProject, JobPosition, Competency, CvContent
 from cv_compiler.pdf_reader import PdfReader
-from .repositories import CvContentRepository
+from cv_content.repositories import CvContentRepository
 
 
-class CVBuilderService:
+class CVContentCreaterService:
     output_pdf_path = "main.pdf"
 
     def __init__(self, repository=CvContentRepository()):
         self.repository: CvContentRepository = repository
         self.content_builder = CVContentBuilder()
-        self.github_fetcher = GitHubProjectFetcher()
-        self.competency_calculator = CompetencyMatrixCalculator()
+        self.github_fetcher = GitHubProjectsRepository()
+        self.competency_calculator = CompetencyMatrixCalculatorService()
         self.latex_content_builder = LatexContentBuilder()
 
     def fetch_github_projects(self, user, github_username, github_token):
@@ -27,6 +28,7 @@ class CVBuilderService:
         self.github_fetcher.token = github_token
         projects = self.github_fetcher.get_projects()
         projects = [project.map_to_generic_project() for project in projects]
+        logger.debug(f"Fetched {len(projects)} projects from GitHub")
         return self.repository.create_projects(user, projects)
 
     def build_cv_from_content(self, selected_jobs, selected_education, selected_projects,

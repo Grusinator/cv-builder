@@ -12,7 +12,7 @@ from cv_compiler.cache import cache
 from cv_compiler.models import GithubProject
 
 
-class GitHubProjectFetcher:
+class GitHubProjectsRepository:
     def __init__(self):
         self.token = os.getenv('GITHUB_TOKEN')
         if not self.token:
@@ -27,14 +27,14 @@ class GitHubProjectFetcher:
 
     def _fetch_all(self) -> List[GithubProject]:
         logger.debug(f'Fetching all projects from GitHub')
-        repos = self.fetch_all_repos()
+        repos = self._fetch_all_repos()
         projects = []
         for repo in repos:
             owner = repo['owner']['login']
             repo_name = repo['name']
-            topics = self.fetch_topics(owner, repo_name)
-            commit_activity = self.fetch_commit_activity(owner, repo_name)
-            languages = self.fetch_languages(owner, repo_name)
+            topics = self._fetch_topics(owner, repo_name)
+            commit_activity = self._fetch_commit_activity(owner, repo_name)
+            languages = self._fetch_languages(owner, repo_name)
             project = GithubProject(
                 name=repo_name,
                 owner=owner,
@@ -51,14 +51,14 @@ class GitHubProjectFetcher:
         return projects
 
     @cache
-    def fetch_all_repos(self, fetch_date_for_caching=THIS_MONTH) -> List[Dict]:
+    def _fetch_all_repos(self, fetch_date_for_caching=THIS_MONTH) -> List[Dict]:
         url = 'https://api.github.com/user/repos'
         response = requests.get(url, headers=self.headers)
         response.raise_for_status()
         return response.json()
 
     @cache
-    def fetch_topics(self, owner: str, repo: str, fetch_date_for_caching=THIS_MONTH) -> List[str]:
+    def _fetch_topics(self, owner: str, repo: str, fetch_date_for_caching=THIS_MONTH) -> List[str]:
         url = f'https://api.github.com/repos/{owner}/{repo}/topics'
         self.headers['Accept'] = 'application/vnd.github.mercy-preview+json'
         response = requests.get(url, headers=self.headers)
@@ -66,14 +66,14 @@ class GitHubProjectFetcher:
         return list(response.json()["names"])
 
     @cache
-    def fetch_commit_activity(self, owner: str, repo: str, fetch_date_for_caching=THIS_MONTH) -> Dict:
+    def _fetch_commit_activity(self, owner: str, repo: str, fetch_date_for_caching=THIS_MONTH) -> Dict:
         url = f'https://api.github.com/repos/{owner}/{repo}/stats/participation'
         response = requests.get(url, headers=self.headers)
         response.raise_for_status()
         return response.json()
 
     @cache
-    def fetch_languages(self, owner: str, repo: str, fetch_date_for_caching=THIS_MONTH) -> Dict[str, int]:
+    def _fetch_languages(self, owner: str, repo: str, fetch_date_for_caching=THIS_MONTH) -> Dict[str, int]:
         url = f'https://api.github.com/repos/{owner}/{repo}/languages'
         response = requests.get(url, headers=self.headers)
         response.raise_for_status()
@@ -82,5 +82,5 @@ class GitHubProjectFetcher:
 
 if __name__ == "__main__":
     load_dotenv()
-    fetcher = GitHubProjectFetcher()
+    fetcher = GitHubProjectsRepository()
     fetcher._fetch_all()

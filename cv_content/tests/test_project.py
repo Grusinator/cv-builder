@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from mixer.backend.django import mixer
 from cv_content.models import ProjectModel
 
+
 @pytest.mark.django_db
 class TestProjectViews:
     def test_add_project(self, client):
@@ -14,11 +15,12 @@ class TestProjectViews:
             'name': 'New Project',
             'description': 'Project Description',
             'effort_in_years': 1.5,
-            'competencies': '["Python", "Django"]'
+            'competencies': '["Python", "Django"]',
+            "last_updated": "2021-01-01"
         }
         response = client.post(url, data)
+        assert ProjectModel.objects.count() == 1, response.content
         assert response.status_code == 302
-        assert ProjectModel.objects.count() == 1
 
     def test_list_projects(self, client):
         user = mixer.blend(User)
@@ -39,7 +41,8 @@ class TestProjectViews:
             'name': 'Updated Project',
             'description': 'Updated Description',
             'effort_in_years': 2.0,
-            'competencies': '["Java", "Spring"]'
+            'competencies': '["Java", "Spring"]',
+            "last_updated": "2021-01-01"
         }
         response = client.post(url, data)
         assert response.status_code == 302
@@ -56,13 +59,14 @@ class TestProjectViews:
         assert response.status_code == 302
         assert ProjectModel.objects.count() == 0
 
-    def test_fetch_github_projects(self, client, mocker):
+    def test_fetch_github_projects(self, client, mocker, github_projects):
         user = mixer.blend(User)
         client.force_login(user)
-        mock_service = mocker.patch('cv_content.services.CVBuilderService.fetch_github_projects', return_value=None)
+        mock_repo = mocker.patch('cv_content.repositories.GitHubProjectsRepository.get_projects',
+                                 return_value=github_projects)
         url = reverse('fetch_github_projects')
         data = {'github_username': 'testuser', 'github_token': 'testtoken'}
         response = client.post(url, data)
         assert response.status_code == 302
-        mock_service.assert_called_once_with(user, 'testuser', 'testtoken')
-
+        mock_repo.assert_called_once_with()
+        assert ProjectModel.objects.count() == len(github_projects)

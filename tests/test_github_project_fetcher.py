@@ -1,9 +1,9 @@
-from cv_compiler.github_project_fetcher import GitHubProjectFetcher
+from cv_content.repositories.github_projects_repository import GitHubProjectsRepository
 
 
 class TestGithubProjectFetcher:
     def test_fetch_all(self):
-        projects = GitHubProjectFetcher()._fetch_all()
+        projects = GitHubProjectsRepository()._fetch_all()
         assert len(projects) > 0
-        cached = GitHubProjectFetcher()._fetch_all()
+        cached = GitHubProjectsRepository()._fetch_all()
         assert projects == cached

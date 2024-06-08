@@ -7,10 +7,10 @@ import pandas as pd
 from loguru import logger
 
 from cv_compiler.llm_connector import LlmConnector
-from cv_compiler.models import Competency, JobPosition, JobApplication, GithubProject, Project
+from cv_compiler.models import Competency, JobPosition, Project
 
 
-class CompetencyMatrixCalculator:
+class CompetencyMatrixCalculatorService:
 
     def __init__(self):
         self.llm_connector = LlmConnector()

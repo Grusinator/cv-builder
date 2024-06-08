@@ -2,13 +2,13 @@
 
 {% block content %}
 <header class="major">
-    <h2>Add Job Position</h2>
+    <h2>{% if form.instance.pk %}Update{% else %}Add{% endif %}</h2>
 </header>
 <section>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Add Job Position</button>
+        <button type="submit">{% if form.instance.pk %}Update{% else %}Add{% endif %}</button>
     </form>
 </section>
 {% endblock %}

@@ -1,9 +1,9 @@
 import pytest
 
-from cv_compiler.competency_matrix_calculator import CompetencyMatrixCalculator
+from cv_content.services.competency_matrix_calculator_service import CompetencyMatrixCalculatorService
 from cv_compiler.file_handler import FileHandler
 from cv_compiler.llm_connector import LlmConnector
-from cv_compiler.models import JobPosition, Competency, GithubProject, JobApplication
+from cv_compiler.models import JobPosition, Competency, GithubProject
 
 
 class TestCompetencyMatrixCalculator:
@@ -15,12 +15,12 @@ class TestCompetencyMatrixCalculator:
         background_competencies = fh.get_background_competency_matrix()
         projects = fh.read_generated_projects_from_json()
         job_app = fh.read_job_application()
-        calc = CompetencyMatrixCalculator(llm)
+        calc = CompetencyMatrixCalculatorService(llm)
         competencies = calc.build(jobs, projects, job_app, background_competencies)
         assert competencies
 
     def test_generate_competencies_from_job_positions(self, mock_llm):
-        competency_calculator = CompetencyMatrixCalculator(mock_llm)
+        competency_calculator = CompetencyMatrixCalculatorService(mock_llm)
         job_positions = [
             JobPosition(title="Software Engineer",
                         description="Job description for Software Engineer",
@@ -46,7 +46,7 @@ class TestCompetencyMatrixCalculator:
         assert generated_competencies == expected_competencies
 
     def test_build_competency_matrix(self, mock_llm, github_projects, job_positions, competencies, job_app):
-        competency_calculator = CompetencyMatrixCalculator(mock_llm)
+        competency_calculator = CompetencyMatrixCalculatorService(mock_llm)
         expected_competencies = [
             Competency(name='Java', level=1, category=None, last_used=2022, years_of_experience=0.25,
                        attractiveness=3)
@@ -64,7 +64,7 @@ class TestCompetencyMatrixCalculator:
     ])
     def test_build_competency_matrix_projects(self, mock_llm, github_project, job_positions, competencies, job_app,
                                               expected_competency):
-        competency_calculator = CompetencyMatrixCalculator(mock_llm)
+        competency_calculator = CompetencyMatrixCalculatorService(mock_llm)
         competencies = competency_calculator.build(job_positions, [github_project] if github_project else [], job_app,
                                                    competencies)
         assert competencies == ([expected_competency] if expected_competency else [])

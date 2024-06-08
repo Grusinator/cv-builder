@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db import transaction
 
 from cv_compiler.models import JobPosition, Competency, Education, Project
-from .models import JobPositionModel, CompetencyModel, ProjectModel, EducationModel
+from cv_content.models import JobPositionModel, CompetencyModel, ProjectModel, EducationModel
 
 
 class CvContentRepository:
@@ -29,35 +29,19 @@ class CvContentRepository:
 
     @staticmethod
     def create_competency(user: User, data: Competency) -> Competency:
-        competency = CompetencyModel.objects.create(
-            user=user,
-            name=data.name,
-            level=data.level,
-            category=data.category,
-            last_used=data.last_used,
-            years_of_experience=data.years_of_experience,
-            attractiveness=data.attractiveness
-        )
+        competency = CompetencyModel.objects.create(user=user, **data.dict())
         return Competency.from_orm(competency)
 
     @staticmethod
     def get_competencies(user: User) -> List[Competency]:
         return [Competency.from_orm(comp) for comp in CompetencyModel.objects.filter(user=user)]
 
+    def delete_competency(self, user, competency_id):
+        CompetencyModel.objects.get(user=user, competency_id=competency_id).delete()
+
     @staticmethod
     def create_project(user: User, data: Project) -> Project:
-        project = ProjectModel.objects.create(
-            user=user,
-            name=data.name,
-            owner=data.owner,
-            commits=data.commits,
-            description=data.description,
-            number_of_weeks_with_commits=data.number_of_weeks_with_commits,
-            last_commit=data.last_commit,
-            topics=data.topics,
-            languages=data.languages,
-            technologies=data.technologies
-        )
+        project = ProjectModel.objects.create(user=user, **data.dict())
         return Project.from_orm(project)
 
     @staticmethod
@@ -66,15 +50,7 @@ class CvContentRepository:
 
     @staticmethod
     def create_education(user: User, data: Education) -> Education:
-        education = EducationModel.objects.create(
-            user=user,
-            degree=data.degree,
-            school=data.school,
-            start_date=data.start_date,
-            end_date=data.end_date,
-            description=data.description,
-            location=data.location
-        )
+        education = EducationModel.objects.create(user=user, **data.dict())
         return Education.from_orm(education)
 
     @staticmethod
@@ -85,6 +61,10 @@ class CvContentRepository:
     def get_educations(user: User) -> List[Education]:
         return [Education.from_orm(edu) for edu in EducationModel.objects.filter(user=user)]
 
+    def create_educations(self, user, educations):
+        with transaction.atomic():
+            return [self.create_education(user, education) for education in educations]
+
     def update_education(self, education_id, data):
         EducationModel.objects.filter(id=education_id).update(**data)
         return data
@@ -93,10 +73,6 @@ class CvContentRepository:
         with transaction.atomic():
             return [self.create_competency(user, competency) for competency in competencies]
 
-    def create_educations(self, user, educations):
-        with transaction.atomic():
-            return [self.create_education(user, education) for education in educations]
-
     def create_job_positions(self, user, job_positions):
         with transaction.atomic():
             return [self.create_job_position(user, job_position) for job_position in job_positions]
@@ -104,6 +80,3 @@ class CvContentRepository:
     def create_projects(self, user, projects):
         with transaction.atomic():
             return [self.create_project(user, project) for project in projects]
-
-    def delete_competency(self, user, competency_id):
-        CompetencyModel.objects.get(user=user, competency_id=competency_id).delete()

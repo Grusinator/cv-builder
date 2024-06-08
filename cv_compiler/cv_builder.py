@@ -6,10 +6,10 @@ import subprocess
 
 from loguru import logger
 
-from cv_compiler.competency_matrix_calculator import CompetencyMatrixCalculator
+from cv_content.services.competency_matrix_calculator_service import CompetencyMatrixCalculatorService
 from cv_compiler.file_handler import FileHandler
-from cv_compiler.github_project_fetcher import GitHubProjectFetcher
-from cv_compiler.models import GithubProject, JobApplication, JobPosition, Competency, CvContent
+from cv_content.repositories.github_projects_repository import GitHubProjectsRepository
+from cv_compiler.models import GithubProject, JobPosition, Competency, CvContent
 from cv_compiler.pdf_reader import PdfReader
 
 
@@ -19,8 +19,8 @@ class CVCompiler:
     def __init__(self, file_handler=FileHandler()):
         self.file_handler = file_handler
         self.content_builder = CVContentBuilder()
-        self.github_fetcher = GitHubProjectFetcher()
-        self.competency_calculator = CompetencyMatrixCalculator()
+        self.github_fetcher = GitHubProjectsRepository()
+        self.competency_calculator = CompetencyMatrixCalculatorService()
         self.latex_content_builder = LatexContentBuilder()
 
     def fetch_github_projects(self, github_username, github_token):
