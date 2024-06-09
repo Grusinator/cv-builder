@@ -1,0 +1,24 @@
+{% extends "base_cv_content.html" %}
+
+{% block content %}
+<header class="major">
+    <h2>Create CV for {{ job_post.job_title }}</h2>
+</header>
+<section>
+    <!-- Form for generating the summary -->
+    <form method="post" action="{% url 'generate_summary' job_post.job_post_id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-info">Generate Summary</button>
+    </form>
+
+    <!-- Form for saving the summary -->
+    <form method="post" action="{% url 'manage_summary' job_post.job_post_id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_summary">Summary:</label>
+            {{ form.summary }}
+        </div>
+        <button type="submit" name="manage_summary" value="true" class="btn btn-primary mt-3">Save Summary</button>
+    </form>
+</section>
+{% endblock %}

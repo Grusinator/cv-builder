@@ -1,10 +1,10 @@
 from django import forms
-
+from django.core.serializers import serialize
 from buildcv.models import CvCreationProcess
 from cv_content.models import ProjectModel, CompetencyModel, EducationModel, JobPositionModel
 
 
-class CvCreationForm(forms.ModelForm):
+class CvContentForm(forms.ModelForm):
     projects = forms.ModelMultipleChoiceField(
         queryset=ProjectModel.objects.none(),
         widget=forms.CheckboxSelectMultiple,
@@ -29,7 +29,7 @@ class CvCreationForm(forms.ModelForm):
 
     class Meta:
         model = CvCreationProcess
-        fields = ['summary', 'projects', 'competencies', 'job_positions', 'educations']
+        fields = ['projects', 'competencies', 'job_positions', 'educations']
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -40,4 +40,12 @@ class CvCreationForm(forms.ModelForm):
             self.fields['job_positions'].queryset = JobPositionModel.objects.filter(user=user)
             self.fields['educations'].queryset = EducationModel.objects.filter(user=user)
 
-
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.projects = serialize('json', self.cleaned_data['projects'])
+        instance.competencies = serialize('json', self.cleaned_data['competencies'])
+        instance.job_positions = serialize('json', self.cleaned_data['job_positions'])
+        instance.educations = serialize('json', self.cleaned_data['educations'])
+        if commit:
+            instance.save()
+        return instance

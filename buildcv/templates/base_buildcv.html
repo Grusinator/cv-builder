@@ -3,9 +3,26 @@
 {% block nav %}
 <li class="nav-item"><a class="nav-link" href="/buildcv/panel/">LegacyApp</a></li>
 <li class="nav-item"><a class="nav-link" href="/buildcv/job_posts/">Job Posts</a></li>
-
 {% endblock %}
 
 {% block content %}
-<!-- Your content here -->
+<!-- Progress Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light mt-4">
+    <ul class="navbar-nav">
+        <li class="nav-item {% if request.path == '/cv/{{ job_post_id }}/manage-summary/' %}active{% endif %}">
+            <a class="nav-link" href="/cv/{{ job_post_id }}/manage-summary/">1. Summary</a>
+        </li>
+        <li class="nav-item {% if request.path == '/cv/{{ job_post_id }}/content/' %}active{% endif %}">
+            <a class="nav-link" href="/cv/{{ job_post_id }}/content/">2. Select Content</a>
+        </li>
+        <li class="nav-item {% if request.path == '/cv/{{ job_post_id }}/' %}active{% endif %}">
+            <a class="nav-link" href="/cv/{{ job_post_id }}/">3. Generate PDF</a>
+        </li>
+    </ul>
+</nav>
+
+<main class="mt-4">
+    {% block cv_content %}
+    {% endblock %}
+</main>
 {% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base_buildcv.html" %}
+
+{% block cv_content %}
+<header class="major">
+    <h2>Select Content for {{ job_post.job_title }}</h2>
+</header>
+<section>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Job Positions</h3>
+                {% for job_position in form.job_positions %}
+                <div class="form-check">
+                    {{ job_position.tag }}
+                    <label class="form-check-label" for="{{ job_position.id_for_label }}">
+                        {{ job_position.choice_label }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6">
+                <h3>Educations</h3>
+                {% for education in form.educations %}
+                <div class="form-check">
+                    {{ education.tag }}
+                    <label class="form-check-label" for="{{ education.id_for_label }}">
+                        {{ education.choice_label }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Projects</h3>
+                {% for project in form.projects %}
+                <div class="form-check">
+                    {{ project.tag }}
+                    <label class="form-check-label" for="{{ project.id_for_label }}">
+                        {{ project.choice_label }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6">
+                <h3>Competencies</h3>
+                {% for competency in form.competencies %}
+                <div class="form-check">
+                    {{ competency.tag }}
+                    <label class="form-check-label" for="{{ competency.id_for_label }}">
+                        {{ competency.choice_label }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Save Content</button>
+    </form>
+</section>
+{% endblock %}
