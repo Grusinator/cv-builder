@@ -24,7 +24,7 @@ class BuildLatexCVService:
         logger.debug(result.stdout)
         logger.debug("return code: " + str(result.returncode))
         logger.debug(result.stderr)
-        if result.returncode != 0:
+        if result.returncode != 1 and ("error" in result.stderr.lower()):
             logger.error(result.stderr)
             raise Exception(f"Error building CV: \n {result.stderr}")
         else:

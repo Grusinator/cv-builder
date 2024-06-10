@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from loguru import logger
@@ -73,16 +74,15 @@ def manage_content_selection(request, job_post_id):
 def create_cv(request, job_post_id):
     job_post: JobPost = get_object_or_404(JobPost, job_post_id=job_post_id, user=request.user)
     cv_creation: CvCreationProcess = get_object_or_404(CvCreationProcess, user=request.user, job_post=job_post)
-    pdf_path = None
     if request.method == 'POST':
         # Assume build_cv method exists and returns the PDF path or bytes
         logger.debug('Creating CV')
         cv_creation_content = CvCreationRepository().get_cv_creation_content(user=request.user, job_post=job_post)
+
         pdf_file = BuildLatexCVService().build_cv_from_content(cv_creation_content)
-        cv_creation.cv_file.save(f'{job_post}.pdf', pdf_file)
-
-        pdf_path = cv_creation.cv_file.url
+        cv_file_content = ContentFile(pdf_file)  # Wrap the bytes in a ContentFile object
+        cv_creation.cv_file.save(f'{job_post.job_title}.pdf', cv_file_content)
         messages.success(request, 'CV created successfully.')
-        redirect(pdf_path)
 
-    return render(request, 'create_cv.html', {'job_post': job_post, 'cv_creation': cv_creation, 'pdf_path': pdf_path})
+    return render(request, 'create_cv.html',
+                  {'job_post': job_post, 'cv_creation': cv_creation, 'pdf_path': cv_creation.cv_file.url})
