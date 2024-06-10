@@ -13,7 +13,7 @@ urlpatterns = [
     path('job_post/<int:job_post_id>/manage_summary/', manage_summary, name='manage_summary'),
 
     path('cv/<int:job_post_id>/content/', manage_content_selection, name='manage_content_selection'),
-    path('cv/<int:job_post_id>/', create_cv, name='create_cv'),
+    path('cv/<int:job_post_id>/generate/', create_cv, name='create_cv'),
 
     path('panel/', build_cv_panel, name='buildcv'),
 

@@ -2,6 +2,7 @@ from django import forms
 from django.core.serializers import serialize
 from buildcv.models import CvCreationProcess
 from cv_content.models import ProjectModel, CompetencyModel, EducationModel, JobPositionModel
+from cv_content.schemas import Education, JobPosition, Competency, Project
 
 
 class CvContentForm(forms.ModelForm):
@@ -10,7 +11,6 @@ class CvContentForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-
     competencies = forms.ModelMultipleChoiceField(
         queryset=CompetencyModel.objects.none(),
         widget=forms.CheckboxSelectMultiple,
@@ -40,12 +40,28 @@ class CvContentForm(forms.ModelForm):
             self.fields['job_positions'].queryset = JobPositionModel.objects.filter(user=user)
             self.fields['educations'].queryset = EducationModel.objects.filter(user=user)
 
+    def clean_projects(self):
+        projects = self.cleaned_data.get('projects')
+        return Project.dict_from_orm_list(projects)
+
+    def clean_competencies(self):
+        competencies = self.cleaned_data.get('competencies')
+        return Competency.dict_from_orm_list(competencies)
+
+    def clean_job_positions(self):
+        job_positions = self.cleaned_data.get('job_positions')
+        return JobPosition.dict_from_orm_list(job_positions)
+
+    def clean_educations(self):
+        educations = self.cleaned_data.get('educations')
+        return Education.dict_from_orm_list(educations)
+
     def save(self, commit=True):
         instance = super().save(commit=False)
-        instance.projects = serialize('json', self.cleaned_data['projects'])
-        instance.competencies = serialize('json', self.cleaned_data['competencies'])
-        instance.job_positions = serialize('json', self.cleaned_data['job_positions'])
-        instance.educations = serialize('json', self.cleaned_data['educations'])
+        instance.projects = self.cleaned_data['projects']
+        instance.competencies = self.cleaned_data['competencies']
+        instance.job_positions = self.cleaned_data['job_positions']
+        instance.educations = self.cleaned_data['educations']
         if commit:
             instance.save()
         return instance

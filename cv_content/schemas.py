@@ -1,10 +1,30 @@
+import json
 from datetime import datetime
 from typing import Optional, List
 
+from django.db.models import Model
 from pydantic import BaseModel
 
 
-class JobPosition(BaseModel):
+class CustomBasePydanticModel(BaseModel):
+    class Config:
+        from_attributes = True  # This line is needed to use from_orm properly
+
+        json_encoders = {
+            datetime: lambda dt: dt.strftime('%Y-%m-%d')
+        }
+
+    @classmethod
+    def from_orm_list(cls, django_objects) -> List['CustomBasePydanticModel']:
+        return [cls.from_orm(job) for job in django_objects]
+
+    @classmethod
+    def dict_from_orm_list(cls, django_objects: List[Model]) -> List[dict]:
+        # back and forth to let the json_encoders work
+        return [json.loads(cls.from_orm(obj).model_dump_json()) for obj in django_objects]
+
+
+class JobPosition(CustomBasePydanticModel):
     job_position_id: Optional[int] = None
     title: str
     company: str
@@ -14,19 +34,12 @@ class JobPosition(BaseModel):
     description: Optional[str] = None
     competencies: List[str] = []
 
-    class Config:
-        from_attributes = True  # This line is needed to use from_orm properly
-
-        json_encoders = {
-            datetime: lambda dt: dt.strftime('%Y-%m-%d')
-        }
-
     @property
     def unique_id(self):
         return f"{self.company}-{self.start_date.strftime('%Y-%m-%d')}"
 
 
-class Competency(BaseModel):
+class Competency(CustomBasePydanticModel):
     competency_id: Optional[int] = None
     name: str
     level: int
@@ -71,19 +84,16 @@ class GithubProject(BaseModel):
         )
 
 
-class Project(BaseModel):
+class Project(CustomBasePydanticModel):
     project_id: Optional[int] = None
     name: str
-    description: str
+    description: Optional[str] = None
     effort_in_years: float
     last_updated: datetime
     competencies: List[str] = []
 
-    class Config:
-        from_attributes = True  # This line is needed to use from_orm properly
 
-
-class Education(BaseModel):
+class Education(CustomBasePydanticModel):
     education_id: Optional[int]
     degree: str
     school: str
@@ -91,6 +101,3 @@ class Education(BaseModel):
     end_date: datetime
     description: Optional[str] = None
     location: Optional[str] = None
-
-    class Config:
-        from_attributes = True  # This line is needed to use from_orm properly

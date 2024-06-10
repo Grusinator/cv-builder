@@ -13,11 +13,7 @@ class BuildLatexCVService:
     def __init__(self):
         self.latex_content_builder = LatexContentBuilderService()
 
-    def build_cv_from_content(self, selected_jobs, selected_education, selected_projects,
-                              selected_competencies, summary):
-        content = CvContent(job_positions=selected_jobs, github_projects=selected_projects,
-                            educations=selected_education,
-                            competences=selected_competencies, summary=summary)
+    def build_cv_from_content(self, content: CvContent):
         self.latex_content_builder.build_content(content)
         pdf_file = self.build_latex_cv()
         return pdf_file

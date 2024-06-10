@@ -73,5 +73,5 @@ def cv_content():
     educations = file_handler.read_generated_educations()
 
     cv = CvContent(job_positions=job_positions, github_projects=github_projects, educations=educations,
-                   competences=competencies, summary=summary_text)
+                   competencies=competencies, summary=summary_text)
     return cv

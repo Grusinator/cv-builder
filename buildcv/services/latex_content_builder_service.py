@@ -17,9 +17,9 @@ from loguru import logger
 class LatexContentBuilderService:
 
     def build_content(self, cv: CvContent):
-        self.create_competencies_matrix_latex(cv.competences)
+        self.create_competencies_matrix_latex(cv.competencies)
         self.create_job_experiences_latex(cv.job_positions)
-        self.create_projects_latex(cv.github_projects)
+        self.create_projects_latex(cv.projects)
         self.create_resume_summary_latex(cv.summary)
         self.create_educations_latex(cv.educations)
         logger.debug("Latex content files created successfully")
@@ -43,9 +43,8 @@ class LatexContentBuilderService:
         # for readability, add a newline after each dot, so lines are shorter
         return text.replace(".", ".\n" + " " * 8)
 
-    def create_projects_latex(self, github_projects: List[GithubProject]):
-        generic_projects = [proj.map_to_generic_project() for proj in github_projects]
-        latex_content = self.convert_projects_to_latex(generic_projects)
+    def create_projects_latex(self, projects: List[Project]):
+        latex_content = self.convert_projects_to_latex(projects)
         self.write_to_file(CONTENT_PROJECTS_TEX, latex_content)
 
     def convert_projects_to_latex(self, projects: List[Project]) -> str:

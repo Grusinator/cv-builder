@@ -6,6 +6,8 @@ from loguru import logger
 
 from buildcv.forms import SummaryForm, CvContentForm
 from buildcv.models import JobPost, CvCreationProcess
+from buildcv.repositories.cv_creation_repository import CvCreationRepository
+from buildcv.services import BuildLatexCVService
 from buildcv.services.generate_summary_service import GenerateSummaryService
 from cv_content.models import ProjectModel, CompetencyModel, EducationModel
 
@@ -59,6 +61,8 @@ def manage_content_selection(request, job_post_id):
         if form.is_valid():
             form.save()
             return redirect('create_cv', job_post_id=job_post_id)
+        else:
+            logger.error(f'Error saving form: {form.errors}')
     else:
         form = CvContentForm(instance=cv_creation, user=request.user)  # Pass user here
 
@@ -67,12 +71,18 @@ def manage_content_selection(request, job_post_id):
 
 @login_required
 def create_cv(request, job_post_id):
-    job_post = get_object_or_404(JobPost, job_post_id=job_post_id, user=request.user)
-    cv_creation = get_object_or_404(CvCreationProcess, user=request.user, job_post=job_post)
+    job_post: JobPost = get_object_or_404(JobPost, job_post_id=job_post_id, user=request.user)
+    cv_creation: CvCreationProcess = get_object_or_404(CvCreationProcess, user=request.user, job_post=job_post)
     pdf_path = None
     if request.method == 'POST':
         # Assume build_cv method exists and returns the PDF path or bytes
         logger.debug('Creating CV')
-        # TODO implement build_cv method
+        cv_creation_content = CvCreationRepository().get_cv_creation_content(user=request.user, job_post=job_post)
+        pdf_file = BuildLatexCVService().build_cv_from_content(cv_creation_content)
+        cv_creation.cv_file.save(f'{job_post}.pdf', pdf_file)
+
+        pdf_path = cv_creation.cv_file.url
+        messages.success(request, 'CV created successfully.')
+        redirect(pdf_path)
 
     return render(request, 'create_cv.html', {'job_post': job_post, 'cv_creation': cv_creation, 'pdf_path': pdf_path})
