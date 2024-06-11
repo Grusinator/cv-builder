@@ -13,20 +13,22 @@ from buildcv.schemas import CvContent
 TEMPLATE_TEX = 'latex_workspace/templates/template1.tex'
 
 
-class LatexContentBuilderService:
+class BuildLatexCVService:
 
     def __init__(self, base_output_dir='latex_workspace', template_file=TEMPLATE_TEX):
         self.tex_file = 'cv.tex'
         self.base_output_dir = Path(base_output_dir)
         self.template_file = template_file
 
-    def build_content(self, cv: CvContent):
+    def build_cv_from_content(self, cv: CvContent):
         output_dir = self.create_output_dir()
         output_tex_file = output_dir / self.tex_file
         context = self.prepare_context(cv)
         self.render_template(context, output_tex_file)
-        self.compile_latex(output_tex_file)
+        pdf_path = self.compile_latex_to_pdf(output_tex_file)
         logger.debug(f"LaTeX content file created successfully in {output_tex_file}")
+        pdf_file = self.load_pdf(pdf_path)
+        return pdf_file
 
     def prepare_context(self, cv: CvContent) -> Dict[str, Any]:
         cv_escaped = self.escape_latex_in_model(cv)
@@ -51,9 +53,24 @@ class LatexContentBuilderService:
         with open(output_tex_file, 'w') as file:
             file.write(rendered_content)
 
-    def compile_latex(self, tex_file_path: Path):
-        subprocess.run(
-            ['pdflatex', '-interaction=nonstopmode', '-output-directory', tex_file_path.parent, tex_file_path.name])
+
+
+    def compile_latex_to_pdf(self, tex_file_path: Path):
+        command = f"pdflatex -interaction=nonstopmode -output-directory {tex_file_path.parent} {tex_file_path.name}"
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        logger.debug(result.stdout)
+        logger.debug("return code: " + str(result.returncode))
+        logger.debug(result.stderr)
+        if result.returncode != 1 and ("error" in result.stderr.lower()):
+            logger.error(result.stderr)
+            raise Exception(f"Error building CV: \n {result.stderr}")
+        else:
+            logger.info("CV successfully built")
+            return tex_file_path.with_suffix('.pdf')
+
+    def load_pdf(self, path: Path) -> bytes:
+        with open(path, "rb") as f:
+            return f.read()
 
     def escape_latex(self, text):
         replacements = {

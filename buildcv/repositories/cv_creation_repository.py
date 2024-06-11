@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from buildcv.models import CvCreationProcess, JobPost
 from buildcv.schemas import CvContent
 from cv_content.schemas import JobPosition, Education, Project, Competency
+from users.schemas import Profile
 
 
 class CvCreationRepository:
@@ -13,6 +14,7 @@ class CvCreationRepository:
         cv_creation = CvCreationProcess.objects.get(user=user, job_post=job_post)
 
         return CvContent(
+            profile=Profile.from_orm(cv_creation.user.profile),
             job_positions=[JobPosition(**job) for job in cv_creation.job_positions],
             projects=[Project(**proj) for proj in cv_creation.projects],
             educations=[Education(**edu) for edu in cv_creation.educations],

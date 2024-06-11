@@ -11,6 +11,12 @@ job_application_text.txt
 venv/
 
 staticfiles/
-media
+media/
+latex_workspace/**/*.pdf
+latex_workspace/**/*.aux
+latex_workspace/**/*.log
+latex_workspace/**/*.out
+
+
 db.sqlite3
 

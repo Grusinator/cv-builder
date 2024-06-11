@@ -8,7 +8,7 @@ class Profile(BaseModel):
     user_id: int
     full_name: Optional[str] = None
     birthdate: Optional[date] = None
-    profile_picture: Optional[str] = None
+    # profile_picture: Optional[str] = None
     profile_description: Optional[str] = None
     email: str
     address: Optional[str] = None

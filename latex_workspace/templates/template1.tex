@@ -46,11 +46,22 @@
 \photoR{2.8cm}{images/william1}
 
 \personalinfo{
+{% if profile.email %}
   \email{(( profile.email ))}
+{% endif %}
+{% if profile.phone_number %}
   \phone{(( profile.phone_number ))}
-  \location{((profile.address))}
-  \linkedin{(( profile.linkedin ))))}
+{% endif %}
+{% if profile.address %}
+  \location{(( profile.address ))}
+{% endif %}
+{% if profile.linkedin %}
+  \linkedin{(( profile.linkedin ))}
+{% endif %}
+{% if profile.github %}
   \github{(( profile.github ))}
+{% endif %}
+
 }
 
 \makecvheader
@@ -58,9 +69,12 @@
 \columnratio{0.6}
 \begin{paracol}{2}
 
+{% if summary %}
 \cvsubsection{Summary}
 (( summary ))
+{% endif %}
 
+{% if competencies %}
 \cvsection{Skill matrix}
 \begin{tabular}{|c|c|c|c|}
 \hline
@@ -70,7 +84,9 @@ name & level & last used & years of exp. \\
 \textbf{(( skill.name ))} & \cvskill{}{(( skill.level ))} & (( skill.last_used )) & (( skill.years_of_experience )) \\
 {% endfor %}
 \end{tabular}
+{% endif %}
 
+{% if job_positions %}
 \cvsection{Experience}
 {% for job in job_positions %}
 \cvevent{(( job.title ))}{(( job.company ))}{(( job.start_date | date_format("%B %Y") )) -- (( job.end_date | date_format("%B %Y") ))}{(( job.location ))}
@@ -80,10 +96,11 @@ name & level & last used & years of exp. \\
 {% endfor %}
 \divider
 {% endfor %}
+{% endif %}
 
 \newpage
 \switchcolumn
-
+{% if projects %}
 \cvsection{Projects}
 {% for project in projects %}
 \cvevent{(( project.name ))}{}{}{}
@@ -93,12 +110,15 @@ name & level & last used & years of exp. \\
 {% endfor %}
 \divider
 {% endfor %}
+{% endif %}
 
+{% if educations %}
 \cvsection{Education}
 {% for edu in educations %}
 \cvevent{(( edu.degree ))}{(( edu.school ))}{(( edu.start_date | date_format("%Y") )) -- (( edu.end_date | date_format("%Y") ))}{}
 \divider
 {% endfor %}
+{% endif %}
 
 \end{paracol}
 \end{document}

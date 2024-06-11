@@ -2,7 +2,7 @@ import invoke
 import webbrowser
 import os
 
-from buildcv.services.latex_content_builder_service import LatexContentBuilderService
+from buildcv.services.latex_content_builder_service import BuildLatexCVService
 from cv_content.services.extract_cv_content_from_pdf_service import ExtractCvContentFromPdfService
 
 from loguru import logger
@@ -18,7 +18,7 @@ def build_content(ctx):
 def build_latex(ctx, template=None):
     logger.debug("Building LaTeX content")
     raise NotImplementedError("This task is not implemented")
-    LatexContentBuilderService(template_file=None).build_content()
+    BuildLatexCVService(template_file=None).build_cv_from_content()
 
 
 @invoke.task(build_content, build_latex)

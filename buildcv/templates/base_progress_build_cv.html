@@ -1,15 +1,16 @@
 {% extends "base_buildcv.html" %}
 
 {% block nav %}
-<li class="nav-item"><a class="nav-link" href="/buildcv/job_posts/">Job Posts</a></li>
-<li class="nav-item {% if request.path == '/buildcv/cv/{{ job_post_id }}/manage-summary/' %}active{% endif %}">
-    <a class="nav-link" href="buildcv/cv/{{ job_post_id }}/manage-summary/">1. Summary</a>
+<li class="nav-item"><a class="nav-link" href="{% url 'list_job_posts' %}">Job Posts</a></li>
+
+<li class="nav-item {% if request.path == '/buildcv/cv/{{ job_post.job_post_id }}/manage-summary/' %}active{% endif %}">
+    <a class="nav-link" href="{% url 'manage_summary' job_post.job_post_id %}">1. Summary</a>
 </li>
-<li class="nav-item {% if request.path == 'buildcv/cv/{{ job_post_id }}/content/' %}active{% endif %}">
-    <a class="nav-link" href="/buildcv/cv/{{ job_post_id }}/content/">2. Select Content</a>
+<li class="nav-item {% if request.path == '/buildcv/cv/{{ job_post.job_post_id }}/content/' %}active{% endif %}">
+    <a class="nav-link" href="{% url 'manage_content_selection' job_post.job_post_id %}">2. Select Content</a>
 </li>
-<li class="nav-item {% if request.path == 'buildcv/cv/{{ job_post_id }}/' %}active{% endif %}">
-    <a class="nav-link" href="/buildcv/cv/{{ job_post_id }}/generate/">3. Generate PDF</a>
+<li class="nav-item {% if request.path == '/buildcv/cv/{{ job_post.job_post_id }}/generate/' %}active{% endif %}">
+    <a class="nav-link" href="{% url 'create_cv' job_post.job_post_id %}">3. Generate PDF</a>
 </li>
 {% endblock %}
 
@@ -19,4 +20,5 @@
     {% endblock %}
 </main>
 {% endblock %}
+
 
