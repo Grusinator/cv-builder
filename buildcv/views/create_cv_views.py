@@ -85,4 +85,5 @@ def create_cv(request, job_post_id):
         messages.success(request, 'CV created successfully.')
 
     return render(request, 'create_cv.html',
-                  {'job_post': job_post, 'cv_creation': cv_creation, 'pdf_path': cv_creation.cv_file.url})
+                  {'job_post': job_post, 'cv_creation': cv_creation,
+                   'pdf_path': cv_creation.cv_file.url if cv_creation.cv_file else None})
