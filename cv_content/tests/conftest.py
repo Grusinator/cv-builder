@@ -1,10 +1,10 @@
-import pytest
 from unittest.mock import MagicMock
 
-from cv_compiler.file_handler import FileHandler
-from cv_compiler.llm_connector import LlmConnector
+import pytest
+
 from buildcv.schemas import JobApplication, CvContent
-from cv_content.schemas import JobPosition, Competency, GithubProject
+from cv_content.schemas import JobPosition, Competency, GithubProject, Education
+from utils.llm_connector import LlmConnector
 
 
 @pytest.fixture
@@ -28,6 +28,10 @@ def github_projects():
     ]
     return projects
 
+@pytest.fixture
+def projects(github_projects):
+    return [project.map_to_generic_project() for project in github_projects]
+
 
 @pytest.fixture
 def job_positions():
@@ -38,14 +42,14 @@ def job_positions():
                     company="Google",
                     start_date="2019-01-01",
                     end_date="2019-12-31",
-                    technologies=["Python", "Problem Solving"]),
+                    competencies=["Python", "Problem Solving"]),
         JobPosition(title="Data Scientist",
                     description="Job description for Data Scientist",
                     location="USA",
                     company="Facebook",
                     start_date="2020-01-01",
                     end_date="2020-12-31",
-                    technologies=["Python", "Machine Learning"]),
+                    competencies=["Python", "Machine Learning"]),
     ]
 
 
@@ -64,14 +68,32 @@ def job_app():
 
 
 @pytest.fixture
-def cv_content():
-    file_handler = FileHandler()
-    competencies = file_handler.read_generated_competencies_from_csv()
-    job_positions = file_handler.get_generated_job_positions()
-    github_projects = file_handler.read_generated_projects_from_json()
-    summary_text = file_handler.read_summary_txt_file()
-    educations = file_handler.read_generated_educations()
+def educations():
+    return [
+        Education(
+            school="University of Copenhagen",
+            degree="Master of Science in Computer Science",
+            start_date="2017-01-01",
+            end_date="2019-01-01",
+            location="Copenhagen, Denmark",
+            description="Master's thesis on Machine Learning",
 
-    cv = CvContent(job_positions=job_positions, github_projects=github_projects, educations=educations,
+        ),
+        Education(
+            school="University of Copenhagen",
+            degree="Bachelor of Science in Computer Science",
+            start_date="2014-01-01",
+            end_date="2017-01-01",
+            location="Copenhagen, Denmark",
+            description="Bachelor's thesis on Software Engineering",
+        )
+    ]
+
+
+@pytest.fixture
+def cv_content(competencies, job_positions, projects, educations):
+    summary_text = "Summary text"
+
+    cv = CvContent(job_positions=job_positions, projects=projects, educations=educations,
                    competencies=competencies, summary=summary_text)
     return cv

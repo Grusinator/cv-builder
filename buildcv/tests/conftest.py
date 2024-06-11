@@ -17,6 +17,9 @@ from django.db.models import AutoField
 
 from cv_content.schemas import JobPosition, Project, Education, Competency
 
+#cv_content/tests/conftest.py
+
+from cv_content.tests.conftest import *
 
 # Function to reset auto fields to None
 def reset_auto_fields_to_none(obj):

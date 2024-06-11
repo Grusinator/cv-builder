@@ -19,3 +19,4 @@ pytest
 pytest-dotenv
 pytest-django
 pytest-mock
+django-cors-headers

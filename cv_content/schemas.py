@@ -94,7 +94,7 @@ class Project(CustomBasePydanticModel):
 
 
 class Education(CustomBasePydanticModel):
-    education_id: Optional[int]
+    education_id: Optional[int] = None
     degree: str
     school: str
     start_date: datetime

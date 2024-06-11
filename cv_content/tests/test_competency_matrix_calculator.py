@@ -1,9 +1,10 @@
 import pytest
 
 from cv_content.services.competency_matrix_calculator_service import CompetencyMatrixCalculatorService
-from cv_compiler.file_handler import FileHandler
-from cv_compiler.llm_connector import LlmConnector
+
 from cv_content.schemas import JobPosition, Competency, GithubProject
+from utils.file_handler import FileHandler
+from utils.llm_connector import LlmConnector
 
 
 class TestCompetencyMatrixCalculator:

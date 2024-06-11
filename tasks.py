@@ -15,15 +15,15 @@ def build_content(ctx):
 
 
 @invoke.task
-def build_latex(ctx):
+def build_latex(ctx, template=None):
     logger.debug("Building LaTeX content")
     raise NotImplementedError("This task is not implemented")
-    LatexContentBuilderService().build_content()
+    LatexContentBuilderService(template_file=None).build_content()
 
 
 @invoke.task(build_content, build_latex)
-def build(ctx):
-    ctx.run("pdflatex -interaction=nonstopmode main.tex")
+def build(ctx, file="main.tex"):
+    ctx.run(f"pdflatex -interaction=nonstopmode {file}")
 
 
 @invoke.task
