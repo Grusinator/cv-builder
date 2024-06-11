@@ -10,6 +10,6 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('profile/', manage_profile, name='manage_profile'),
     path('signup/', signup_view, name='signup'),
-    path('logout/', logout, {'next_page': '/'}, name='logout'),
+    path('logout/', logout, {'next_page': '/login/'}, name='logout'),
     path('login/', login, {'next_page': '/'}, name='login'),
 ]

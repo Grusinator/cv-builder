@@ -5,6 +5,7 @@ from django.db import models
 class ProfileModel(models.Model):
     profile_id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=255, null=True, blank=True)
     birthdate = models.DateField(null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures', null=True, blank=True)
     profile_description = models.TextField(null=True, blank=True)

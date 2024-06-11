@@ -4,6 +4,7 @@ import pytest
 
 from buildcv.schemas import JobApplication, CvContent
 from cv_content.schemas import JobPosition, Competency, GithubProject, Education
+from users.schemas import Profile
 from utils.llm_connector import LlmConnector
 
 
@@ -27,6 +28,7 @@ def github_projects():
                       commits=8),
     ]
     return projects
+
 
 @pytest.fixture
 def projects(github_projects):
@@ -93,7 +95,19 @@ def educations():
 @pytest.fixture
 def cv_content(competencies, job_positions, projects, educations):
     summary_text = "Summary text"
+    profile = Profile(
+        user_id=1,
+        birthdate="1990-01-01",
+        profile_picture="profile_pictures/1.jpg",
+        profile_description="Profile description",
+        full_name="John Dutton",
+        email="test@gmail.com",
+        address="Copenhagen, Denmark",
+        linkedin="https://www.linkedin.com/in/test",
+        github="github.com/test",
+        phone_number="+45 12345678"
+    )
 
-    cv = CvContent(job_positions=job_positions, projects=projects, educations=educations,
+    cv = CvContent(profile=profile, job_positions=job_positions, projects=projects, educations=educations,
                    competencies=competencies, summary=summary_text)
     return cv

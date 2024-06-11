@@ -1,13 +1,14 @@
 <!-- templates/registration/login.html -->
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
-    <h2>Login</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="button primary" type="submit">Login</button>
-    </form>
+<h2>Login</h2>
+<form method="post" action="{% url 'login' %}?next=/users/profile/">
+    {% csrf_token %}
+    {{ form |crispy }}
+    <button type="submit">Login</button>
+</form>
 
 {% endblock %}

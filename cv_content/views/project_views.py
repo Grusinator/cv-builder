@@ -31,7 +31,7 @@ def update_project(request, project_id):
             return redirect('list_projects')
     else:
         form = ProjectForm(instance=project)
-    return render(request, 'upsert_with_form.html', {'form': form, 'form_title': 'Update Project'})
+    return render(request, 'upsert_with_form.html', {'form': form, 'title': 'Update Project'})
 
 
 @login_required

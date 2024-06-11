@@ -20,3 +20,5 @@ pytest-dotenv
 pytest-django
 pytest-mock
 django-cors-headers
+django-crispy-forms
+crispy-bootstrap4

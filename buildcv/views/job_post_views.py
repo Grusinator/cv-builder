@@ -25,7 +25,7 @@ def add_job_post(request):
             return redirect('list_job_posts')
     else:
         form = JobPostForm()
-    return render(request, 'upsert_with_form.html', {'form': form})
+    return render(request, 'upsert_with_form.html', {'form': form, 'title': 'Add Job Post'})
 
 
 @login_required
