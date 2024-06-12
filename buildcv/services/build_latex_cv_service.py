@@ -14,7 +14,7 @@ TEMPLATE_TEX = Path('latex_workspace/templates/template1.tex')
 
 
 class BuildLatexCVService:
-    base_output_dir: Path = Path('latex_workspace')
+    base_output_dir: Path = Path('latex_workspace/cv_generation')
 
     def build_cv_from_content(self, cv: CvContent, template_file: Path=TEMPLATE_TEX):
         output_tex_file_path = self.base_output_dir / str(uuid.uuid4()) / f'cv.tex'

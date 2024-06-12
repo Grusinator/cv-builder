@@ -12,10 +12,7 @@ venv/
 
 staticfiles/
 media/
-latex_workspace/**/*.pdf
-latex_workspace/**/*.aux
-latex_workspace/**/*.log
-latex_workspace/**/*.out
+latex_workspace/cv_generation/*
 
 
 db.sqlite3

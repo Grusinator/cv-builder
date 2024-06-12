@@ -1,0 +1,169 @@
+%%%%%%%%%%%%%%%%%
+% This is a sample CV template created using altacv.cls
+% (v1.7, 9 August 2023) written by LianTze Lim (liantze@gmail.com). Compiles with pdfLaTeX, XeLaTeX and LuaLaTeX.
+%
+%%%%%%%%%%%%%%%%
+
+\documentclass[10pt,a4paper,ragged2e,withhyper]{altacv}
+\geometry{left=1.25cm,right=1.25cm,top=1.5cm,bottom=1.5cm,columnsep=1.2cm}
+\usepackage{paracol}
+
+\ifxetexorluatex
+  \setmainfont{Roboto Slab}
+  \setsansfont{Lato}
+  \renewcommand{\familydefault}{\sfdefault}
+\else
+  \usepackage[rm]{roboto}
+  \usepackage[defaultsans]{lato}
+  \renewcommand{\familydefault}{\sfdefault}
+\fi
+
+\definecolor{SlateGrey}{HTML}{2E2E2E}
+\definecolor{LightGrey}{HTML}{666666}
+\definecolor{DarkPastelRed}{HTML}{450808}
+\definecolor{PastelRed}{HTML}{8F0D0D}
+\definecolor{GoldenEarth}{HTML}{E7D192}
+\colorlet{name}{black}
+\colorlet{tagline}{PastelRed}
+\colorlet{heading}{DarkPastelRed}
+\colorlet{headingrule}{GoldenEarth}
+\colorlet{subheading}{PastelRed}
+\colorlet{accent}{PastelRed}
+\colorlet{emphasis}{SlateGrey}
+\colorlet{body}{LightGrey}
+
+\renewcommand{\namefont}{\Huge\rmfamily\bfseries}
+\renewcommand{\personalinfofont}{\footnotesize}
+\renewcommand{\cvsectionfont}{\LARGE\rmfamily\bfseries}
+\renewcommand{\cvsubsectionfont}{\large\bfseries}
+
+\renewcommand{\cvItemMarker}{{\small\textbullet}}
+\renewcommand{\cvRatingMarker}{\faCircle}
+
+\begin{document}
+\name{}
+\tagline{Data Engineer}
+\photoR{2.8cm}{images/william1}
+
+\personalinfo{
+
+  \email{test@gmail.com}
+
+
+  \phone{+45 12345678}
+
+
+  \location{Copenhagen, Denmark}
+
+
+  \linkedin{https://www.linkedin.com/in/test}
+
+
+  \github{github.com/test}
+
+
+}
+
+\makecvheader
+
+\columnratio{0.6}
+\begin{paracol}{2}
+
+
+\cvsubsection{Summary}
+Summary text
+
+
+
+\cvsection{Skill matrix}
+\begin{tabular}{|c|c|c|c|}
+\hline
+name & level & last used & years of exp. \\
+\hline
+
+\textbf{Python} & \cvskill{}{1} & 2020 & 2.0 \\
+
+\textbf{JavaScript} & \cvskill{}{1} & 2020 & 1.0 \\
+
+\end{tabular}
+
+
+
+\cvsection{Experience}
+
+\cvevent{Software Engineer}{Google}{January 2019 -- December 2019}{USA}
+Job description for Software Engineer
+
+\cvtag{Python}
+
+\cvtag{Problem Solving}
+
+\divider
+
+\cvevent{Data Scientist}{Facebook}{January 2020 -- December 2020}{USA}
+Job description for Data Scientist
+
+\cvtag{Python}
+
+\cvtag{Machine Learning}
+
+\divider
+
+
+
+\newpage
+\switchcolumn
+
+\cvsection{Projects}
+
+\cvevent{Project 1}{}{}{}
+
+
+\cvtag{JavaScript}
+
+\cvtag{Python}
+
+\divider
+
+\cvevent{Project 2}{}{}{}
+
+
+\cvtag{Java}
+
+\cvtag{C++}
+
+\divider
+
+\cvevent{Project 3}{}{}{}
+
+
+\cvtag{HTML}
+
+\cvtag{Python}
+
+\divider
+
+\cvevent{Project 4}{}{}{}
+
+
+\cvtag{JavaScript}
+
+\cvtag{CSS}
+
+\divider
+
+
+
+
+\cvsection{Education}
+
+\cvevent{Master of Science in Computer Science}{University of Copenhagen}{2017 -- 2019}{}
+\divider
+
+\cvevent{Bachelor of Science in Computer Science}{University of Copenhagen}{2014 -- 2017}{}
+\divider
+
+
+
+\end{paracol}
+\end{document}
