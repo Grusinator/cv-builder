@@ -1,0 +1,4 @@
+from .data_provider_detail_view import data_provider_view
+from .data_providers_list_view import data_provider_list_view
+from .endpoint_detail_view import endpoint_detail_view
+from .oauth2redirect_view import oauth2redirect_view

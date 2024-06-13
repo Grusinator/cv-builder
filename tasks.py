@@ -47,6 +47,10 @@ def open_pdf(ctx):
 def run_ui(ctx):
     ctx.run("panel serve --show cv_app.py --autoreload --port 5006")
 
+@invoke.task
+def terraform(ctx):
+    ctx.run("terraform -chdir=devops/terraform init")
+    ctx.run("terraform -chdir=devops/terraform plan")
 
 if __name__ == '__main__':
     pass

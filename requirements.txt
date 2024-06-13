@@ -21,4 +21,5 @@ pytest-django
 pytest-mock
 django-cors-headers
 django-crispy-forms
+django-allauth
 crispy-bootstrap4

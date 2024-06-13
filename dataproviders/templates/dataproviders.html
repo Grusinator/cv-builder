@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <header class="major">
+        <h2>Dataproviders</h2>
+    </header>
+
+
+    <section>
+        <div class="row">
+            {% for dp in dataproviders %}
+                {% if forloop.counter0|divisibleby:3 %}
+                    </div>
+                    <br>
+                    <div class="row">
+                {% endif %}
+                <div class="col-4">
+                    <a href={{ dp.get_internal_view_url }}>
+                        <img height="150" width="150" alt={{ dp.provider_name }} src={{ dp.icon_image_url }} >
+                    </a>
+                </div>
+            {% endfor %}
+            </div>
+    </section>
+
+{% endblock %}

@@ -28,9 +28,12 @@ pn_app_config = apps.get_app_config('bokeh_django')
 urlpatterns = [
     path('buildcv/', include('buildcv.urls')),
     path("", include("core.urls")),
-    path('users/', include('users.urls')),
     path("cv_content/", include("cv_content.urls")),
+    path("dataproviders/", include("dataproviders.urls")),
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
+    path('accounts/', include('users.urls')),
+    path('users/', include('users.urls')),
 ]
 
 bokeh_apps = [

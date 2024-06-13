@@ -3,24 +3,31 @@ import os
 import re
 
 from loguru import logger
-from openai import OpenAI
+from openai import OpenAI, OpenAIError
 
 from utils.cache import cache
 
 
 class LlmConnector:
     def __init__(self):
-        self.client = OpenAI(
-            organization=os.getenv("OPENAI_ORG_ID"),
-            project=os.getenv("OPENAI_PROJECT_ID"),
-        )
+        try:
+            self.client = OpenAI(
+                organization=os.getenv("OPENAI_ORG_ID"),
+                project=os.getenv("OPENAI_PROJECT_ID"),
+            )
+        except OpenAIError:
+            logger.exception("OpenAIError: OpenAI client has not been enabled due to missing accesss tokens")
+            self.ask_question = self.raise_access_exception
         self.model_name = "gpt-4-turbo"
 
     def __str__(self):
         return f"ChatGPTInterface(model_name={self.model_name})"
 
+    def raise_access_exception(self, question):
+        raise OpenAIError("OpenAIError: OpenAI client has not been enabled due to missing accesss tokens")
+
     @cache
-    def ask_question(self, question):
+    def ask_question(self, question: str):
         response = self.client.chat.completions.create(
             model=self.model_name,
             messages=[{"role": "user", "content": question}],
@@ -69,4 +76,3 @@ class LlmConnector:
 
     def is_list_of_strings(self, input_list):
         return isinstance(input_list, list) and all(isinstance(elm, str) for elm in input_list)
-

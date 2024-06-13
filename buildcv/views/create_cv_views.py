@@ -66,6 +66,7 @@ def manage_content_selection(request, job_post_id):
             logger.error(f'Error saving form: {form.errors}')
     else:
         form = CvContentForm(instance=cv_creation, user=request.user)  # Pass user here
+        form.competencies.queryset = FilterRelevantContentService().
 
     return render(request, 'manage_content_selection.html', {'job_post': job_post, 'form': form})
 
