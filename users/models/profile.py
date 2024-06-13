@@ -18,3 +18,10 @@ class ProfileModel(models.Model):
     class Meta:
         app_label = 'users'
         default_related_name = 'profile'
+
+    @classmethod
+    def model_validate(cls, obj):
+        return Profile(
+            **obj.__dict__,
+            profile_picture=obj.profile_picture.url if obj.profile_picture else None
+        )

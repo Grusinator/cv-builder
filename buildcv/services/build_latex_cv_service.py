@@ -16,13 +16,15 @@ TEMPLATE_TEX = Path('latex_workspace/templates/template1.tex')
 class BuildLatexCVService:
     base_output_dir: Path = Path('latex_workspace/cv_generation')
 
-    def build_cv_from_content(self, cv: CvContent, template_file: Path=TEMPLATE_TEX):
+    def build_cv_from_content(self, cv: CvContent, template_file: Path = TEMPLATE_TEX):
         output_tex_file_path = self.base_output_dir / str(uuid.uuid4()) / f'cv.tex'
+        os.makedirs(output_tex_file_path.parent, exist_ok=True)
         context = self.prepare_context(cv)
         self.render_template(context, output_tex_file_path, template_file)
         pdf_path = self.compile_latex_to_pdf(output_tex_file_path)
         logger.debug(f"LaTeX content file created successfully in {output_tex_file_path}")
         pdf_file = self.load_pdf(pdf_path)
+        # os.remove(output_tex_file_path.parent)
         return pdf_file
 
     def prepare_context(self, cv: CvContent) -> Dict[str, Any]:
@@ -30,20 +32,16 @@ class BuildLatexCVService:
         context = cv_escaped.dict()
         return context
 
-    def create_output_dir(self):
-        build_id = "1234"
-        output_dir = self.base_output_dir / build_id
-        os.makedirs(output_dir, exist_ok=True)
-        return output_dir
-
     def render_template(self, context, output_tex_file, template_file: Path):
+        logger.debug(f"Current working directory: {os.getcwd()}")
+        logger.debug(f"Rendering template: {template_file}, to {output_tex_file}")
         env = Environment(
             loader=FileSystemLoader(template_file.parent),
             variable_start_string='((',
             variable_end_string='))'
         )
         env.filters['date_format'] = self.date_format
-        template = env.get_template(template_file.stem)
+        template = env.get_template(template_file.name)
         rendered_content = template.render(context)
         with open(output_tex_file, 'w') as file:
             file.write(rendered_content)
@@ -59,7 +57,7 @@ class BuildLatexCVService:
             raise Exception(f"Error building CV: \n {result.stderr}")
         else:
             logger.info("CV successfully built")
-            return tex_file_path.parent / tex_file_path.with_suffix('.pdf')
+            return tex_file_path.with_suffix('.pdf')
 
     def load_pdf(self, path: Path) -> bytes:
         with open(path, "rb") as f:

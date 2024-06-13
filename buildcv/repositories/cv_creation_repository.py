@@ -15,7 +15,7 @@ class CvCreationRepository:
 
         return CvContent(
             job_title=job_post.job_title,
-            profile=Profile.from_orm(cv_creation.user.profile),
+            profile=Profile.model_validate(cv_creation.user.profile),
             job_positions=[JobPosition(**job) for job in cv_creation.job_positions],
             projects=[Project(**proj) for proj in cv_creation.projects],
             educations=[Education(**edu) for edu in cv_creation.educations],

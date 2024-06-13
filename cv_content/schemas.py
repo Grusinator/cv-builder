@@ -16,12 +16,12 @@ class CustomBasePydanticModel(BaseModel):
 
     @classmethod
     def from_orm_list(cls, django_objects) -> List['CustomBasePydanticModel']:
-        return [cls.from_orm(job) for job in django_objects]
+        return [cls.model_validate(job) for job in django_objects]
 
     @classmethod
     def dict_from_orm_list(cls, django_objects: List[Model]) -> List[dict]:
         # back and forth to let the json_encoders work
-        return [json.loads(cls.from_orm(obj).model_dump_json()) for obj in django_objects]
+        return [json.loads(cls.model_validate(obj).model_dump_json()) for obj in django_objects]
 
 
 class JobPosition(CustomBasePydanticModel):

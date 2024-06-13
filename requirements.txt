@@ -19,6 +19,7 @@ pytest
 pytest-dotenv
 pytest-django
 pytest-mock
+pytest-regressions
 django-cors-headers
 django-crispy-forms
 django-allauth

@@ -12,16 +12,16 @@ class CvContentRepository:
     @staticmethod
     def create_job_position(user: User, job_position: JobPosition) -> JobPosition:
         job_position = JobPositionModel.objects.create(**job_position.dict(), user=user)
-        return JobPosition.from_orm(job_position)
+        return JobPosition.model_validate(job_position)
 
     @staticmethod
     def get_job_positions(user: User) -> List[JobPosition]:
-        return [JobPosition.from_orm(jp) for jp in JobPositionModel.objects.filter(user=user)]
+        return [JobPosition.model_validate(jp) for jp in JobPositionModel.objects.filter(user=user)]
 
     @staticmethod
     def update_job_position(job_position_id: int, data: dict) -> JobPosition:
         JobPositionModel.objects.filter(id=job_position_id).update(**data)
-        return JobPosition.from_orm(JobPositionModel.objects.get(id=job_position_id))
+        return JobPosition.model_validate(JobPositionModel.objects.get(id=job_position_id))
 
     @staticmethod
     def delete_job_position(user: User, job_position_id: int):
@@ -30,11 +30,11 @@ class CvContentRepository:
     @staticmethod
     def create_competency(user: User, data: Competency) -> Competency:
         competency = CompetencyModel.objects.create(user=user, **data.dict())
-        return Competency.from_orm(competency)
+        return Competency.model_validate(competency)
 
     @staticmethod
     def get_competencies(user: User) -> List[Competency]:
-        return [Competency.from_orm(comp) for comp in CompetencyModel.objects.filter(user=user)]
+        return [Competency.model_validate(comp) for comp in CompetencyModel.objects.filter(user=user)]
 
     def delete_competency(self, user, competency_id):
         CompetencyModel.objects.get(user=user, competency_id=competency_id).delete()
@@ -42,16 +42,16 @@ class CvContentRepository:
     @staticmethod
     def create_project(user: User, data: Project) -> Project:
         project = ProjectModel.objects.create(user=user, **data.dict())
-        return Project.from_orm(project)
+        return Project.model_validate(project)
 
     @staticmethod
     def get_projects(user: User) -> List[Project]:
-        return [Project.from_orm(proj) for proj in ProjectModel.objects.filter(user=user)]
+        return [Project.model_validate(proj) for proj in ProjectModel.objects.filter(user=user)]
 
     @staticmethod
     def create_education(user: User, data: Education) -> Education:
         education = EducationModel.objects.create(user=user, **data.dict())
-        return Education.from_orm(education)
+        return Education.model_validate(education)
 
     @staticmethod
     def delete_education(user: User, education_id: int):
@@ -59,7 +59,7 @@ class CvContentRepository:
 
     @staticmethod
     def get_educations(user: User) -> List[Education]:
-        return [Education.from_orm(edu) for edu in EducationModel.objects.filter(user=user)]
+        return [Education.model_validate(edu) for edu in EducationModel.objects.filter(user=user)]
 
     def create_educations(self, user, educations):
         with transaction.atomic():
