@@ -14,6 +14,7 @@ class CvCreationRepository:
         cv_creation = CvCreationProcess.objects.get(user=user, job_post=job_post)
 
         return CvContent(
+            job_title=job_post.job_title,
             profile=Profile.from_orm(cv_creation.user.profile),
             job_positions=[JobPosition(**job) for job in cv_creation.job_positions],
             projects=[Project(**proj) for proj in cv_creation.projects],

@@ -108,6 +108,9 @@ def cv_content(competencies, job_positions, projects, educations):
         phone_number="+45 12345678"
     )
 
-    cv = CvContent(profile=profile, job_positions=job_positions, projects=projects, educations=educations,
-                   competencies=competencies, summary=summary_text)
+    job_title = "Software Engineer"
+    cv = CvContent(
+        job_title=job_title,
+        profile=profile, job_positions=job_positions, projects=projects, educations=educations,
+        competencies=competencies, summary=summary_text)
     return cv

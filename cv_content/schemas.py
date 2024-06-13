@@ -51,6 +51,14 @@ class Competency(CustomBasePydanticModel):
     class Config:
         from_attributes = True  # This line is needed to use from_orm properly
 
+    @staticmethod
+    def strip_competency_name_for_comparison(competency_name: str) -> str:
+        return competency_name.lower().replace(" ", "").replace("-", "")
+
+    @property
+    def stripped_name(self):
+        return self.strip_competency_name_for_comparison(self.name)
+
     @property
     def level_description(self):
         level_mapping = {

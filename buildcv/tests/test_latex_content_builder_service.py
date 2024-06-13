@@ -1,9 +1,5 @@
-import textwrap
-from datetime import datetime
-
 from buildcv.schemas import CvContent
-from buildcv.services.latex_content_builder_service import BuildLatexCVService
-from cv_content.schemas import JobPosition, Competency, Project
+from buildcv.services.build_latex_cv_service import BuildLatexCVService
 
 
 class TestLatexContentBuilder:

@@ -9,8 +9,10 @@ from buildcv.forms import SummaryForm, CvContentForm
 from buildcv.models import JobPost, CvCreationProcess
 from buildcv.repositories.cv_creation_repository import CvCreationRepository
 from buildcv.services import BuildLatexCVService
+from buildcv.services.filter_relevant_content_service import FilterRelevantContentService
 from buildcv.services.generate_summary_service import GenerateSummaryService
 from cv_content.models import ProjectModel, CompetencyModel, EducationModel
+from cv_content.repositories import CvContentRepository
 
 
 @login_required
@@ -66,7 +68,10 @@ def manage_content_selection(request, job_post_id):
             logger.error(f'Error saving form: {form.errors}')
     else:
         form = CvContentForm(instance=cv_creation, user=request.user)  # Pass user here
-        form.competencies.queryset = FilterRelevantContentService().
+        service = FilterRelevantContentService()
+        competencies = CvContentRepository().get_competencies(user=request.user)
+        matching_competencies = service.find_most_relevant_competencies_to_job_add(job_post.job_post_text, competencies)
+        form.fields['competencies'].initial = [comp.competency_id for comp in matching_competencies]
 
     return render(request, 'manage_content_selection.html', {'job_post': job_post, 'form': form})
 

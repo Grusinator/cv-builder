@@ -19,6 +19,7 @@ class JobApplication(BaseModel):
 
 
 class CvContent(BaseModel):
+    job_title: str
     profile: Optional[Profile] = None
     job_positions: List[JobPosition]
     projects: List[Project]

@@ -2,7 +2,7 @@ import pytest
 
 from cv_content.services.competency_matrix_calculator_service import CompetencyMatrixCalculatorService
 
-from cv_content.schemas import JobPosition, Competency, GithubProject
+from cv_content.schemas import JobPosition, Competency, GithubProject, Project
 from utils.file_handler import FileHandler
 from utils.llm_connector import LlmConnector
 
@@ -56,9 +56,9 @@ class TestCompetencyMatrixCalculator:
         assert competencies == expected_competencies
 
     @pytest.mark.parametrize("github_project, expected_competency", [
-        (GithubProject(name="Project 1", owner="me", last_commit="2022-11-02", languages=["Python", "JavaScript"],
-                       commits=10), Competency(name='Python', level=1, last_used=2022, years_of_experience=0.25)),
-        (GithubProject(name="Project 2", owner="me", last_commit="2022-11-02", languages=["Java", "C++"], commits=5),
+        (Project(name="Project 1", effort_in_years=7, last_updated="2022-11-02", competencies=["Python", "JavaScript"]),
+         Competency(name='Python', level=1, last_used=2022, years_of_experience=0.25)),
+        (Project(name="Project 2", effort_in_years=7, last_updated="2022-11-02", competencies=["Java", "C++"]),
          Competency(name='Java', level=1, last_used=2022, years_of_experience=0.25)),
         (None, None)
 
@@ -66,6 +66,6 @@ class TestCompetencyMatrixCalculator:
     def test_build_competency_matrix_projects(self, mock_llm, github_project, job_positions, competencies, job_app,
                                               expected_competency):
         competency_calculator = CompetencyMatrixCalculatorService(mock_llm)
-        competencies = competency_calculator.build(job_positions, [github_project] if github_project else [], job_app,
+        competencies = competency_calculator.build(job_positions, [github_project] if github_project else [],
                                                    competencies)
         assert competencies == ([expected_competency] if expected_competency else [])

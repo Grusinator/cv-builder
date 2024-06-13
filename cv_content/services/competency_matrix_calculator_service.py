@@ -12,8 +12,8 @@ from cv_content.schemas import JobPosition, Competency, Project
 
 class CompetencyMatrixCalculatorService:
 
-    def __init__(self):
-        self.llm_connector = LlmConnector()
+    def __init__(self, llm_connector=LlmConnector()):
+        self.llm_connector = llm_connector
 
     def build(self, jobs: List[JobPosition], projects: List[Project], background_competencies: List[Competency] = None):
         background_competencies = background_competencies or []
@@ -21,16 +21,6 @@ class CompetencyMatrixCalculatorService:
         project_competencies = self.generate_competencies_from_generic_projects(projects)
         competencies = self.merge_competencies(background_competencies, job_competencies, project_competencies)
         return competencies
-
-    def find_most_relevant_competencies_to_job_add(self, job_description: str, competencies, n=15) -> List[
-        Competency]:
-        competencies_ordered = self.filter_matching_competencies_from_job_application(competencies, job_description)
-
-        if len(competencies_ordered) > n:
-            competencies_ordered = competencies_ordered[:n]
-        attractive_competencies = [comp for comp in competencies if comp.name in competencies_ordered]
-        logger.debug(f"Most attractive competencies: {attractive_competencies}")
-        return attractive_competencies
 
     def filter_matching_competencies_from_job_application(self, competencies, job_description):
         competency_names = [comp.name for comp in competencies]
@@ -77,16 +67,12 @@ class CompetencyMatrixCalculatorService:
         logger.debug(f"job competencies: {[comp.name for comp in competencies]}")
         return competencies
 
-    @staticmethod
-    def strip_competency_name_for_comparison(competency_name: str) -> str:
-        return competency_name.lower().replace(" ", "").replace("-", "")
-
     def generate_competencies_from_generic_projects(self, projects: List[Project]) -> List[Competency]:
         competencies: List[Competency] = []
         for project in projects:
             for competency_name in project.competencies:
-                competency = next(filter(lambda x: self.strip_competency_name_for_comparison(
-                    x.name) == self.strip_competency_name_for_comparison(competency_name), competencies), None)
+                competency = next(filter(lambda x: Competency.strip_competency_name_for_comparison(
+                    x.name) == Competency.strip_competency_name_for_comparison(competency_name), competencies), None)
 
                 if competency:
                     competency.years_of_experience += project.effort_in_years
@@ -142,7 +128,7 @@ class CompetencyMatrixCalculatorService:
 
     def df_add_stripped_name_for_comparison(self, job_project_competencies_pd: pd.DataFrame, column_name='name'):
         job_project_competencies_pd[column_name + "_compare"] = job_project_competencies_pd.apply(
-            lambda x: self.strip_competency_name_for_comparison(x[column_name]), axis=1)
+            lambda x: Competency.strip_competency_name_for_comparison(x[column_name]), axis=1)
 
     def sum_years_of_experience_on_jobs_and_projects(self, job_competencies_pd, project_competencies_pd):
         job_project_competencies_pd = pd.concat([job_competencies_pd, project_competencies_pd], ignore_index=True)

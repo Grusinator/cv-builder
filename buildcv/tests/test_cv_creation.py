@@ -6,8 +6,9 @@ from django.urls import reverse
 from buildcv.models import CvCreationProcess
 from cv_content.models import JobPositionModel, CompetencyModel, ProjectModel, EducationModel
 
-
 import mixer
+
+from cv_content.schemas import Project, Education, Competency
 
 
 @pytest.mark.django_db
@@ -47,7 +48,8 @@ class TestCvCreationViews:
         cv_creation_process.refresh_from_db()
         assert cv_creation_process.summary == 'This is a generated summary.'
 
-    def test_manage_content_selection_get(self, client, user, job_post_in_db, cv_creation_process):
+    def test_manage_content_selection_get(self, client, user, job_post_in_db, cv_creation_process, competencies_in_db,
+                                          projects_in_db, educations_in_db, job_positions_in_db):
         client.force_login(user)
         url = reverse('manage_content_selection', kwargs={'job_post_id': job_post_in_db.job_post_id})
         response = client.get(url)
@@ -68,6 +70,7 @@ class TestCvCreationViews:
         response = client.post(url, job_post_id=job_post_in_db.job_post_id, data=data)
         assert response.status_code == 302
         cv_creation_process = CvCreationProcess.objects.get(user=user, job_post=job_post_in_db)
-        assert serialize('json', projects_in_db) == cv_creation_process.projects
-        assert serialize('json', competencies_in_db) == cv_creation_process.competencies
-        assert serialize('json', educations_in_db) == cv_creation_process.educations
+        assert Project.from_orm_list(projects_in_db) == [Project(**proj) for proj in cv_creation_process.projects]
+        assert Competency.from_orm_list(competencies_in_db) == [Competency(**comp) for comp in
+                                                                cv_creation_process.competencies]
+        assert Education.from_orm_list(educations_in_db) == [Education(**edu) for edu in cv_creation_process.educations]

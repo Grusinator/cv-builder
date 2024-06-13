@@ -40,9 +40,6 @@ class CVContentCreaterService:
         existing_competencies = self.repository.update_competencies(user, existing_competencies)
         return sorted(existing_competencies + new_competencies, key=lambda x: x.name)
 
-    def match_competencies_with_job_description(self, competencies: List[Competency], job_description: str, n=15):
-        return self.competency_calculator.find_most_relevant_competencies_to_job_add(job_description, competencies, n=n)
-
     def load_job_positions_from_pdf(self, user, pdf_bytes: bytes):
         pdf_cv_content = PdfReader().extract_text_from_pdf(pdf_bytes)
         job_positions = self.content_builder.get_job_positions_from_pdf(pdf_cv_content)
