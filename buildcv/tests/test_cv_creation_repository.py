@@ -4,8 +4,8 @@ from buildcv.repositories.cv_creation_repository import CvCreationRepository
 
 
 @pytest.mark.django_db
-def test_get_cv_creation_content(user, cv_creation_process, job_positions_in_db, projects_in_db,
-                                 competencies_in_db, educations_in_db, job_post_in_db):
+def test_get_cv_creation_content(user, cv_creation_process_in_db, job_positions_in_db, projects_in_db,
+                                 competencies_in_db, educations_in_db, job_post_in_db, profile_in_db):
     repository = CvCreationRepository()
     cv_content = repository.get_cv_creation_content(user, job_post_in_db)
 

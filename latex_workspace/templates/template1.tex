@@ -46,22 +46,11 @@
 \photoR{2.8cm}{(( profile.profile_picture ))}
 
 \personalinfo{
-{% if profile.email %}
-  \email{(( profile.email ))}
-{% endif %}
-{% if profile.phone_number %}
-  \phone{(( profile.phone_number ))}
-{% endif %}
-{% if profile.address %}
-  \location{(( profile.address ))}
-{% endif %}
-{% if profile.linkedin %}
-  \linkedin{(( profile.linkedin ))}
-{% endif %}
-{% if profile.github %}
-  \github{(( profile.github ))}
-{% endif %}
-
+  {% if profile.email %}\email{(( profile.email ))}{% endif %}
+  {% if profile.phone_number %}\phone{(( profile.phone_number ))}{% endif %}
+  {% if profile.address %}\location{(( profile.address ))}{% endif %}
+  {% if profile.linkedin %}\linkedin{(( profile.linkedin ))}{% endif %}
+  {% if profile.github %}\github{(( profile.github ))}{% endif %}
 }
 
 \makecvheader
@@ -80,23 +69,20 @@
 \hline
 name & level & last used & years of exp. \\
 \hline
-{% for skill in competencies %}
-\textbf{(( skill.name ))} & \cvskill{}{(( skill.level ))} & (( skill.last_used )) & (( skill.years_of_experience )) \\
-{% endfor %}
-\end{tabular}
-{% endif %}
+{% for skill in competencies %} \textbf{(( skill.name ))} & \cvskill{}{(( skill.level ))} & (( skill.last_used )) & (( skill.years_of_experience )) \\{% endfor %}
+\end{tabular}{% endif %}
 
 {% if job_positions %}
 \cvsection{Experience}
 {% for job in job_positions %}
 \cvevent{(( job.title ))}{(( job.company ))}{(( job.start_date | date_format("%B %Y") )) -- (( job.end_date | date_format("%B %Y") ))}{(( job.location ))}
 (( job.description ))
-{% for competency in job.competencies %}
-\cvtag{(( competency ))}
-{% endfor %}
+{% for competency in job.competencies %}\cvtag{(( competency ))}{% endfor %}
+
 \divider
 {% endfor %}
 {% endif %}
+
 
 \newpage
 \switchcolumn
@@ -105,9 +91,9 @@ name & level & last used & years of exp. \\
 {% for project in projects %}
 \cvevent{(( project.name ))}{}{}{}
 (( project.description ))
-{% for competency in project.competencies %}
-\cvtag{(( competency ))}
-{% endfor %}
+
+{% for competency in project.competencies %}\cvtag{(( competency ))}{% endfor %}
+
 \divider
 {% endfor %}
 {% endif %}
@@ -116,6 +102,7 @@ name & level & last used & years of exp. \\
 \cvsection{Education}
 {% for edu in educations %}
 \cvevent{(( edu.degree ))}{(( edu.school ))}{(( edu.start_date | date_format("%Y") )) -- (( edu.end_date | date_format("%Y") ))}{}
+
 \divider
 {% endfor %}
 {% endif %}

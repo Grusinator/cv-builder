@@ -20,6 +20,7 @@ from cv_content.schemas import JobPosition, Project, Education, Competency
 #cv_content/tests/conftest.py
 
 from cv_content.tests.conftest import *
+from users.models.profile import ProfileModel
 
 # Function to reset auto fields to None
 def reset_auto_fields_to_none(obj):
@@ -45,7 +46,12 @@ def user():
 
 
 @pytest.fixture
-def cv_creation_process(user, job_positions_in_db, projects_in_db, competencies_in_db, educations_in_db,
+def profile_in_db(user):
+    return _object_in_db(ProfileModel, user=user, n=1)[0]
+
+
+@pytest.fixture
+def cv_creation_process_in_db(user, job_positions_in_db, projects_in_db, competencies_in_db, educations_in_db,
                         job_post_in_db):
 
     job_positions_json = JobPosition.dict_from_orm_list(job_positions_in_db)

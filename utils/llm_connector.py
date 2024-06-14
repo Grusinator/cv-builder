@@ -6,6 +6,8 @@ from loguru import logger
 from openai import OpenAI, OpenAIError
 
 from utils.cache import cache
+from typing import List
+from pydantic import BaseModel
 
 
 class LlmConnector:
@@ -72,7 +74,15 @@ class LlmConnector:
             please fix the Json decode error.            
             """
             response = self.ask_question(modified_question)
-            return self.try_load_as_pydantic_list(response, model)
+            instances = self.try_load_as_pydantic_list(response, model)
+            self.remove_primary_keys(instances)
+            return instances
 
     def is_list_of_strings(self, input_list):
         return isinstance(input_list, list) and all(isinstance(elm, str) for elm in input_list)
+
+    def remove_primary_keys(self, instances: List[BaseModel]):
+        for instance in instances:
+            primary_keys = [key for key, value in instance.__fields__.items() if
+                            value.field_info.extra.get('primary_key')]
+            instance[primary_keys[0]] = None

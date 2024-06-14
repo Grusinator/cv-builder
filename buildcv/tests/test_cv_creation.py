@@ -14,7 +14,7 @@ from cv_content.schemas import Project, Education, Competency
 @pytest.mark.django_db
 class TestCvCreationViews:
 
-    def test_manage_summary_get(self, client, user, job_post_in_db, cv_creation_process):
+    def test_manage_summary_get(self, client, user, job_post_in_db, cv_creation_process_in_db):
         client.force_login(user)
         url = reverse('manage_summary', kwargs={'job_post_id': job_post_in_db.job_post_id})
         response = client.get(url)
@@ -36,7 +36,7 @@ class TestCvCreationViews:
         cv_creation_process = CvCreationProcess.objects.get(user=user, job_post=job_post_in_db)
         assert cv_creation_process.summary == 'Generated summary from mock service.'
 
-    def test_manage_summary_post_save(self, client, user, job_post_in_db, cv_creation_process):
+    def test_manage_summary_post_save(self, client, user, job_post_in_db, cv_creation_process_in_db):
         client.force_login(user)
         url = reverse('manage_summary', kwargs={'job_post_id': job_post_in_db.job_post_id})
         data = {
@@ -45,10 +45,10 @@ class TestCvCreationViews:
         }
         response = client.post(url, data=data)
         assert response.status_code == 302
-        cv_creation_process.refresh_from_db()
-        assert cv_creation_process.summary == 'This is a generated summary.'
+        cv_creation_process_in_db.refresh_from_db()
+        assert cv_creation_process_in_db.summary == 'This is a generated summary.'
 
-    def test_manage_content_selection_get(self, client, user, job_post_in_db, cv_creation_process, competencies_in_db,
+    def test_manage_content_selection_get(self, client, user, job_post_in_db, cv_creation_process_in_db, competencies_in_db,
                                           projects_in_db, educations_in_db, job_positions_in_db):
         client.force_login(user)
         url = reverse('manage_content_selection', kwargs={'job_post_id': job_post_in_db.job_post_id})

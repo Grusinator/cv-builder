@@ -36,6 +36,10 @@ ALLOWED_HOSTS = []
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
+SITE_DOMAIN = '127.0.0.1:8000'
+SITE_PROTOCOL = 'https'  # or 'http'
+BASE_URL = f"{SITE_PROTOCOL}://{SITE_DOMAIN}"
+
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8000',
     # Add other allowed origins here

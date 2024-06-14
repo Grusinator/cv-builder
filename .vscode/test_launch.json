@@ -9,12 +9,13 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Pytest",
+            "name": "Python: Pytest All",
             "type": "python",
             "request": "launch",
             "module": "pytest",
             "args": [
-                "${workspaceFolder}"
+                "-v",
+                "-s"
             ],
             "console": "integratedTerminal"
         }

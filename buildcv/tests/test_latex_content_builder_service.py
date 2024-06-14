@@ -1,3 +1,4 @@
+import os
 from buildcv.schemas import CvContent
 from buildcv.services.build_latex_cv_service import BuildLatexCVService
 
@@ -14,3 +15,4 @@ class TestLatexContentBuilder:
         latex_builder = BuildLatexCVService()
         # latex_builder.compile_latex_to_pdf = lambda x: "latex_workspace/cv.pdf"
         latex_builder.build_cv_from_content(cv_content)
+        assert os.path.exists("latex_workspace/cv.pdf")

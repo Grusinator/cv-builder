@@ -98,7 +98,7 @@ def cv_content(competencies, job_positions, projects, educations):
     profile = Profile(
         user_id=1,
         birthdate="1990-01-01",
-        profile_picture="profile_pictures/1.jpg",
+        profile_picture="https://media.licdn.com/dms/image/D4D03AQHckvokGfM_xw/profile-displayphoto-shrink_200_200/0/1667507312442?e=1723680000&v=beta&t=gwfVWUu_7PAUgbYe85YbciDTpUIoHN25Ds_897sbOzs",
         profile_description="Profile description",
         full_name="John Dutton",
         email="test@gmail.com",
