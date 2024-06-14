@@ -1,1 +1,1 @@
-from users.models.profile import ProfileModel
+from users.models.models import ProfileModel

@@ -9,8 +9,11 @@ from jinja2 import Environment, FileSystemLoader
 from loguru import logger
 from pydantic import BaseModel
 import requests
-
+from django.core.files.storage import default_storage
+from pathlib import Path
+import shutil
 from buildcv.schemas import CvContent
+from django.utils._os import safe_join
 
 TEMPLATE_TEX = Path('latex_workspace/templates/template1.tex')
 
@@ -20,9 +23,9 @@ class BuildLatexCVService:
     base_output_dir: Path = Path('latex_workspace/cv_generation')
     base_tex_file_name = 'cv.tex'
 
-    def build_cv_from_content(self, cv_context: CvContent, template_file: Path = TEMPLATE_TEX):
+    def build_cv_from_content(self, cv_context: CvContent, template_file: Path = TEMPLATE_TEX, media_content=None):
         workspace_folder_path = self.create_workspace_folder(prefix=f"{cv_context.job_title.replace(' ', '_')}")
-        self.save_media(cv_context, workspace_folder_path)
+        self.save_media(media_content, workspace_folder_path)
         context = self.prepare_context(cv_context)
         tex_file_path = self.render_template(context, workspace_folder_path, template_file)
         pdf_path = self.compile_latex_to_pdf(tex_file_path)
@@ -35,23 +38,11 @@ class BuildLatexCVService:
         workspace_folder_path.mkdir(parents=False, exist_ok=True)
         return workspace_folder_path
 
-    def save_media(self, cv_context: CvContent, path: Path):
-        profile_image = cv_context.profile.profile_picture # URL
-        if profile_image:
-            image_url = settings.BASE_URL + profile_image
-            logger.debug("image_url: " + image_url)
-            profile_image_path = path / self.profile_picture_filename
-            self.download_image(image_url, profile_image_path)
-            cv_context.profile.profile_picture = self.profile_picture_filename
-
-    def download_image(self, url, save_path):
-        response = requests.get(url)
-        if response.status_code == 200:
-            with open(save_path, 'wb') as f:
-                f.write(response.content)
-        else:
-            raise Exception(f"Failed to download image. Status code: {response.status_code}")
-
+    def save_media(self, media_content: Dict[str, bytes], path: Path):
+        if media_content:
+            for fn, file_bytes in media_content.items():
+                with open(path / fn, "wb") as file:
+                    file.write(file_bytes)
 
     def prepare_context(self, cv_context: CvContent) -> Dict[str, Any]:
         cv_escaped = self.escape_latex_in_model(cv_context)
@@ -119,5 +110,5 @@ class BuildLatexCVService:
             return [self.escape_latex_in_model(item) for item in model]
         return model
 
-    def date_format(self, value, format='%B %Y'):
+    def date_format(self, value, format='%b. %Y'):
         return value.strftime(format)

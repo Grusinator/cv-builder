@@ -1,5 +1,6 @@
 # tests/conftest.py
 import json
+import uuid
 from typing import Type
 
 import pytest
@@ -20,7 +21,7 @@ from cv_content.schemas import JobPosition, Project, Education, Competency
 #cv_content/tests/conftest.py
 
 from cv_content.tests.conftest import *
-from users.models.profile import ProfileModel
+from users.models.models import ProfileModel
 
 # Function to reset auto fields to None
 def reset_auto_fields_to_none(obj):
@@ -32,22 +33,19 @@ def reset_auto_fields_to_none(obj):
     return obj
 
 
-def _object_in_db(model: Type[Model], n=5, **kwargs):
+def _objects_in_db(model: Type[Model], n=5, **kwargs):
     obs = [reset_auto_fields_to_none(_mixer.blend(model, **kwargs)) for _ in range(n)]
     obs = model.objects.bulk_create(obs)
     return obs
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def user():
-    user = mixer.blend(User)
-    user.save()
-    return user
+    return _objects_in_db(User, n=1, username=str(uuid.uuid4())[:8])[0]
 
-
-@pytest.fixture
+@pytest.fixture(scope="session")
 def profile_in_db(user):
-    return _object_in_db(ProfileModel, user=user, n=1)[0]
+    return _objects_in_db(ProfileModel, user=user, n=1)[0]
 
 
 @pytest.fixture
@@ -72,24 +70,24 @@ def cv_creation_process_in_db(user, job_positions_in_db, projects_in_db, compete
 
 @pytest.fixture
 def job_post_in_db(user):
-    return _object_in_db(JobPost, user=user, n=1)[0]
+    return _objects_in_db(JobPost, user=user, n=1)[0]
 
 
 @pytest.fixture
 def job_positions_in_db(user):
-    return _object_in_db(JobPositionModel, user=user, competencies=[])
+    return _objects_in_db(JobPositionModel, user=user, competencies=[])
 
 
 @pytest.fixture
 def projects_in_db(user):
-    return _object_in_db(ProjectModel, user=user, competencies=[])
+    return _objects_in_db(ProjectModel, user=user, competencies=[])
 
 
 @pytest.fixture
 def competencies_in_db(user):
-    return _object_in_db(CompetencyModel, user=user)
+    return _objects_in_db(CompetencyModel, user=user)
 
 
 @pytest.fixture
 def educations_in_db(user):
-    return _object_in_db(EducationModel, user=user)
+    return _objects_in_db(EducationModel, user=user)

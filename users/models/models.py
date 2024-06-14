@@ -11,12 +11,10 @@ class ProfileModel(models.Model):
     profile_description = models.TextField(null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
-    linkedin = models.URLField(null=True, blank=True)
-    github = models.URLField(null=True, blank=True)
+    linkedin = models.CharField(max_length=255, null=True, blank=True)
+    github = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=15, null=True, blank=True)
 
     class Meta:
         app_label = 'users'
         default_related_name = 'profile'
-
-

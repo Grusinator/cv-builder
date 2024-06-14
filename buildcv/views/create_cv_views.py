@@ -13,6 +13,7 @@ from buildcv.services.filter_relevant_content_service import FilterRelevantConte
 from buildcv.services.generate_summary_service import GenerateSummaryService
 from cv_content.models import ProjectModel, CompetencyModel, EducationModel
 from cv_content.repositories import CvContentRepository
+from users.models import ProfileModel
 
 
 @login_required
@@ -81,12 +82,14 @@ def create_cv(request, job_post_id):
     job_post: JobPost = get_object_or_404(JobPost, job_post_id=job_post_id, user=request.user)
     cv_creation: CvCreationProcess = get_object_or_404(CvCreationProcess, user=request.user, job_post=job_post)
     if request.method == 'POST':
-        # Assume build_cv method exists and returns the PDF path or bytes
         logger.debug('Creating CV')
-        cv_creation_content = CvCreationRepository().get_cv_creation_content(user=request.user, job_post=job_post)
+        repository = CvCreationRepository()
+        cv_service = BuildLatexCVService()
+        cv_creation_content = repository.get_cv_creation_content(user=request.user, job_post=job_post)
+        media = repository.get_media(user=request.user)
 
-        pdf_file = BuildLatexCVService().build_cv_from_content(cv_creation_content)
-        cv_file_content = ContentFile(pdf_file)  # Wrap the bytes in a ContentFile object
+        pdf_file = cv_service.build_cv_from_content(cv_creation_content, media_content=media)
+        cv_file_content = ContentFile(pdf_file)
         cv_creation.cv_file.save(f'{job_post.job_title}.pdf', cv_file_content)
         messages.success(request, 'CV created successfully.')
 

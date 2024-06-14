@@ -4,7 +4,7 @@ import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
 
-import users.models.profile
+import users.models.models
 
 
 class Migration(migrations.Migration):

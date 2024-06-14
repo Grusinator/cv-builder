@@ -43,7 +43,7 @@
 \begin{document}
 \name{(( profile.name ))}
 \tagline{(( job_title ))}
-\photoR{2.8cm}{(( profile.profile_picture ))}
+\photoR{2.8cm}{profile_picture.jpg}
 
 \personalinfo{
   {% if profile.email %}\email{(( profile.email ))}{% endif %}
@@ -75,7 +75,7 @@ name & level & last used & years of exp. \\
 {% if job_positions %}
 \cvsection{Experience}
 {% for job in job_positions %}
-\cvevent{(( job.title ))}{(( job.company ))}{(( job.start_date | date_format("%B %Y") )) -- (( job.end_date | date_format("%B %Y") ))}{(( job.location ))}
+\cvevent{(( job.title ))}{(( job.company ))}{(( job.start_date | date_format("%b. %Y") )) -- (( job.end_date | date_format("%b. %Y") ))}{(( job.location ))}
 (( job.description ))
 {% for competency in job.competencies %}\cvtag{(( competency ))}{% endfor %}
 
