@@ -19,6 +19,7 @@ class JobPost(models.Model):
 class CvCreationProcess(models.Model):
     job_post = models.OneToOneField(JobPost, on_delete=models.CASCADE, related_name='cv_creation_processes')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cv_creation_processes')
+    summary_guidance = models.TextField(null=True, blank=True)
     summary = models.TextField(null=True, blank=True)
     projects = models.JSONField(default=list, null=True, blank=True)
     competencies = models.JSONField(default=list, null=True, blank=True)

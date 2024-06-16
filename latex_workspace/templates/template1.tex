@@ -69,7 +69,7 @@
 \hline
 name & level & last used & years of exp. \\
 \hline
-{% for skill in competencies %} \textbf{(( skill.name ))} & \cvskill{}{(( skill.level ))} & (( skill.last_used )) & (( skill.years_of_experience )) \\{% endfor %}
+{% for skill in competencies %} \textbf{(( skill.name ))} & \cvskill{}{(( skill.level ))} & (( skill.last_used )) & (( skill.years_of_experience|int ))} \\{% endfor %}
 \end{tabular}{% endif %}
 
 {% if job_positions %}

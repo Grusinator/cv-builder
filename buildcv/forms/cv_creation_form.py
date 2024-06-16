@@ -37,7 +37,9 @@ class CvContentForm(forms.ModelForm):
         if user:
             self.fields['projects'].queryset = ProjectModel.objects.filter(user=user)
             self.fields['competencies'].queryset = CompetencyModel.objects.filter(user=user)
-            self.fields['job_positions'].queryset = JobPositionModel.objects.filter(user=user)
+            jobs = JobPositionModel.objects.filter(user=user)
+            self.fields['job_positions'].queryset = jobs
+            self.fields["job_positions"].initial = jobs.values_list('job_position_id', flat=True)
             self.fields['educations'].queryset = EducationModel.objects.filter(user=user)
 
     def clean_projects(self):
