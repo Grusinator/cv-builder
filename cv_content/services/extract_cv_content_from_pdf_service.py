@@ -6,12 +6,12 @@ from utils.llm_connector import LlmConnector
 load_dotenv()
 
 
-class ExtractCvContentFromPdfService:
+class ExtractCvContentFromTextService:
 
-    def __init__(self):
-        self.chatgpt_interface = LlmConnector()
+    def __init__(self, llm_connector=LlmConnector()):
+        self.llm_connector = llm_connector
 
-    def get_job_positions_from_pdf(self, cv_text_with_job_positions):
+    def get_job_positions_from_text(self, cv_text_with_job_positions):
         question = f"""
         Extract job positions from this pdf. it has to be stored in json format, with these fields, 
         please save dates as yyyy-mm-dd, just assume first in month if day is not given.
@@ -20,9 +20,9 @@ class ExtractCvContentFromPdfService:
         ------------------
         {cv_text_with_job_positions}
         """
-        return self.chatgpt_interface.ask_question_that_returns_pydantic_list(question, JobPosition)
+        return self.llm_connector.ask_question_that_returns_pydantic_list(question, JobPosition)
 
-    def get_educations_from_pdf(self, cv_text_with_educations):
+    def get_educations_from_text(self, cv_text_with_educations):
         question = f"""
          Extract education from this pdf. it has to be stored in json format, with these fields:
          please save dates as yyyy-mm-dd, just assume first in month if day is not given.
@@ -31,8 +31,8 @@ class ExtractCvContentFromPdfService:
          ------------------
          {cv_text_with_educations}
          """
-        return self.chatgpt_interface.ask_question_that_returns_pydantic_list(question, Education)
+        return self.llm_connector.ask_question_that_returns_pydantic_list(question, Education)
 
 
 if __name__ == '__main__':
-    cv_content_builder = ExtractCvContentFromPdfService()
+    cv_content_builder = ExtractCvContentFromTextService()

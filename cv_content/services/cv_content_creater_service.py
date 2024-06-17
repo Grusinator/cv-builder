@@ -2,7 +2,7 @@ from typing import List
 
 from loguru import logger
 
-from cv_content.services.extract_cv_content_from_pdf_service import ExtractCvContentFromPdfService
+from cv_content.services.extract_cv_content_from_pdf_service import ExtractCvContentFromTextService
 from cv_content.services.competency_matrix_calculator_service import CompetencyMatrixCalculatorService
 from cv_content.repositories.github_projects_repository import GitHubProjectsRepository
 from cv_content.schemas import Competency
@@ -14,7 +14,7 @@ class CVContentCreaterService:
 
     def __init__(self, repository=CvContentRepository()):
         self.repository: CvContentRepository = repository
-        self.content_builder = ExtractCvContentFromPdfService()
+        self.content_builder = ExtractCvContentFromTextService()
         self.github_fetcher = GitHubProjectsRepository()
         self.competency_calculator = CompetencyMatrixCalculatorService()
 
@@ -42,12 +42,12 @@ class CVContentCreaterService:
 
     def load_job_positions_from_pdf(self, user, pdf_bytes: bytes):
         pdf_cv_content = PdfReader().extract_text_from_pdf(pdf_bytes)
-        job_positions = self.content_builder.get_job_positions_from_pdf(pdf_cv_content)
+        job_positions = self.content_builder.get_job_positions_from_text(pdf_cv_content)
         self.repository.create_job_positions(user, job_positions)
         return job_positions
 
     def load_educations_from_pdf(self, user, pdf_bytes: bytes):
         pdf_cv_content = PdfReader().extract_text_from_pdf(pdf_bytes)
-        educations = self.content_builder.get_educations_from_pdf(pdf_cv_content)
+        educations = self.content_builder.get_educations_from_text(pdf_cv_content)
         self.repository.create_educations(user, educations)
         return educations

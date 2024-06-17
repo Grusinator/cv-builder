@@ -44,6 +44,11 @@ def delete_project(request, project_id):
 
 @login_required
 def list_projects(request):
+    messages.error(request, "This is an error message")
+    messages.info(request, "This is an info message")
+    messages.success(request, "This is a success message")
+    messages.warning(request, "This is a warning message")
+    messages.warning(request, "This is a warning message")
     service = CVContentCreaterService()
     if request.method == 'POST':
         github_username = request.POST.get('github_username')

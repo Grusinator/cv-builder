@@ -26,9 +26,8 @@
                     {% endif %}
 
                     {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="/buildcv/">Build CV</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/cv_content/">CV content</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'manage_profile' %}">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'manage_profile' %}">Create Content</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'list_job_posts' %}">Apply for job</a></li>
 
                     <li class="nav-item">
                         <form method="post" action="{% url 'account_logout' %}">
@@ -53,6 +52,23 @@
             </div>
         </nav>
     </header>
+
+    <!-- Messages -->
+    <div class="mt-4">
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert {% if 'error' in message.tags %}alert-danger{% elif 'warning' in message.tags %}alert-warning{% elif 'success' in message.tags %}alert-success{% elif 'info' in message.tags %}alert-info{% endif %} alert-dismissible fade show"
+                 role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
 
     <!-- Main Content -->
     <main class="mt-4">

@@ -3,7 +3,7 @@ import webbrowser
 import os
 
 from buildcv.services.latex_content_builder_service import BuildLatexCVService
-from cv_content.services.extract_cv_content_from_pdf_service import ExtractCvContentFromPdfService
+from cv_content.services.extract_cv_content_from_pdf_service import ExtractCvContentFromTextService
 
 from loguru import logger
 
@@ -11,7 +11,7 @@ from loguru import logger
 @invoke.task
 def build_content(ctx):
     logger.debug("Building CV content")
-    ExtractCvContentFromPdfService().build_all()
+    ExtractCvContentFromTextService().build_all()
 
 
 @invoke.task
