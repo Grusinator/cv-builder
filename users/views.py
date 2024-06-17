@@ -1,3 +1,4 @@
+from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -10,6 +11,10 @@ from .models import ProfileModel
 @login_required
 def manage_profile(request):
     profile, created = ProfileModel.objects.get_or_create(user=request.user)
+
+    github_connected = SocialAccount.objects.filter(user=request.user, provider='github').exists()
+    linkedin_connected = SocialAccount.objects.filter(user=request.user, provider='linkedin_oauth2').exists()
+
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
@@ -17,8 +22,15 @@ def manage_profile(request):
             return redirect('manage_profile')
     else:
         form = ProfileForm(instance=profile)
-    return render(request, 'manage_profile.html', {'form': form, 'profile': profile})
 
+    context = {
+        'form': form,
+        'profile': profile,
+        'github_connected': github_connected,
+        'linkedin_connected': linkedin_connected,
+    }
+
+    return render(request, 'manage_profile.html', context)
 
 def signup_view(request):
     if request.method == 'POST':

@@ -2,6 +2,8 @@ from typing import List
 
 from django.contrib.auth.models import User
 from django.db import transaction
+from django.db.models import AutoField
+from pydantic import BaseModel
 
 from cv_content.schemas import JobPosition, Competency, Project, Education
 from cv_content.models import JobPositionModel, CompetencyModel, ProjectModel, EducationModel
@@ -11,6 +13,7 @@ class CvContentRepository:
 
     @staticmethod
     def create_job_position(user: User, job_position: JobPosition) -> JobPosition:
+        job_position.job_position_id = None
         job_position = JobPositionModel.objects.create(**job_position.dict(), user=user)
         return JobPosition.model_validate(job_position)
 
@@ -29,6 +32,7 @@ class CvContentRepository:
 
     @staticmethod
     def create_competency(user: User, data: Competency) -> Competency:
+        data.competency_id = None
         competency = CompetencyModel.objects.create(user=user, **data.dict())
         return Competency.model_validate(competency)
 
@@ -41,6 +45,7 @@ class CvContentRepository:
 
     @staticmethod
     def create_project(user: User, data: Project) -> Project:
+        data.project_id= None
         project = ProjectModel.objects.create(user=user, **data.dict())
         return Project.model_validate(project)
 
@@ -49,8 +54,9 @@ class CvContentRepository:
         return [Project.model_validate(proj) for proj in ProjectModel.objects.filter(user=user)]
 
     @staticmethod
-    def create_education(user: User, data: Education) -> Education:
-        education = EducationModel.objects.create(user=user, **data.dict())
+    def create_education(user: User, edu: Education) -> Education:
+        edu.education_id = None
+        education = EducationModel.objects.create(user=user, **edu.dict())
         return Education.model_validate(education)
 
     @staticmethod

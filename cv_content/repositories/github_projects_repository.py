@@ -13,10 +13,10 @@ from cv_content.schemas import GithubProject
 
 
 class GitHubProjectsRepository:
-    def __init__(self):
-        self.token = os.getenv('GITHUB_TOKEN')
-        # if not self.token:
-        #         #     raise ValueError('GitHub token is required')
+    def __init__(self, token):
+        self.token = token
+        if not self.token:
+            raise ValueError('GitHub token is required')
         self.headers = {'Authorization': f'token {self.token}'}
         self._projects = []
 

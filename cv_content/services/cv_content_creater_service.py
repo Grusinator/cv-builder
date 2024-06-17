@@ -15,13 +15,12 @@ class CVContentCreaterService:
     def __init__(self, repository=CvContentRepository()):
         self.repository: CvContentRepository = repository
         self.content_builder = ExtractCvContentFromTextService()
-        self.github_fetcher = GitHubProjectsRepository()
+        self.github_fetcher = GitHubProjectsRepository("dummy_token")  # TODO this is ugly
         self.competency_calculator = CompetencyMatrixCalculatorService()
 
-    def fetch_github_projects(self, user, github_username, github_token):
+    def fetch_github_projects(self, user, github_token):
         logger.info("Fetching GitHub projects")
-        self.github_fetcher.username = github_username
-        self.github_fetcher.token = github_token
+        self.github_fetcher = GitHubProjectsRepository(github_token)
         projects = self.github_fetcher.get_projects()
         projects = [project.map_to_generic_project() for project in projects]
         logger.debug(f"Fetched {len(projects)} projects from GitHub")

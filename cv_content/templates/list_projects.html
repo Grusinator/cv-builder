@@ -8,12 +8,6 @@
     <section>
         <form method="post" action="{% url 'fetch_github_projects' %}" class="mb-4">
             {% csrf_token %}
-            <div class="form-group">
-                <input type="text" name="github_username" class="form-control" placeholder="GitHub Username" required>
-            </div>
-            <div class="form-group">
-                <input type="password" name="github_token" class="form-control" placeholder="GitHub Token" required>
-            </div>
             <button type="submit" class="btn btn-primary">Fetch Projects from GitHub</button>
             <a href="{% url 'add_project' %}" class="btn btn-secondary ml-2">Add Project Manually</a>
         </form>

@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.linkedin_oauth2',
+    "allauth.socialaccount.providers.github",
 ]
 
 MIDDLEWARE = [
@@ -176,23 +177,19 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 OAUTH_REDIRECT_URI = "http://localhost:8000/dataproviders/oauth2redirect"
 
-SOCIALACCOUNT_PROVIDERS = {
-    'linkedin_oauth2': {
-        'SCOPE': [
-            'r_liteprofile',
-            'r_emailaddress',
-        ],
-        'PROFILE_FIELDS': [
-            'id',
-            'first-name',
-            'last-name',
-            'email-address',
-            'picture-url',
-        ]
-    }
-}
 
 SOCIALACCOUNT_PROVIDERS = {
+    'github': {
+        'SCOPE': [
+            'user',
+            'repo',
+            'read:org',
+        ],
+        'APP': {
+            'client_id': os.getenv("GITHUB_CLIENT_ID"),
+            'secret': os.getenv("GITHUB_CLIENT_SECRET"),
+        }
+    },
     'linkedin_oauth2': {
         'SCOPE': [
             'openid',
@@ -212,4 +209,30 @@ SOCIALACCOUNT_PROVIDERS = {
             'secret': os.getenv("LINKEDIN_CLIENT_SECRET"),
         }
     }
+}
+
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = "username"
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'allauth': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
 }

@@ -1,3 +1,4 @@
+from allauth.socialaccount.models import SocialToken
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
@@ -44,38 +45,27 @@ def delete_project(request, project_id):
 
 @login_required
 def list_projects(request):
-    messages.error(request, "This is an error message")
-    messages.info(request, "This is an info message")
-    messages.success(request, "This is a success message")
-    messages.warning(request, "This is a warning message")
-    messages.warning(request, "This is a warning message")
     service = CVContentCreaterService()
-    if request.method == 'POST':
-        github_username = request.POST.get('github_username')
-        github_token = request.POST.get('github_token')
-        if github_username and github_token:
-            try:
-                service.fetch_github_projects(request.user, github_username, github_token)
-                messages.success(request, 'Projects fetched successfully from GitHub.')
-                return redirect('list_projects')
-            except Exception as e:
-                messages.error(request, f'Error fetching projects from GitHub: {str(e)}')
-
     projects = service.repository.get_projects(user=request.user)
     return render(request, 'list_projects.html', {'projects': projects})
 
+
 @login_required
 def fetch_github_projects(request):
-    if request.method == 'POST':
-        github_username = request.POST.get('github_username')
-        github_token = request.POST.get('github_token')
-        service = CVContentCreaterService()
-        try:
-            service.fetch_github_projects(request.user, github_username, github_token)
-            messages.success(request, 'Projects fetched successfully from GitHub.')
-        except Exception as e:
-            msg = f"Error fetching projects from GitHub"
-            logger.error(msg, exc_info=True)
-            messages.error(request, msg)
-    return redirect('list_projects')
+    try:
+        if request.user.is_authenticated:
+            github_account = request.user.socialaccount_set.filter(provider='github').first()
+            logger.debug(f'github_account: {github_account}')
+            if github_account:
+                service = CVContentCreaterService()
+                github_token = SocialToken.objects.get(account=github_account)
+                service.fetch_github_projects(request.user, github_token)
+                messages.success(request, 'Projects fetched successfully from GitHub.')
+            else:
+                messages.error(request, 'GitHub account not connected.')
 
+        return redirect('list_projects')
+    except Exception as e:
+        logger.exception(f'Error fetching projects from GitHub', exc_info=True)
+        messages.error(request, f'Error fetching projects from GitHub error')
+    return redirect('list_projects')
