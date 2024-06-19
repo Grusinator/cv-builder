@@ -31,9 +31,11 @@ def add_competency(request):
         form = CompetencyForm(request.POST, user=request.user)
         if form.is_valid():
             form.save()
+            messages.success(request, "Competency added successfully.")
             return redirect('list_competencies')
         else:
-            messages.error(request, f"Error adding competency.: {form.errors}")
+            error_messages = form.errors.as_json()
+            messages.error(request, f"Error adding competency: {error_messages}")
     else:
         form = CompetencyForm(user=request.user)
     return render(request, 'upsert_with_form.html', {'form': form})

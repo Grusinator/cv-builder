@@ -19,9 +19,12 @@ class TestCompetencyViews:
             'category': 'Programming Language',
             'last_used': 2023,
             'years_of_experience': 5.0,
-            'attractiveness': 3
+            #'attractiveness': 3
         }
         response = client.post(url, data)
+        if response.status_code != 302:
+            print(f"Status Code: {response.status_code}")
+            print(f"Response Content: {response.content.decode('utf-8')}")
         assert response.status_code == 302
         assert CompetencyModel.objects.count() == 1
 
@@ -32,8 +35,9 @@ class TestCompetencyViews:
         url = reverse('list_competencies')
         response = client.get(url)
         assert response.status_code == 200
-        assert 'competencies' in response.context
-        assert len(response.context['competencies']) == 3
+        assert 'formset' in response.context
+        formset = response.context['formset']
+        assert formset.queryset.count() == 3
 
     def test_update_competency(self, client):
         user = mixer.blend(User)
