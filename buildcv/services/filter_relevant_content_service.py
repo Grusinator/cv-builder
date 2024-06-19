@@ -21,7 +21,8 @@ class FilterRelevantContentService:
         projects = sorted(filtered_projects, key=lambda x: x.commits, reverse=True)
         return projects
 
-    def find_most_relevant_competencies_to_job_add(self, job_description: str, competencies: List[Competency], n=15) -> List[
+    def find_most_relevant_competencies_to_job_add(self, job_description: str, competencies: List[Competency], n=15) -> \
+    List[
         Competency]:
         competencies_ordered = self._filter_matching_competencies_from_job_application(competencies, job_description)
 

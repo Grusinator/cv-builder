@@ -11,7 +11,7 @@
             {% csrf_token %}
             {{ form |crispy }}
             <button type="submit" class="btn btn-primary">Upload PDF</button>
-            <a href="add-job/" class="btn btn-secondary ml-2">Add Job Manually</a>
+            <a href="{% url add_job_position %}" class="btn btn-secondary ml-2">Add Job Manually</a>
         </form>
         <h3>Work Experience</h3>
         <ul class="list-group">

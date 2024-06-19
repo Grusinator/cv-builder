@@ -13,7 +13,6 @@ from buildcv.services.filter_relevant_content_service import FilterRelevantConte
 from buildcv.services.generate_summary_service import GenerateSummaryService
 from cv_content.models import ProjectModel, CompetencyModel, EducationModel
 from cv_content.repositories import CvContentRepository
-from users.models import ProfileModel
 
 
 @login_required
@@ -76,6 +75,7 @@ def manage_summary(request, job_post_id):
     return render(request, 'manage_summary.html', {'form': form, 'job_post': job_post})
 
 
+
 @login_required
 def manage_content_selection(request, job_post_id):
     job_post = get_object_or_404(JobPost, job_post_id=job_post_id, user=request.user)
@@ -83,17 +83,19 @@ def manage_content_selection(request, job_post_id):
 
     if request.method == 'POST':
         form = CvContentForm(request.POST, instance=cv_creation, user=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('create_cv', job_post_id=job_post_id)
-        else:
-            logger.error(f'Error saving form: {form.errors}')
+        if 'select_relevant_project' in request.POST:
+            service = FilterRelevantContentService()
+            competencies = CvContentRepository().get_competencies(user=request.user)
+            matching_competencies = service.find_most_relevant_competencies_to_job_add(job_post.job_post_text, competencies)
+            form.fields['competencies'].initial = [comp.competency_id for comp in matching_competencies]
+        elif 'save_content' in request.POST:
+            if form.is_valid():
+                form.save()
+                return redirect('create_cv', job_post_id=job_post_id)
+            else:
+                logger.error(f'Error saving form: {form.errors}')
     else:
         form = CvContentForm(instance=cv_creation, user=request.user)  # Pass user here
-        service = FilterRelevantContentService()
-        competencies = CvContentRepository().get_competencies(user=request.user)
-        matching_competencies = service.find_most_relevant_competencies_to_job_add(job_post.job_post_text, competencies)
-        form.fields['competencies'].initial = [comp.competency_id for comp in matching_competencies]
 
     return render(request, 'manage_content_selection.html', {'job_post': job_post, 'form': form})
 

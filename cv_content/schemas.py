@@ -86,7 +86,7 @@ class GithubProject(BaseModel):
         return Project(
             name=self.name,
             description=self.description if self.description else '',
-            effort_in_years=max(0.1, self.number_of_weeks_with_commits or 0 / 47),
+            effort_in_years=float(max(0.1, self.number_of_weeks_with_commits or 0 / 47)),
             last_updated=self.last_commit,
             competencies=set(self.technologies + self.languages + self.topics)
         )

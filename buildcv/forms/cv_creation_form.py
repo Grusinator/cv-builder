@@ -29,7 +29,7 @@ class CvContentForm(forms.ModelForm):
 
     class Meta:
         model = CvCreationProcess
-        fields = ['projects', 'competencies', 'job_positions', 'educations']
+        fields = ['job_positions', 'educations', 'projects', 'competencies']
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
