@@ -1,29 +1,10 @@
-import invoke
-import webbrowser
 import os
+import webbrowser
+from pathlib import Path
 
-from buildcv.services.latex_content_builder_service import BuildLatexCVService
-from cv_content.services.extract_cv_content_from_pdf_service import ExtractCvContentFromTextService
+import invoke
 
-from loguru import logger
-
-
-@invoke.task
-def build_content(ctx):
-    logger.debug("Building CV content")
-    ExtractCvContentFromTextService().build_all()
-
-
-@invoke.task
-def build_latex(ctx, template=None):
-    logger.debug("Building LaTeX content")
-    raise NotImplementedError("This task is not implemented")
-    BuildLatexCVService(template_file=None).build_cv_from_content()
-
-
-@invoke.task(build_content, build_latex)
-def build(ctx, file="main.tex"):
-    ctx.run(f"pdflatex -interaction=nonstopmode {file}")
+docker_path = Path("devops/docker")
 
 
 @invoke.task
@@ -32,8 +13,10 @@ def pdflatex(ctx):
 
 
 @invoke.task
-def docker_run(ctx):
-    ctx.run("docker-compose -f devops/docker/compose.yml up --build")
+def docker_run(ctx, env=""):
+    base_compose = docker_path / "docker-compose.yml"
+    env_compose = docker_path / f"docker-compose.{env}.yml"
+    ctx.run(f"docker-compose -f {base_compose} -f {env_compose} up --build")
 
 
 @invoke.task
@@ -44,13 +27,15 @@ def open_pdf(ctx):
 
 
 @invoke.task
-def run_ui(ctx):
+def run_panel(ctx):
     ctx.run("panel serve --show cv_app.py --autoreload --port 5006")
+
 
 @invoke.task
 def terraform(ctx):
     ctx.run("terraform -chdir=devops/terraform init")
     ctx.run("terraform -chdir=devops/terraform plan")
+
 
 if __name__ == '__main__':
     pass

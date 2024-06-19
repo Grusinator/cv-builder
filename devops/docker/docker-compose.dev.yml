@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  web:
+    environment:
+      - ENV_FILE=dev.env
+    volumes:
+      - .:/workspace
+      - /path/to/your/local/static:/workspace/static
+      - /path/to/your/local/media:/workspace/media

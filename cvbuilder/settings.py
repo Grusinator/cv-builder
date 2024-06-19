@@ -27,21 +27,20 @@ load_dotenv()
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-ecpma!l4-b1_6z%$*%qfjf#os7#^2fu#rw5zg5%u%aq(@4$h_j"
+SECRET_KEY = os.getenv("DJANGO_SECRET")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+
+ALLOWED_HOSTS = ['cv-builder.wsh-it.dk', 'localhost', '127.0.0.1']
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-SITE_DOMAIN = '127.0.0.1:8000'
-SITE_PROTOCOL = 'https'  # or 'http'
-BASE_URL = f"{SITE_PROTOCOL}://{SITE_DOMAIN}"
 
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8000',
+    'http://cv-builder.wsh-it.dk',
     # Add other allowed origins here
 ]
 
@@ -216,24 +215,23 @@ ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "username"
 SOCIALACCOUNT_STORE_TOKENS = True
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-        'allauth': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-    },
-}
-
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         },
+#         'allauth': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         },
+#     },
+# }

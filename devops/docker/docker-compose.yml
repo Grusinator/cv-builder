@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  web:
+    container_name: cv_builder
+    build:
+      context: ../..
+      dockerfile: devops/docker/cv_builder.Dockerfile
+    command: bash -c "gunicorn cvbuilder.wsgi:application --bind 0.0.0.0:8000"
+    env_file:
+      - ../../prod.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    volumes:
+      - .:/workspace
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./static:/workspace/static
+      - ./media:/workspace/media
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:

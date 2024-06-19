@@ -14,6 +14,8 @@ channels
 bokeh_django
 pdfplumber
 mixer
+# psycopg2
+gunicorn
 
 pytest
 pytest-dotenv
