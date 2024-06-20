@@ -1,6 +1,15 @@
 from typing import List
 
 from django import forms
+from loguru import logger
+
+from buildcv.models import CvCreationProcess, CvTemplate
+from cv_content.models import ProjectModel, CompetencyModel, EducationModel, JobPositionModel
+from cv_content.schemas import Education, JobPosition, Competency, Project
+
+from typing import List
+
+from django import forms
 
 from buildcv.models import CvCreationProcess, CvTemplate
 from cv_content.models import ProjectModel, CompetencyModel, EducationModel, JobPositionModel
@@ -35,20 +44,32 @@ class CvContentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
+        initial_competency_ids = kwargs.pop('initial_competency_ids', [])
+        initial_project_ids = kwargs.pop('initial_project_ids', [])
         super().__init__(*args, **kwargs)
+
         if user:
             self.fields['projects'].queryset = ProjectModel.objects.filter(user=user)
             self.fields['competencies'].queryset = CompetencyModel.objects.filter(user=user)
-            jobs = JobPositionModel.objects.filter(user=user)
-            self.fields['job_positions'].queryset = jobs
-            self.fields["job_positions"].initial = jobs.values_list('job_position_id', flat=True)
+            self.fields['job_positions'].queryset = JobPositionModel.objects.filter(user=user)
             self.fields['educations'].queryset = EducationModel.objects.filter(user=user)
 
-    def set_selected_competencies(self, competencies: List[Competency]):
-        competencies_field = self.fields["competencies"]
-        select_competency_ids = [com.competency_id for com in competencies]
-        competencies_field.initial = [i for i, comp in enumerate(competencies_field.queryset) if
-                                      comp.competency_id in select_competency_ids]
+            if initial_competency_ids:
+                values_list = CompetencyModel.objects.filter(user=user,
+                                                             competency_id__in=initial_competency_ids).values_list(
+                    'competency_id', flat=True)
+                logger.debug(f"competencies: {values_list}")
+                self.initial['competencies'] = values_list
+
+            if initial_project_ids:
+                project_ids__values_list = ProjectModel.objects.filter(
+                    user=user, project_id__in=initial_project_ids).values_list('project_id', flat=True)
+                logger.debug("project_select: " + str(project_ids__values_list))
+                self.initial['projects'] = project_ids__values_list
+
+            self.initial['job_positions'] = JobPositionModel.objects.filter(user=user).values_list('job_position_id',
+                                                                                                   flat=True)
+            self.initial['educations'] = EducationModel.objects.filter(user=user).values_list('education_id', flat=True)
 
     def clean_projects(self):
         projects = self.cleaned_data.get('projects')
