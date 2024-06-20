@@ -1,6 +1,8 @@
+from typing import List
+
 from django import forms
-from django.core.serializers import serialize
-from buildcv.models import CvCreationProcess
+
+from buildcv.models import CvCreationProcess, CvTemplate
 from cv_content.models import ProjectModel, CompetencyModel, EducationModel, JobPositionModel
 from cv_content.schemas import Education, JobPosition, Competency, Project
 
@@ -42,6 +44,12 @@ class CvContentForm(forms.ModelForm):
             self.fields["job_positions"].initial = jobs.values_list('job_position_id', flat=True)
             self.fields['educations'].queryset = EducationModel.objects.filter(user=user)
 
+    def set_selected_competencies(self, competencies: List[Competency]):
+        competencies_field = self.fields["competencies"]
+        select_competency_ids = [com.competency_id for com in competencies]
+        competencies_field.initial = [i for i, comp in enumerate(competencies_field.queryset) if
+                                      comp.competency_id in select_competency_ids]
+
     def clean_projects(self):
         projects = self.cleaned_data.get('projects')
         return Project.dict_from_orm_list(projects)
@@ -67,3 +75,7 @@ class CvContentForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+
+class CvTemplateForm(forms.Form):
+    template = forms.ModelChoiceField(queryset=CvTemplate.objects.all(), required=True, label="Select CV Template")

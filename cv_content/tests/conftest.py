@@ -19,12 +19,14 @@ def mock_llm():
 @pytest.fixture
 def github_projects():
     projects = [
-        GithubProject(name="Project 1", owner="me", last_commit="2022-11-02", languages=["Python", "JavaScript"],
+        GithubProject(name="Analyze Me", description="data science project", owner="me", last_commit="2022-11-02",
+                      languages=["Python", "JavaScript"],
                       commits=10),
-        GithubProject(name="Project 2", owner="me", last_commit="2022-11-02", languages=["Java", "C++"], commits=5),
-        GithubProject(name="Project 3", owner="me", last_commit="2022-11-02", languages=["Python", "HTML"],
+        GithubProject(name="Web app", description="Web development", owner="me", last_commit="2022-11-02",
+                      languages=["Java", "C++"], commits=5),
+        GithubProject(name="Web project", owner="me", last_commit="2022-11-02", languages=["Python", "HTML"],
                       commits=15),
-        GithubProject(name="Project 4", owner="me", last_commit="2022-11-02", languages=["JavaScript", "CSS"],
+        GithubProject(name="Report Writing", owner="me", last_commit="2022-11-02", languages=["JavaScript", "CSS"],
                       commits=8),
     ]
     return projects
@@ -57,10 +59,11 @@ def job_positions():
 
 @pytest.fixture
 def competencies():
+    competencies = ["Javascript", "SCRUM", "Finance", "reqruiting", "Hunting", "Childcare", "deep learning"]
     return [
         Competency(name='Python', level=1, last_used=2020, years_of_experience=2),
         Competency(name='JavaScript', level=1, last_used=2020, years_of_experience=1),
-    ]
+    ] + [Competency(name=comp, level=3, last_used=2020, years_of_experience=3) for comp in competencies]
 
 
 @pytest.fixture

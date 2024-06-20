@@ -4,16 +4,11 @@ import uuid
 from pathlib import Path
 from typing import Any, Dict
 
-from django.conf import settings
 from jinja2 import Environment, FileSystemLoader
 from loguru import logger
 from pydantic import BaseModel
-import requests
-from django.core.files.storage import default_storage
-from pathlib import Path
-import shutil
+
 from buildcv.schemas import CvContent
-from django.utils._os import safe_join
 
 TEMPLATE_TEX = Path('latex_workspace/templates/template1.tex')
 
@@ -30,7 +25,6 @@ class BuildLatexCVService:
         tex_file_path = self.render_template(context, workspace_folder_path, template_file)
         pdf_path = self.compile_latex_to_pdf(tex_file_path)
         pdf_file = self.load_pdf(pdf_path)
-        # os.remove(output_tex_file_path.parent)
         return pdf_file
 
     def create_workspace_folder(self, prefix="cv") -> Path:

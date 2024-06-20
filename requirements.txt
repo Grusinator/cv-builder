@@ -13,6 +13,8 @@ django-ninja
 channels
 bokeh_django
 pdfplumber
+scikit-learn
+sentence-transformers
 mixer
 # psycopg2
 gunicorn

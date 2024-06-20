@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from loguru import logger
 
-from buildcv.forms import SummaryForm, CvContentForm
+from buildcv.forms import SummaryForm, CvContentForm, CvTemplateForm
 from buildcv.models import JobPost, CvCreationProcess
 from buildcv.repositories.cv_creation_repository import CvCreationRepository
 from buildcv.services import BuildLatexCVService
@@ -13,6 +13,7 @@ from buildcv.services.filter_relevant_content_service import FilterRelevantConte
 from buildcv.services.generate_summary_service import GenerateSummaryService
 from cv_content.models import ProjectModel, CompetencyModel, EducationModel
 from cv_content.repositories import CvContentRepository
+from pathlib import Path
 
 
 @login_required
@@ -59,7 +60,8 @@ def manage_summary(request, job_post_id):
                     profile_description = request.user.profile.profile_description
                     guidance = cv_creation.summary_guidance
                     service = GenerateSummaryService()
-                    summary = service.generate_summary_from_llm(guidance, job_post, projects, competencies, educations, profile_description)
+                    summary = service.generate_summary_from_llm(guidance, job_post, projects, competencies, educations,
+                                                                profile_description)
                     cv_creation.summary = summary
                     cv_creation.save()
                     messages.success(request, 'Summary generated successfully.')
@@ -75,7 +77,6 @@ def manage_summary(request, job_post_id):
     return render(request, 'manage_summary.html', {'form': form, 'job_post': job_post})
 
 
-
 @login_required
 def manage_content_selection(request, job_post_id):
     job_post = get_object_or_404(JobPost, job_post_id=job_post_id, user=request.user)
@@ -83,11 +84,12 @@ def manage_content_selection(request, job_post_id):
 
     if request.method == 'POST':
         form = CvContentForm(request.POST, instance=cv_creation, user=request.user)
-        if 'select_relevant_project' in request.POST:
+        if 'select_relevant_content' in request.POST:
             service = FilterRelevantContentService()
-            competencies = CvContentRepository().get_competencies(user=request.user)
-            matching_competencies = service.find_most_relevant_competencies_to_job_add(job_post.job_post_text, competencies)
-            form.fields['competencies'].initial = [comp.competency_id for comp in matching_competencies]
+            matching_competencies = service.find_most_relevant_competencies(job_post)
+            matching_projects = service.find_most_relevant_projects(job_post)
+            form.fields['competencies'].initial = [1, 2, 3]
+            form.fields["projects"].initial = [1, 2, 3]
         elif 'save_content' in request.POST:
             if form.is_valid():
                 form.save()
@@ -102,20 +104,25 @@ def manage_content_selection(request, job_post_id):
 
 @login_required
 def create_cv(request, job_post_id):
-    job_post: JobPost = get_object_or_404(JobPost, job_post_id=job_post_id, user=request.user)
-    cv_creation: CvCreationProcess = get_object_or_404(CvCreationProcess, user=request.user, job_post=job_post)
-    if request.method == 'POST':
+    job_post = get_object_or_404(JobPost, job_post_id=job_post_id, user=request.user)
+    cv_creation = get_object_or_404(CvCreationProcess, user=request.user, job_post=job_post)
+    template_form = CvTemplateForm(request.POST or None)
+
+    if request.method == 'POST' and template_form.is_valid():
         logger.debug('Creating CV')
         repository = CvCreationRepository()
         cv_service = BuildLatexCVService()
         cv_creation_content = repository.get_cv_creation_content(user=request.user, job_post=job_post)
         media = repository.get_media(user=request.user)
 
-        pdf_file = cv_service.build_cv_from_content(cv_creation_content, media_content=media)
+        template = template_form.cleaned_data['template']
+        pdf_file = cv_service.build_cv_from_content(cv_creation_content,
+                                                    template_file=Path(template.template_file.path),
+                                                    media_content=media)
         cv_file_content = ContentFile(pdf_file)
         cv_creation.cv_file.save(f'{job_post.job_title}.pdf', cv_file_content)
         messages.success(request, 'CV created successfully.')
 
     return render(request, 'create_cv.html',
-                  {'job_post': job_post, 'cv_creation': cv_creation,
+                  {'job_post': job_post, 'cv_creation': cv_creation, 'template_form': template_form,
                    'pdf_path': cv_creation.cv_file.url if cv_creation.cv_file else None})
