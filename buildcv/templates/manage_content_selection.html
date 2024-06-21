@@ -9,11 +9,10 @@
     <section>
         <form method="post">
             {% csrf_token %}
-            {{ form|crispy }}
             <button type="submit" name="save_content" class="btn btn-primary mt-3">Save Content</button>
             <button type="submit" name="select_relevant_content" class="btn btn-secondary mt-3">Select Relevant Content</button>
+            {{ form|crispy }}
         </form>
     </section>
 </div>
 {% endblock %}
-
