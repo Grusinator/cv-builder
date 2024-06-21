@@ -99,6 +99,7 @@ class Project(CustomBasePydanticModel):
     effort_in_years: float
     last_updated: datetime
     competencies: List[str] = []
+    url: Optional[str] = None
 
 
 class Education(CustomBasePydanticModel):

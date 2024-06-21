@@ -9,10 +9,24 @@
     <section>
         <form method="post">
             {% csrf_token %}
-            <button type="submit" name="save_content" class="btn btn-primary mt-3">Save Content</button>
-            <button type="submit" name="select_relevant_content" class="btn btn-secondary mt-3">Select Relevant Content</button>
-            {{ form|crispy }}
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <button type="submit" name="select_relevant_content" class="btn btn-secondary">Select Relevant Content</button>
+                    <button type="submit" name="save_content" class="btn btn-primary">Save Content</button>
+                </div>
+                <div class="col-md-6">
+                    {{ form.num_projects|as_crispy_field }}
+                    {{ form.num_competencies|as_crispy_field }}
+                    {{ form.job_positions|as_crispy_field }}
+                    {{ form.projects|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.educations|as_crispy_field }}
+                    {{ form.competencies|as_crispy_field }}
+                </div>
+            </div>
         </form>
     </section>
 </div>
 {% endblock %}
+

@@ -7,14 +7,6 @@ from buildcv.models import CvCreationProcess, CvTemplate
 from cv_content.models import ProjectModel, CompetencyModel, EducationModel, JobPositionModel
 from cv_content.schemas import Education, JobPosition, Competency, Project
 
-from typing import List
-
-from django import forms
-
-from buildcv.models import CvCreationProcess, CvTemplate
-from cv_content.models import ProjectModel, CompetencyModel, EducationModel, JobPositionModel
-from cv_content.schemas import Education, JobPosition, Competency, Project
-
 
 class CvContentForm(forms.ModelForm):
     projects = forms.ModelMultipleChoiceField(
@@ -37,6 +29,18 @@ class CvContentForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
+    num_projects = forms.IntegerField(
+        label="Number of Projects to Select",
+        min_value=0,
+        required=False,
+        initial=3
+    )
+    num_competencies = forms.IntegerField(
+        label="Number of Competencies to Select",
+        min_value=0,
+        required=False,
+        initial=10
+    )
 
     class Meta:
         model = CvCreationProcess
@@ -46,7 +50,7 @@ class CvContentForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         initial_competency_ids = kwargs.pop('initial_competency_ids', [])
         initial_project_ids = kwargs.pop('initial_project_ids', [])
-        
+
         super().__init__(*args, **kwargs)
         if user:
             self.fields['projects'].queryset = ProjectModel.objects.filter(user=user)
@@ -70,7 +74,6 @@ class CvContentForm(forms.ModelForm):
             self.initial['job_positions'] = JobPositionModel.objects.filter(user=user).values_list('job_position_id',
                                                                                                    flat=True)
             self.initial['educations'] = EducationModel.objects.filter(user=user).values_list('education_id', flat=True)
-        
 
     def clean_projects(self):
         projects = self.cleaned_data.get('projects')
