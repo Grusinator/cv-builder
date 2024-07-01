@@ -39,6 +39,8 @@ class BuildLatexCVService:
                     file.write(file_bytes)
 
     def prepare_context(self, cv_context: CvContent) -> Dict[str, Any]:
+        cv_context.job_positions.sort(key=lambda x: x.start_date, reverse=True)
+        cv_context.educations.sort(key=lambda x: x.start_date, reverse=True)
         cv_escaped = self.escape_latex_in_model(cv_context)
         context = cv_escaped.model_dump()
         return context

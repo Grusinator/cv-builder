@@ -29,7 +29,6 @@ urlpatterns = [
     path('buildcv/', include('buildcv.urls')),
     path("", include("core.urls")),
     path("cv_content/", include("cv_content.urls")),
-    path("dataproviders/", include("dataproviders.urls")),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('users.urls')),

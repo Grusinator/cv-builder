@@ -10,6 +10,8 @@ class JobPost(models.Model):
     job_title = models.CharField(max_length=255)
     job_post_text = models.TextField()
     recruiter_name = models.CharField(max_length=255, null=True, blank=True)
+    is_freelance = models.BooleanField(default=False)
+    requisition_number = models.CharField(max_length=255, null=True, blank=True)
     contact_email = models.EmailField(null=True, blank=True)
 
     def __str__(self):

@@ -13,7 +13,7 @@
             {% for job_post in job_posts %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
-                    <strong>{{ job_post.job_title }}</strong> at {{ job_post.company_name }}
+                    <strong>{{ job_post.job_title }}</strong> at {{ job_post.company_name }} ({{ job_post.recruiter_name }}, {% if job_post.is_freelance %}Freelance{% else %}Full-time{% endif %})
                 </div>
                 <div>
                     <a href="{% url 'update_job_post' job_post.job_post_id %}" class="btn btn-sm btn-info mr-2">Edit</a>
