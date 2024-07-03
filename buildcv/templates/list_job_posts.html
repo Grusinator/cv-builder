@@ -11,9 +11,20 @@
         {% if job_posts %}
         <ul class="list-group">
             {% for job_post in job_posts %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
+            <li class="list-group-item d-flex justify-content-between align-items-center {% if job_post.state == 'rejected' or job_post.deadline < now %}text-muted{% endif %}">
                 <div>
                     <strong>{{ job_post.job_title }}</strong> at {{ job_post.company_name }} ({{ job_post.recruiter_name }}, {% if job_post.is_freelance %}Freelance{% else %}Full-time{% endif %})
+                    <span class="badge
+                        {% if job_post.state == 'new' %}badge-primary
+                        {% elif job_post.state == 'draft' %}badge-secondary
+                        {% elif job_post.state == 'applied' %}badge-info
+                        {% elif job_post.state == 'in_process' %}badge-warning
+                        {% elif job_post.state == 'approved' %}badge-success
+                        {% elif job_post.state == 'rejected' %}badge-danger
+                        {% endif %} ml-2">{{ job_post.get_state_display }}</span>
+                    {% if job_post.deadline < now %}
+                    <span class="badge badge-warning ml-2">Expired</span>
+                    {% endif %}
                 </div>
                 <div>
                     <a href="{% url 'update_job_post' job_post.job_post_id %}" class="btn btn-sm btn-info mr-2">Edit</a>

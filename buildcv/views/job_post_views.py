@@ -1,16 +1,19 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import render
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from buildcv.models import JobPost
 from buildcv.forms import JobPostForm
+from buildcv.models import JobPost
 
 
 @login_required
 def list_job_posts(request):
-    job_posts = JobPost.objects.filter(user=request.user)
-    return render(request, 'list_job_posts.html', {'job_posts': job_posts})
+    job_posts = JobPost.objects.filter(user=request.user).order_by('state', '-deadline')
+    now = timezone.now()
+    return render(request, 'list_job_posts.html', {'job_posts': job_posts, 'now': now})
 
 
 @login_required

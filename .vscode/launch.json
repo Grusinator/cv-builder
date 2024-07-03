@@ -17,6 +17,21 @@
                 "${workspaceFolder}"
             ],
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Django",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "runserver"
+            ],
+            "django": true,
+            "jinja": true,
+            "justMyCode": true,
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "cvbuilder.settings"
+            }
         }
     ]
 }

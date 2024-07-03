@@ -3,7 +3,19 @@ from django.db import models
 from django.utils import timezone
 
 
+from django.db import models
+from django.contrib.auth.models import User
+
 class JobPost(models.Model):
+    STATE_CHOICES = [
+        ('new', 'New'),
+        ('draft', 'Draft'),
+        ('applied', 'Applied'),
+        ('in_process', 'In Process'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected')
+    ]
+
     job_post_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='job_posts')
     company_name = models.CharField(max_length=255)
@@ -12,11 +24,12 @@ class JobPost(models.Model):
     recruiter_name = models.CharField(max_length=255, null=True, blank=True)
     is_freelance = models.BooleanField(default=False)
     requisition_number = models.CharField(max_length=255, null=True, blank=True)
+    state = models.CharField(max_length=20, choices=STATE_CHOICES, default='new')
+    deadline = models.DateField(null=True, blank=True)
     contact_email = models.EmailField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.job_title} at {self.company_name}"
-
 
 class CvCreationProcess(models.Model):
     job_post = models.OneToOneField(JobPost, on_delete=models.CASCADE, related_name='cv_creation_processes')
