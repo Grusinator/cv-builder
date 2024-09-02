@@ -1,0 +1,63 @@
+\documentclass[10pt,a4paper,ragged2e]{altacv}
+\geometry{left=1.25cm,right=1.25cm,top=1.5cm,bottom=1.5cm,columnsep=1.2cm}
+\usepackage{paracol}
+
+\renewcommand{\namefont}{\Huge\rmfamily\bfseries}
+\renewcommand{\cvsectionfont}{\LARGE\rmfamily\bfseries}
+\renewcommand{\cvsubsectionfont}{\large\bfseries}
+
+\begin{document}
+
+\name{Anonymous}
+\tagline{(( profile.job_title ))}
+
+\makecvheader
+
+\columnratio{0.6}
+\begin{paracol}{2}
+
+{% if skills %}
+\cvsection{Skills}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Skill & Level & Last Used & Years of Exp. \\
+\hline
+{% for skill in skills %}
+\textbf{(( skill.name ))} & (( skill.level )) & (( skill.last_used )) & (( skill.years_of_experience )) \\
+{% endfor %}
+\end{tabular}
+{% endif %}
+
+{% if job_positions %}
+\cvsection{Experience}
+{% for job in job_positions %}
+\cvevent{(( job.title ))}{(( job.company ))}{(( job.start_date | date_format("%b %Y") )) -- (( job.end_date | date_format("%b %Y") ))}{(( job.location ))}
+(( job.description ))
+
+\divider
+{% endfor %}
+{% endif %}
+
+\switchcolumn
+
+{% if projects %}
+\cvsection{Projects}
+{% for project in projects %}
+\cvevent{(( project.name ))}{}{}{}
+(( project.description ))
+
+\divider
+{% endfor %}
+{% endif %}
+
+{% if educations %}
+\cvsection{Education}
+{% for edu in educations %}
+\cvevent{(( edu.degree ))}{(( edu.school ))}{(( edu.start_date | date_format("%Y") )) -- (( edu.end_date | date_format("%Y") ))}{}
+
+\divider
+{% endfor %}
+{% endif %}
+
+\end{paracol}
+\end{document}

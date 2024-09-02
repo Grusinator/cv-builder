@@ -37,5 +37,13 @@ def terraform(ctx):
     ctx.run("terraform -chdir=devops/terraform plan")
 
 
+@invoke.task
+def deploy_to_kubernetes(c):
+    kubeconfig = os.getenv("KUBE_CONFIG")
+    c.run(f"KUBECONFIG={kubeconfig} helm install cv-builder ./cv-builder --namespace cv-builder")
+
+
 if __name__ == '__main__':
     pass
+
+
